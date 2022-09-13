@@ -31,8 +31,9 @@ Parser* parser_new(str text) {
             BUF_PUSH(&tokens, token);
         } else {
             syntax_token_free(token);
+            token = NULL;
         }
-        if (token->kind == SYNTAX_KIND_END_OF_FILE_TOKEN) {
+        if (token != NULL && token->kind == SYNTAX_KIND_END_OF_FILE_TOKEN) {
             break;
         }
     }

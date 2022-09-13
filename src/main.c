@@ -5,7 +5,10 @@
 #include <str/str.h>
 #include <string.h>
 
-#include "lexer.h"
+#include "parser.h"
+#include "syntax_token.h"
+
+static void pretty_print(const SyntaxNode* root, str indent);
 
 int main(void) {
     linenoiseHistoryLoad("minsc.history");
@@ -19,29 +22,36 @@ int main(void) {
 
         linenoiseHistoryAdd(line.ptr);
 
-        Lexer* lexer = lexer_new(str_ref(line));
+        Parser* parser = parser_new(str_ref(line));
+        ExpressionSyntax* program = parser_parse(parser);
+        parser_free(parser);
+        pretty_print((const SyntaxNode*)program, str_null);
+        expression_syntax_free(program);
 
-        while (true) {
-            SyntaxToken* token = lexer_next_token(lexer);
-            if (token->kind == SYNTAX_KIND_END_OF_FILE_TOKEN) {
-                syntax_token_free(token);
-                break;
-            }
-            printf(str_fmt ": '" str_fmt "'",
-                   str_arg(syntax_kind_string(token->kind)),
-                   str_arg(token->text));
-            if (token->value != NULL) {
-                str value = object_string(token->value);
-                printf(" " str_fmt, str_arg(value));
-                str_free(value);
-            }
-            println();
-            syntax_token_free(token);
-        }
-
-        lexer_free(lexer);
         str_free(line);
     }
 
     linenoiseHistorySave("minsc.history");
+}
+
+static void pretty_print(const SyntaxNode* root, str indent) {
+    printf(str_fmt str_fmt,
+           str_arg(indent),
+           str_arg(syntax_kind_string(syntax_node_kind(root))));
+    if (root->type == SYNTAX_NODE_TYPE_TOKEN &&
+        ((SyntaxToken*)root)->value != NULL) {
+        str value = object_string(((SyntaxToken*)root)->value);
+        printf(" " str_fmt, str_arg(value));
+        str_free(value);
+    }
+
+    str new_indent = str_null;
+    str_cat(&new_indent, indent, str_lit("    "));
+
+    SyntaxNodeChildren children = syntax_node_children(root);
+    for (size_t i = 0; i < children.len; i++) {
+        println();
+        pretty_print(children.ptr[i], new_indent);
+    }
+    BUF_FREE(children);
 }
