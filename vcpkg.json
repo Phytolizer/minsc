@@ -1,0 +1,6 @@
+{
+    "name": "minsc",
+    "version-semver": "0.1.0",
+    "dependencies": ["hedley"],
+    "builtin-baseline": "1912e1a397ac4f79fc51e4ed2190de25278d31b8"
+}
