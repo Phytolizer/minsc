@@ -6,8 +6,9 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(PrependPath)
 
 add_subdirectory(deps/println)
+add_subdirectory(deps/linenoise)
 
 set(MINSC_SRC main.c)
 prepend_path(MINSC_SRC src/ MINSC_SRC_REL)
 add_executable(minsc ${MINSC_SRC_REL})
-target_link_libraries(minsc PRIVATE println::println)
+target_link_libraries(minsc PRIVATE println::println linenoise::linenoise)
