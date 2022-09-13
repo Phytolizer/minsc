@@ -1,7 +1,6 @@
 #include "println/println.h"
 
-extern int printfln(const char* format, ...)
-{
+extern int printfln(const char* format, ...) {
     va_list args;
     va_start(args, format);
     int result = vprintfln(format, args);
@@ -9,8 +8,7 @@ extern int printfln(const char* format, ...)
     return result;
 }
 
-extern int fprintfln(FILE* stream, const char* format, ...)
-{
+extern int fprintfln(FILE* stream, const char* format, ...) {
     va_list args;
     va_start(args, format);
     int result = vfprintfln(stream, format, args);
@@ -18,16 +16,13 @@ extern int fprintfln(FILE* stream, const char* format, ...)
     return result;
 }
 
-extern int vprintfln(const char* format, va_list args)
-{
+extern int vprintfln(const char* format, va_list args) {
     return vfprintfln(stdout, format, args);
 }
 
-extern int vfprintfln(FILE* stream, const char* format, va_list args)
-{
+extern int vfprintfln(FILE* stream, const char* format, va_list args) {
     int result = vfprintf(stream, format, args);
-    if (result < 0)
-    {
+    if (result < 0) {
         return result;
     }
     return result + fprintf(stream, "\n");

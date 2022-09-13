@@ -1,6 +1,5 @@
 #include <println/println.h>
 
-int main(void)
-{
+int main(void) {
     printfln("Hello, world!");
 }

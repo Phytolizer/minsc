@@ -6,8 +6,9 @@
 #include <stdio.h>
 
 extern int printfln(const char* format, ...) HEDLEY_PRINTF_FORMAT(1, 2);
-extern int fprintfln(FILE* stream, const char* format, ...) HEDLEY_PRINTF_FORMAT(2, 3);
+extern int fprintfln(FILE* stream, const char* format, ...)
+    HEDLEY_PRINTF_FORMAT(2, 3);
 extern int vprintfln(const char* format, va_list args);
 extern int vfprintfln(FILE* stream, const char* format, va_list args);
 
-#endif // PRINTLN_H_
+#endif  // PRINTLN_H_
