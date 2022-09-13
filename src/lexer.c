@@ -35,8 +35,8 @@ SyntaxToken lexer_next_token(Lexer* lexer) {
             lexer->position++;
         }
 
-        str text =
-            str_ref_chars(lexer->source.ptr + start, lexer->position - start);
+        str text = str_ref_chars(lexer->source.ptr + start,
+                                 lexer->position - start);
         Str2U64Result result = str2u64(text, 10);
         if (result.err) {
             fprintfln(stderr, "TODO");
@@ -46,10 +46,10 @@ SyntaxToken lexer_next_token(Lexer* lexer) {
         str_cpy(&owned_text, text);
         Object* value = object_new_u64(result.value);
         return (SyntaxToken){
-            .kind = SYNTAX_KIND_NUMBER_TOKEN,
-            .position = start,
-            .text = owned_text,
-            .value = value,
+                .kind = SYNTAX_KIND_NUMBER_TOKEN,
+                .position = start,
+                .text = owned_text,
+                .value = value,
         };
     }
 
@@ -58,15 +58,15 @@ SyntaxToken lexer_next_token(Lexer* lexer) {
             lexer->position++;
         }
 
-        str text =
-            str_ref_chars(lexer->source.ptr + start, lexer->position - start);
+        str text = str_ref_chars(lexer->source.ptr + start,
+                                 lexer->position - start);
         str owned_text = str_null;
         str_cpy(&owned_text, text);
         return (SyntaxToken){
-            .kind = SYNTAX_KIND_WHITESPACE_TOKEN,
-            .position = start,
-            .text = owned_text,
-            .value = NULL,
+                .kind = SYNTAX_KIND_WHITESPACE_TOKEN,
+                .position = start,
+                .text = owned_text,
+                .value = NULL,
         };
     }
 
@@ -74,57 +74,57 @@ SyntaxToken lexer_next_token(Lexer* lexer) {
         case '+':
             lexer->position++;
             return (SyntaxToken){
-                .kind = SYNTAX_KIND_PLUS_TOKEN,
-                .position = start,
-                .text = str_lit("+"),
-                .value = NULL,
+                    .kind = SYNTAX_KIND_PLUS_TOKEN,
+                    .position = start,
+                    .text = str_lit("+"),
+                    .value = NULL,
             };
         case '-':
             lexer->position++;
             return (SyntaxToken){
-                .kind = SYNTAX_KIND_MINUS_TOKEN,
-                .position = start,
-                .text = str_lit("-"),
-                .value = NULL,
+                    .kind = SYNTAX_KIND_MINUS_TOKEN,
+                    .position = start,
+                    .text = str_lit("-"),
+                    .value = NULL,
             };
         case '*':
             lexer->position++;
             return (SyntaxToken){
-                .kind = SYNTAX_KIND_STAR_TOKEN,
-                .position = start,
-                .text = str_lit("*"),
-                .value = NULL,
+                    .kind = SYNTAX_KIND_STAR_TOKEN,
+                    .position = start,
+                    .text = str_lit("*"),
+                    .value = NULL,
             };
         case '/':
             lexer->position++;
             return (SyntaxToken){
-                .kind = SYNTAX_KIND_SLASH_TOKEN,
-                .position = start,
-                .text = str_lit("/"),
-                .value = NULL,
+                    .kind = SYNTAX_KIND_SLASH_TOKEN,
+                    .position = start,
+                    .text = str_lit("/"),
+                    .value = NULL,
             };
         case '(':
             lexer->position++;
             return (SyntaxToken){
-                .kind = SYNTAX_KIND_OPEN_PARENTHESIS_TOKEN,
-                .position = start,
-                .text = str_lit("("),
-                .value = NULL,
+                    .kind = SYNTAX_KIND_OPEN_PARENTHESIS_TOKEN,
+                    .position = start,
+                    .text = str_lit("("),
+                    .value = NULL,
             };
         case ')':
             lexer->position++;
             return (SyntaxToken){
-                .kind = SYNTAX_KIND_CLOSE_PARENTHESIS_TOKEN,
-                .position = start,
-                .text = str_lit(")"),
-                .value = NULL,
+                    .kind = SYNTAX_KIND_CLOSE_PARENTHESIS_TOKEN,
+                    .position = start,
+                    .text = str_lit(")"),
+                    .value = NULL,
             };
         case '\0':
             return (SyntaxToken){
-                .kind = SYNTAX_KIND_END_OF_FILE_TOKEN,
-                .position = start,
-                .text = str_lit(""),
-                .value = NULL,
+                    .kind = SYNTAX_KIND_END_OF_FILE_TOKEN,
+                    .position = start,
+                    .text = str_lit(""),
+                    .value = NULL,
             };
         default: {
             char text[] = {current(lexer)};
@@ -132,10 +132,10 @@ SyntaxToken lexer_next_token(Lexer* lexer) {
             str_cpy(&owned_text, str_ref_chars(text, 1));
             lexer->position++;
             return (SyntaxToken){
-                .kind = SYNTAX_KIND_BAD_TOKEN,
-                .position = start,
-                .text = owned_text,
-                .value = NULL,
+                    .kind = SYNTAX_KIND_BAD_TOKEN,
+                    .position = start,
+                    .text = owned_text,
+                    .value = NULL,
             };
         }
     }

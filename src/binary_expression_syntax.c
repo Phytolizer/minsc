@@ -3,8 +3,8 @@
 #include <stdlib.h>
 
 ExpressionSyntax* binary_expression_syntax_new(ExpressionSyntax* left,
-    SyntaxToken operator_token,
-    ExpressionSyntax* right) {
+                                               SyntaxToken operator_token,
+                                               ExpressionSyntax* right) {
     BinaryExpressionSyntax* expression = malloc(sizeof(BinaryExpressionSyntax));
     expression->base.type = EXPRESSION_SYNTAX_TYPE_BINARY;
     expression->left = left;

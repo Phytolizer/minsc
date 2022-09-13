@@ -40,7 +40,7 @@
         if ((buf)->len == (buf)->cap) { \
             (buf)->cap = (buf)->cap ? (buf)->cap * 2 : 1; \
             (buf)->ptr = \
-                realloc((buf)->ptr, (buf)->cap * sizeof(*(buf)->ptr)); \
+                    realloc((buf)->ptr, (buf)->cap * sizeof(*(buf)->ptr)); \
         } \
         (buf)->ptr[(buf)->len++] = (val); \
     } while (false)
@@ -49,8 +49,9 @@
     do { \
         if ((buf)->len > 0) { \
             (buf)->len--; \
-            memmove( \
-                (buf)->ptr, (buf)->ptr + 1, (buf)->len * sizeof(*(buf)->ptr)); \
+            memmove((buf)->ptr, \
+                    (buf)->ptr + 1, \
+                    (buf)->len * sizeof(*(buf)->ptr)); \
         } \
     } while (false)
 

@@ -20,7 +20,7 @@ void expression_syntax_free(ExpressionSyntax* expression) {
     switch (expression->type) {
         case EXPRESSION_SYNTAX_TYPE_LITERAL:
             literal_expression_syntax_free(
-                (LiteralExpressionSyntax*)expression);
+                    (LiteralExpressionSyntax*)expression);
             break;
         case EXPRESSION_SYNTAX_TYPE_BINARY:
             binary_expression_syntax_free((BinaryExpressionSyntax*)expression);

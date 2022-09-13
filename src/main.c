@@ -28,8 +28,8 @@ int main(void) {
                 break;
             }
             printf(str_fmt ": '" str_fmt "'",
-                str_arg(syntax_kind_string(token.kind)),
-                str_arg(token.text));
+                   str_arg(syntax_kind_string(token.kind)),
+                   str_arg(token.text));
             if (token.value != NULL) {
                 str value = object_string(token.value);
                 printf(" " str_fmt, str_arg(value));
