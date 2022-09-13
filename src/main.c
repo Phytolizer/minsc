@@ -22,16 +22,16 @@ int main(void) {
         Lexer* lexer = lexer_new(str_ref(line));
 
         while (true) {
-            SyntaxToken token = lexer_next_token(lexer);
-            if (token.kind == SYNTAX_KIND_END_OF_FILE_TOKEN) {
+            SyntaxToken* token = lexer_next_token(lexer);
+            if (token->kind == SYNTAX_KIND_END_OF_FILE_TOKEN) {
                 syntax_token_free(token);
                 break;
             }
             printf(str_fmt ": '" str_fmt "'",
-                   str_arg(syntax_kind_string(token.kind)),
-                   str_arg(token.text));
-            if (token.value != NULL) {
-                str value = object_string(token.value);
+                   str_arg(syntax_kind_string(token->kind)),
+                   str_arg(token->text));
+            if (token->value != NULL) {
+                str value = object_string(token->value);
                 printf(" " str_fmt, str_arg(value));
                 str_free(value);
             }

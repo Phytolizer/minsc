@@ -27,3 +27,17 @@ void expression_syntax_free(ExpressionSyntax* expression) {
             break;
     }
 }
+
+SyntaxNodeChildren expression_syntax_children(
+        const ExpressionSyntax* expression) {
+    switch (expression->type) {
+        case EXPRESSION_SYNTAX_TYPE_LITERAL:
+            return literal_expression_syntax_children(
+                    (const LiteralExpressionSyntax*)expression);
+        case EXPRESSION_SYNTAX_TYPE_BINARY:
+            return binary_expression_syntax_children(
+                    (const BinaryExpressionSyntax*)expression);
+    }
+
+    abort();
+}

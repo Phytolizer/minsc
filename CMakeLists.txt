@@ -5,6 +5,8 @@ project(minsc LANGUAGES C)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(PrependPath)
 
+set(CMAKE_C_STANDARD 11)
+
 add_subdirectory(deps/buf)
 add_subdirectory(deps/linenoise)
 add_subdirectory(deps/println)

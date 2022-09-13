@@ -6,10 +6,13 @@
 
 typedef struct LiteralExpressionSyntax {
     ExpressionSyntax base;
-    SyntaxToken literal_token;
+    SyntaxToken* literal_token;
 } LiteralExpressionSyntax;
 
-ExpressionSyntax* literal_expression_syntax_new(SyntaxToken literal_token);
+ExpressionSyntax* literal_expression_syntax_new(SyntaxToken* literal_token);
 void literal_expression_syntax_free(LiteralExpressionSyntax* expression);
+
+SyntaxNodeChildren literal_expression_syntax_children(
+        const LiteralExpressionSyntax* expression);
 
 #endif  // MINSC_LITERAL_EXPRESSION_SYNTAX_H_

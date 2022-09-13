@@ -26,7 +26,7 @@ void lexer_free(Lexer* lexer) {
     free(lexer);
 }
 
-SyntaxToken lexer_next_token(Lexer* lexer) {
+SyntaxToken* lexer_next_token(Lexer* lexer) {
     size_t start = lexer->position;
     char c = current(lexer);
 
@@ -45,12 +45,8 @@ SyntaxToken lexer_next_token(Lexer* lexer) {
         str owned_text = str_null;
         str_cpy(&owned_text, text);
         Object* value = object_new_u64(result.value);
-        return (SyntaxToken){
-                .kind = SYNTAX_KIND_NUMBER_TOKEN,
-                .position = start,
-                .text = owned_text,
-                .value = value,
-        };
+        return syntax_token_new(
+                SYNTAX_KIND_NUMBER_TOKEN, start, owned_text, value);
     }
 
     if (wrap_isspace(c)) {
@@ -62,81 +58,49 @@ SyntaxToken lexer_next_token(Lexer* lexer) {
                                  lexer->position - start);
         str owned_text = str_null;
         str_cpy(&owned_text, text);
-        return (SyntaxToken){
-                .kind = SYNTAX_KIND_WHITESPACE_TOKEN,
-                .position = start,
-                .text = owned_text,
-                .value = NULL,
-        };
+        return syntax_token_new(
+                SYNTAX_KIND_WHITESPACE_TOKEN, start, owned_text, NULL);
     }
 
     switch (c) {
         case '+':
             lexer->position++;
-            return (SyntaxToken){
-                    .kind = SYNTAX_KIND_PLUS_TOKEN,
-                    .position = start,
-                    .text = str_lit("+"),
-                    .value = NULL,
-            };
+            return syntax_token_new(
+                    SYNTAX_KIND_PLUS_TOKEN, start, str_lit("+"), NULL);
         case '-':
             lexer->position++;
-            return (SyntaxToken){
-                    .kind = SYNTAX_KIND_MINUS_TOKEN,
-                    .position = start,
-                    .text = str_lit("-"),
-                    .value = NULL,
-            };
+            return syntax_token_new(
+                    SYNTAX_KIND_MINUS_TOKEN, start, str_lit("-"), NULL);
         case '*':
             lexer->position++;
-            return (SyntaxToken){
-                    .kind = SYNTAX_KIND_STAR_TOKEN,
-                    .position = start,
-                    .text = str_lit("*"),
-                    .value = NULL,
-            };
+            return syntax_token_new(
+                    SYNTAX_KIND_STAR_TOKEN, start, str_lit("*"), NULL);
         case '/':
             lexer->position++;
-            return (SyntaxToken){
-                    .kind = SYNTAX_KIND_SLASH_TOKEN,
-                    .position = start,
-                    .text = str_lit("/"),
-                    .value = NULL,
-            };
+            return syntax_token_new(
+                    SYNTAX_KIND_SLASH_TOKEN, start, str_lit("/"), NULL);
         case '(':
             lexer->position++;
-            return (SyntaxToken){
-                    .kind = SYNTAX_KIND_OPEN_PARENTHESIS_TOKEN,
-                    .position = start,
-                    .text = str_lit("("),
-                    .value = NULL,
-            };
+            return syntax_token_new(SYNTAX_KIND_OPEN_PARENTHESIS_TOKEN,
+                                    start,
+                                    str_lit("("),
+                                    NULL);
         case ')':
             lexer->position++;
-            return (SyntaxToken){
-                    .kind = SYNTAX_KIND_CLOSE_PARENTHESIS_TOKEN,
-                    .position = start,
-                    .text = str_lit(")"),
-                    .value = NULL,
-            };
+            return syntax_token_new(SYNTAX_KIND_CLOSE_PARENTHESIS_TOKEN,
+                                    start,
+                                    str_lit(")"),
+                                    NULL);
         case '\0':
-            return (SyntaxToken){
-                    .kind = SYNTAX_KIND_END_OF_FILE_TOKEN,
-                    .position = start,
-                    .text = str_lit(""),
-                    .value = NULL,
-            };
+            return syntax_token_new(
+                    SYNTAX_KIND_END_OF_FILE_TOKEN, start, str_lit(""), NULL);
         default: {
             char text[] = {current(lexer)};
             str owned_text = str_null;
             str_cpy(&owned_text, str_ref_chars(text, 1));
             lexer->position++;
-            return (SyntaxToken){
-                    .kind = SYNTAX_KIND_BAD_TOKEN,
-                    .position = start,
-                    .text = owned_text,
-                    .value = NULL,
-            };
+            return syntax_token_new(
+                    SYNTAX_KIND_BAD_TOKEN, start, owned_text, NULL);
         }
     }
 }

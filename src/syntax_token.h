@@ -6,14 +6,17 @@
 
 #include "object.h"
 #include "syntax_kind.h"
+#include "syntax_node.h"
 
 typedef struct SyntaxToken {
+    SyntaxNode base;
     SyntaxKind kind;
     size_t position;
     str text;
     Object* value;
 } SyntaxToken;
 
-void syntax_token_free(SyntaxToken token);
+SyntaxToken* syntax_token_new(SyntaxKind kind, size_t position, str text, Object* value);
+void syntax_token_free(SyntaxToken* token);
 
 #endif  // MINSC_TOKEN_H_
