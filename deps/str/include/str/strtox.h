@@ -1,12 +1,11 @@
 #pragma once
 
-#include "str/str.h"
-
 #include <stdint.h>
 
+#include "str/str.h"
+
 #define STRTOX_RESULT(T) \
-    struct \
-    { \
+    struct { \
         T value; \
         const char* endptr; \
         int err; \

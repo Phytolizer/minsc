@@ -30,7 +30,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#define _DEFAULT_SOURCE // for strncasecmp()
+#define _DEFAULT_SOURCE  // for strncasecmp()
 #define _XOPEN_SOURCE
 
 #include "str/str.h"
@@ -48,35 +48,28 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 // compatibility
 #ifndef _GNU_SOURCE
-static inline void* mempcpy(void* dest, const void* src, const size_t n)
-{
+static inline void* mempcpy(void* dest, const void* src, const size_t n) {
     char* d = memcpy(dest, src, n);
     return d + n;
 }
 #endif
 
-static inline void str_mem_free(void* p)
-{
-    if (p)
-    {
+static inline void str_mem_free(void* p) {
+    if (p) {
         free(p);
     }
 }
 
 // string deallocation
-void str_free(const str s)
-{
-    if (str_is_owner(s))
-    {
+void str_free(const str s) {
+    if (str_is_owner(s)) {
         str_mem_free((void*)s.ptr);
     }
 }
 
 // version of str_free() for str_auto macro
-void str_free_(const str* const ps)
-{
-    if (ps)
-    {
+void str_free_(const str* const ps) {
+    if (ps) {
         str_free(*ps);
     }
 }
@@ -86,8 +79,7 @@ void str_free_(const str* const ps)
     ({ \
         void* const s___ = (p); \
         void* const p___ = realloc(s___, (n)); \
-        if (!p___) \
-        { \
+        if (!p___) { \
             str_mem_free(s___); \
             return ENOMEM; \
         } \
@@ -96,39 +88,34 @@ void str_free_(const str* const ps)
 
 // errno checker
 #define EINTR_RETRY(expr) \
-    while ((expr) < 0) \
-    { \
-        do \
-        { \
+    while ((expr) < 0) { \
+        do { \
             const int __err = errno; \
-            if (__err != EINTR) \
-            { \
+            if (__err != EINTR) { \
                 return __err; \
             } \
         } while (0); \
     }
 
 // swap
-void str_swap(str* const s1, str* const s2)
-{
+void str_swap(str* const s1, str* const s2) {
     const str tmp = *s1;
 
     *s1 = *s2;
     *s2 = tmp;
 }
 
-// string comparison ---------------------------------------------------------------------
-// compare two strings lexicographically
-int str_cmp(const str s1, const str s2)
-{
+// string comparison
+// --------------------------------------------------------------------- compare
+// two strings lexicographically
+int str_cmp(const str s1, const str s2) {
     const size_t n1 = s1.len;
     const size_t n2 = s2.len;
 
     // either string may be missing a null terminator, hence "memcmp"
     const int res = memcmp(str_ptr(s1), str_ptr(s2), (n1 < n2) ? n1 : n2);
 
-    if (res != 0 || n1 == n2)
-    {
+    if (res != 0 || n1 == n2) {
         return res;
     }
 
@@ -136,16 +123,14 @@ int str_cmp(const str s1, const str s2)
 }
 
 // case-insensitive comparison
-int str_cmp_ci(const str s1, const str s2)
-{
+int str_cmp_ci(const str s1, const str s2) {
     const size_t n1 = s1.len;
     const size_t n2 = s2.len;
 
     // either string may be missing a null terminator, hence "strNcasecmp"
     const int res = strncasecmp(str_ptr(s1), str_ptr(s2), (n1 < n2) ? n1 : n2);
 
-    if (res != 0 || n1 == n2)
-    {
+    if (res != 0 || n1 == n2) {
         return res;
     }
 
@@ -153,43 +138,39 @@ int str_cmp_ci(const str s1, const str s2)
 }
 
 // test for prefix
-bool str_has_prefix(const str s, const str prefix)
-{
+bool str_has_prefix(const str s, const str prefix) {
     const size_t n = prefix.len;
 
-    return (n == 0) || (s.len >= n && memcmp(str_ptr(s), str_ptr(prefix), n) == 0);
+    return (n == 0) ||
+        (s.len >= n && memcmp(str_ptr(s), str_ptr(prefix), n) == 0);
 }
 
 // test for suffix
-bool str_has_suffix(const str s, const str suffix)
-{
+bool str_has_suffix(const str s, const str suffix) {
     const size_t n = suffix.len;
 
-    return (n == 0) || (s.len >= n && memcmp(str_end(s) - n, str_ptr(suffix), n) == 0);
+    return (n == 0) ||
+        (s.len >= n && memcmp(str_end(s) - n, str_ptr(suffix), n) == 0);
 }
 
-// string constructors -----------------------------------------------------------------
-// create a reference to the given range of chars
-str str_ref_chars(const char* const s, const size_t n)
-{
+// string constructors
+// ----------------------------------------------------------------- create a
+// reference to the given range of chars
+str str_ref_chars(const char* const s, const size_t n) {
     return (s && n > 0) ? ((str){s, n, false}) : str_null;
 }
 
-str str_ref_from_ptr_(const char* const s)
-{
+str str_ref_from_ptr_(const char* const s) {
     return s ? str_ref_chars(s, strlen(s)) : str_null;
 }
 
 // take ownership of the given range of chars
-str str_acquire_chars(const char* const s, const size_t n)
-{
-    if (!s)
-    {
+str str_acquire_chars(const char* const s, const size_t n) {
+    if (!s) {
         return str_null;
     }
 
-    if (n == 0)
-    {
+    if (n == 0) {
         free((void*)s);
         return str_null;
     }
@@ -198,13 +179,11 @@ str str_acquire_chars(const char* const s, const size_t n)
 }
 
 // take ownership of the given C string
-str str_acquire(const char* const s)
-{
+str str_acquire(const char* const s) {
     return s ? str_acquire_chars(s, strlen(s)) : str_null;
 }
 
-static str str_vprintf(const char* const fmt, va_list ap)
-{
+static str str_vprintf(const char* const fmt, va_list ap) {
     va_list ap2;
     va_copy(ap2, ap);
 
@@ -212,15 +191,13 @@ static str str_vprintf(const char* const fmt, va_list ap)
 
     va_end(ap2);
 
-    if (n < 0)
-    {
+    if (n < 0) {
         return str_null;
     }
 
     char* const s = malloc((size_t)n + 1);
 
-    if (!s)
-    {
+    if (!s) {
         return str_null;
     }
 
@@ -229,8 +206,7 @@ static str str_vprintf(const char* const fmt, va_list ap)
     return str_acquire_chars(s, n);
 }
 
-str str_printf(const char* fmt, ...)
-{
+str str_printf(const char* fmt, ...) {
     va_list args;
     va_start(args, fmt);
     str s = str_vprintf(fmt, args);
@@ -239,16 +215,12 @@ str str_printf(const char* fmt, ...)
 }
 
 // allocate a copy of the given string
-int str_cpy(str* const dest, const str s)
-{
+int str_cpy(str* const dest, const str s) {
     const size_t n = s.len;
 
-    if (n == 0)
-    {
+    if (n == 0) {
         str_clear(dest);
-    }
-    else
-    {
+    } else {
         char* const p = memcpy(malloc(n + 1), str_ptr(s), n);
 
         p[n] = 0;
@@ -258,19 +230,17 @@ int str_cpy(str* const dest, const str s)
     return 0;
 }
 
-// string composition -----------------------------------------------------------------------
+// string composition
+// -----------------------------------------------------------------------
 // append string
-static inline char* append_str(char* p, const str s)
-{
+static inline char* append_str(char* p, const str s) {
     return mempcpy(p, str_ptr(s), s.len);
 }
 
-static size_t total_length(const str* src, size_t count)
-{
+static size_t total_length(const str* src, size_t count) {
     size_t sum = 0;
 
-    for (; count > 0; --count)
-    {
+    for (; count > 0; --count) {
         sum += (src++)->len;
     }
 
@@ -278,10 +248,8 @@ static size_t total_length(const str* src, size_t count)
 }
 
 // concatenate strings
-int str_cat_range(str* const dest, const str* src, size_t count)
-{
-    if (!src)
-    {
+int str_cat_range(str* const dest, const str* src, size_t count) {
+    if (!src) {
         str_clear(dest);
         return 0;
     }
@@ -289,8 +257,7 @@ int str_cat_range(str* const dest, const str* src, size_t count)
     // calculate total length
     const size_t num = total_length(src, count);
 
-    if (num == 0)
-    {
+    if (num == 0) {
         str_clear(dest);
         return 0;
     }
@@ -301,8 +268,7 @@ int str_cat_range(str* const dest, const str* src, size_t count)
     // copy bytes
     char* p = buff;
 
-    for (; count > 0; --count)
-    {
+    for (; count > 0; --count) {
         p = append_str(p, *src++);
     }
 
@@ -313,22 +279,19 @@ int str_cat_range(str* const dest, const str* src, size_t count)
 }
 
 // join strings
-int str_join_range(str* const dest, const str sep, const str* src, size_t count)
-{
+int str_join_range(
+    str* const dest, const str sep, const str* src, size_t count) {
     // test for simple cases
-    if (str_is_empty(sep))
-    {
+    if (str_is_empty(sep)) {
         return str_cat_range(dest, src, count);
     }
 
-    if (!src || count == 0)
-    {
+    if (!src || count == 0) {
         str_clear(dest);
         return 0;
     }
 
-    if (count == 1)
-    {
+    if (count == 1) {
         return str_cpy(dest, *src);
     }
 
@@ -341,8 +304,7 @@ int str_join_range(str* const dest, const str sep, const str* src, size_t count)
     // copy bytes
     char* p = append_str(buff, *src++);
 
-    while (--count > 0)
-    {
+    while (--count > 0) {
         p = append_str(append_str(p, sep), *src++);
     }
 
@@ -352,14 +314,14 @@ int str_join_range(str* const dest, const str sep, const str* src, size_t count)
     return 0;
 }
 
-// searching and sorting --------------------------------------------------------------------
-// string partitioning
+// searching and sorting
+// -------------------------------------------------------------------- string
+// partitioning
 #ifndef _GNU_SOURCE
 // an implementation of memmem(3) for the str_partition() function below
-static const void* memmem(const void* s, const size_t len, const void* patt, size_t patt_len)
-{
-    switch (patt_len)
-    {
+static const void* memmem(
+    const void* s, const size_t len, const void* patt, size_t patt_len) {
+    switch (patt_len) {
         case 0:
             return s;
         case 1:
@@ -374,35 +336,31 @@ static const void* memmem(const void* s, const size_t len, const void* patt, siz
 
     --patt_len;
 
-    for (s = memchr(cs, c, len); cs && cs + patt_len < end; ++cs, cs = memchr(cs, c, end - cs))
-    {
-        if (memcmp(cs + 1, cpatt, patt_len) == 0)
-        {
+    for (s = memchr(cs, c, len); cs && cs + patt_len < end;
+         ++cs, cs = memchr(cs, c, end - cs)) {
+        if (memcmp(cs + 1, cpatt, patt_len) == 0) {
             return cs;
         }
     }
 
     return NULL;
 }
-#endif // ifndef _GNU_SOURCE
+#endif  // ifndef _GNU_SOURCE
 
-bool str_partition(const str src, const str patt, str* const prefix, str* const suffix)
-{
+bool str_partition(
+    const str src, const str patt, str* const prefix, str* const suffix) {
     const size_t patt_len = patt.len;
 
-    if (patt_len > 0 && !str_is_empty(src))
-    {
+    if (patt_len > 0 && !str_is_empty(src)) {
         const char* s = memmem(str_ptr(src), src.len, str_ptr(patt), patt_len);
 
-        if (s)
-        {
-            if (prefix)
-            {
-                str_assign(prefix, str_ref_chars(str_ptr(src), s - str_ptr(src)));
+        if (s) {
+            if (prefix) {
+                str_assign(
+                    prefix, str_ref_chars(str_ptr(src), s - str_ptr(src)));
             }
 
-            if (suffix)
-            {
+            if (suffix) {
                 s += patt_len;
                 str_assign(suffix, str_ref_chars(s, str_end(src) - s));
             }
@@ -411,13 +369,11 @@ bool str_partition(const str src, const str patt, str* const prefix, str* const 
         }
     }
 
-    if (prefix)
-    {
+    if (prefix) {
         str_assign(prefix, str_ref(src));
     }
 
-    if (suffix)
-    {
+    if (suffix) {
         str_clear(suffix);
     }
 
@@ -425,45 +381,38 @@ bool str_partition(const str src, const str patt, str* const prefix, str* const 
 }
 
 // comparison functions
-int str_order_asc(const void* const s1, const void* const s2)
-{
+int str_order_asc(const void* const s1, const void* const s2) {
     return str_cmp(*(const str*)s1, *(const str*)s2);
 }
 
-int str_order_desc(const void* const s1, const void* const s2)
-{
+int str_order_desc(const void* const s1, const void* const s2) {
     return -str_cmp(*(const str*)s1, *(const str*)s2);
 }
 
-int str_order_asc_ci(const void* const s1, const void* const s2)
-{
+int str_order_asc_ci(const void* const s1, const void* const s2) {
     return str_cmp_ci(*(const str*)s1, *(const str*)s2);
 }
 
-int str_order_desc_ci(const void* const s1, const void* const s2)
-{
+int str_order_desc_ci(const void* const s1, const void* const s2) {
     return -str_cmp_ci(*(const str*)s1, *(const str*)s2);
 }
 
 // sorting
-void str_sort_range(const str_cmp_func cmp, str* const array, const size_t count)
-{
-    if (array && count > 1)
-    {
+void str_sort_range(
+    const str_cmp_func cmp, str* const array, const size_t count) {
+    if (array && count > 1) {
         qsort(array, count, sizeof(array[0]), cmp);
     }
 }
 
 // searching
-const str* str_search_range(const str key, const str* const array, const size_t count)
-{
-    if (!array || count == 0)
-    {
+const str* str_search_range(
+    const str key, const str* const array, const size_t count) {
+    if (!array || count == 0) {
         return NULL;
     }
 
-    if (count == 1)
-    {
+    if (count == 1) {
         return str_eq(key, array[0]) ? array : NULL;
     }
 
@@ -471,25 +420,21 @@ const str* str_search_range(const str key, const str* const array, const size_t 
 }
 
 // partitioning
-size_t str_partition_range(bool (*pred)(const str), str* const array, const size_t count)
-{
-    if (!array)
-    {
+size_t str_partition_range(
+    bool (*pred)(const str), str* const array, const size_t count) {
+    if (!array) {
         return 0;
     }
 
     const str* const end = array + count;
     str* p = array;
 
-    while (p < end && pred(*p))
-    {
+    while (p < end && pred(*p)) {
         ++p;
     }
 
-    for (str* s = p + 1; s < end; ++s)
-    {
-        if (pred(*s))
-        {
+    for (str* s = p + 1; s < end; ++s) {
+        if (pred(*s)) {
             str_swap(p++, s);
         }
     }
@@ -498,15 +443,12 @@ size_t str_partition_range(bool (*pred)(const str), str* const array, const size
 }
 
 // unique partitioning
-size_t str_unique_range(str* const array, const size_t count)
-{
-    if (!array || count == 0)
-    {
+size_t str_unique_range(str* const array, const size_t count) {
+    if (!array || count == 0) {
         return 0;
     }
 
-    if (count == 1)
-    {
+    if (count == 1) {
         return 1;
     }
 
@@ -515,10 +457,8 @@ size_t str_unique_range(str* const array, const size_t count)
     const str* const end = array + count;
     str* p = array;
 
-    for (str* s = array + 1; s < end; ++s)
-    {
-        if (!str_eq(*p, *s) && (++p < s))
-        {
+    for (str* s = array + 1; s < end; ++s) {
+        if (!str_eq(*p, *s) && (++p < s)) {
             str_swap(p, s);
         }
     }
@@ -527,48 +467,41 @@ size_t str_unique_range(str* const array, const size_t count)
 }
 
 // tokeniser
-static inline bool is_delim(const str_tok_state* const state, const char c)
-{
+static inline bool is_delim(const str_tok_state* const state, const char c) {
     return state->bits[(unsigned char)c >> 3] & (1 << (c & 0x7));
 }
 
-static inline void set_bit(str_tok_state* const state, const char c)
-{
+static inline void set_bit(str_tok_state* const state, const char c) {
     state->bits[(unsigned char)c >> 3] |= (1 << (c & 0x7));
 }
 
-void str_tok_delim(str_tok_state* const state, const str delim_set)
-{
+void str_tok_delim(str_tok_state* const state, const str delim_set) {
     memset(state->bits, 0, sizeof(state->bits));
 
     const char* const end = str_end(delim_set);
 
-    for (const char* s = str_ptr(delim_set); s < end; ++s)
-    {
+    for (const char* s = str_ptr(delim_set); s < end; ++s) {
         set_bit(state, *s);
     }
 }
 
-void str_tok_init(str_tok_state* const state, const str src, const str delim_set)
-{
+void str_tok_init(
+    str_tok_state* const state, const str src, const str delim_set) {
     state->src = str_ptr(src);
     state->end = str_end(src);
 
     str_tok_delim(state, delim_set);
 }
 
-bool str_tok(str* const dest, str_tok_state* const state)
-{
+bool str_tok(str* const dest, str_tok_state* const state) {
     // token start
     const char* begin = state->src;
 
-    while (begin < state->end && is_delim(state, *begin))
-    {
+    while (begin < state->end && is_delim(state, *begin)) {
         ++begin;
     }
 
-    if (begin == state->end)
-    {
+    if (begin == state->end) {
         str_clear(dest);
         return false;
     }
@@ -576,8 +509,7 @@ bool str_tok(str* const dest, str_tok_state* const state)
     // token end
     const char* end = begin + 1;
 
-    while (end < state->end && !is_delim(state, *end))
-    {
+    while (end < state->end && !is_delim(state, *end)) {
         ++end;
     }
 

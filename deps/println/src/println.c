@@ -1,5 +1,9 @@
 #include "println/println.h"
 
+extern int println(void) {
+    return printf("\n");
+}
+
 extern int printfln(const char* format, ...) {
     va_list args;
     va_start(args, format);

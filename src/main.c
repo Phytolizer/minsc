@@ -35,7 +35,7 @@ int main(void) {
                 printf(" " str_fmt, str_arg(value));
                 str_free(value);
             }
-            printfln("");
+            println();
             syntax_token_free(token);
         }
 

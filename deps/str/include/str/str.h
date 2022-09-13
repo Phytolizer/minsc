@@ -36,13 +36,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdio.h>
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-// string type ----------------------------------------------------------------------------
-typedef struct
-{
+// string type
+// ----------------------------------------------------------------------------
+typedef struct {
     const char* ptr;
     size_t len;
     bool owner;
@@ -51,45 +50,41 @@ typedef struct
 // NULL string
 #define str_null ((str){0, 0, false})
 
-// string properties ----------------------------------------------------------------------
-// length of the string
-static inline size_t str_len(const str s)
-{
+// string properties
+// ---------------------------------------------------------------------- length
+// of the string
+static inline size_t str_len(const str s) {
     return s.len;
 }
 
 // pointer to the string
-static inline const char* str_ptr(const str s)
-{
+static inline const char* str_ptr(const str s) {
     return s.ptr ? s.ptr : "";
 }
 
 // end of the string
-static inline const char* str_end(const str s)
-{
+static inline const char* str_end(const str s) {
     return str_ptr(s) + str_len(s);
 }
 
 // test if the string is empty
-static inline bool str_is_empty(const str s)
-{
+static inline bool str_is_empty(const str s) {
     return str_len(s) == 0;
 }
 
 // test if the string is allocated on the heap
-static inline bool str_is_owner(const str s)
-{
+static inline bool str_is_owner(const str s) {
     return s.owner;
 }
 
 // test if the string is a reference
-static inline bool str_is_ref(const str s)
-{
+static inline bool str_is_ref(const str s) {
     return !s.owner;
 }
 
-// string memory control -------------------------------------------------------------------
-// free memory allocated for the string
+// string memory control
+// ------------------------------------------------------------------- free
+// memory allocated for the string
 void str_free(str s);
 
 // automatic cleanup
@@ -97,25 +92,23 @@ void str_free_(const str* ps);
 
 #define str_auto str __attribute__((cleanup(str_free_)))
 
-// string movements -----------------------------------------------------------------------
-// free target string, then assign the new value to it
-static inline void str_assign(str* const ps, const str s)
-{
+// string movements
+// ----------------------------------------------------------------------- free
+// target string, then assign the new value to it
+static inline void str_assign(str* const ps, const str s) {
     str_free(*ps);
     *ps = s;
 }
 
 // move the string, resetting the source to str_null
-static inline str str_move(str* const ps)
-{
+static inline str str_move(str* const ps) {
     const str t = *ps;
     *ps = str_null;
     return t;
 }
 
 // pass ownership of the string
-static inline str str_pass(str* const ps)
-{
+static inline str str_pass(str* const ps) {
     const str t = *ps;
     ps->owner = false;
     return t;
@@ -124,10 +117,10 @@ static inline str str_pass(str* const ps)
 // swap two string objects
 void str_swap(str* s1, str* s2);
 
-// string helpers --------------------------------------------------------------------------
+// string helpers
+// --------------------------------------------------------------------------
 // reset the string to str_null
-static inline void str_clear(str* const ps)
-{
+static inline void str_clear(str* const ps) {
     str_assign(ps, str_null);
 }
 
@@ -135,8 +128,7 @@ static inline void str_clear(str* const ps)
 int str_cmp(str s1, str s2);
 
 // test if two strings match
-static inline bool str_eq(const str s1, const str s2)
-{
+static inline bool str_eq(const str s1, const str s2) {
     return str_cmp(s1, s2) == 0;
 }
 
@@ -144,8 +136,7 @@ static inline bool str_eq(const str s1, const str s2)
 int str_cmp_ci(str s1, str s2);
 
 // case-insensitive match
-static inline bool str_eq_ci(const str s1, const str s2)
-{
+static inline bool str_eq_ci(const str s1, const str s2) {
     return str_cmp_ci(s1, s2) == 0;
 }
 
@@ -155,7 +146,8 @@ bool str_has_prefix(str s, str prefix);
 // test for suffix
 bool str_has_suffix(str s, str suffix);
 
-// string composition ------------------------------------------------------------------
+// string composition
+// ------------------------------------------------------------------
 int str_cpy(str* dest, str s);
 
 int str_cat_range(str* dest, const str* src, size_t count);
@@ -170,23 +162,25 @@ int str_cat_range(str* dest, const str* src, size_t count);
 int str_join_range(str* dest, str sep, const str* src, size_t count);
 
 // join string arguments around the separator
-#define str_join(dest, sep, ...) str_join_range((dest), (sep), ARRAYOF_(__VA_ARGS__))
+#define str_join(dest, sep, ...) \
+    str_join_range((dest), (sep), ARRAYOF_(__VA_ARGS__))
 
 #define path_join(dest, ...) str_join((dest), str_lit("/"), __VA_ARGS__)
 
-// constructors ----------------------------------------------------------------------------
+// constructors
+// ----------------------------------------------------------------------------
 // string reference from a string literal
 #define str_lit(s) ((str){"" s, sizeof(s) - 1, false})
 
-static inline str str_ref_(const str s)
-{
+static inline str str_ref_(const str s) {
     return (str){s.ptr, s.len, false};
 }
 
 str str_ref_from_ptr_(const char* s);
 
 // string reference from anything
-#define str_ref(s) _Generic((s), str : str_ref_, char* : str_ref_from_ptr_, const char* : str_ref_from_ptr_)(s)
+#define str_ref(s) \
+    _Generic((s), str : str_ref_, char* : str_ref_from_ptr_, const char* : str_ref_from_ptr_)(s)
 
 // create a reference to the given range of chars
 str str_ref_chars(const char* s, size_t n);
@@ -201,8 +195,9 @@ str str_printf(const char* fmt, ...) __attribute__((format(printf, 1, 2)));
 
 #define str_after(s, i) str_ref_chars(str_ptr(s) + (i), str_len(s) - (i))
 
-// searching and sorting --------------------------------------------------------------------
-// string partitioning (substring search)
+// searching and sorting
+// -------------------------------------------------------------------- string
+// partitioning (substring search)
 bool str_partition(str src, str patt, str* prefix, str* suffix);
 
 // comparison functions
@@ -225,10 +220,10 @@ size_t str_partition_range(bool (*pred)(str), str* array, size_t count);
 // unique partitioning
 size_t str_unique_range(str* array, size_t count);
 
-// tokeniser --------------------------------------------------------------------------------
-typedef struct
-{
-    unsigned char bits[32]; // 256 / 8
+// tokeniser
+// --------------------------------------------------------------------------------
+typedef struct {
+    unsigned char bits[32];  // 256 / 8
     const char *src, *end;
 } str_tok_state;
 

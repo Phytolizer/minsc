@@ -5,6 +5,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+extern int println(void);
 extern int printfln(const char* format, ...) HEDLEY_PRINTF_FORMAT(1, 2);
 extern int fprintfln(FILE* stream, const char* format, ...)
     HEDLEY_PRINTF_FORMAT(2, 3);
