@@ -8,5 +8,5 @@ project(
 
 add_library(println src/println.c)
 find_path(HEDLEY_INCLUDE_DIR hedley.h)
-target_include_directories(println SYSTEM PUBLIC ${HEDLEY_INCLUDE_DIR} include)
+target_include_directories(println PUBLIC ${HEDLEY_INCLUDE_DIR} include)
 add_library(println::println ALIAS println)
