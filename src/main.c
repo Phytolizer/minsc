@@ -24,17 +24,16 @@ int main(void) {
         linenoiseHistoryAdd(line.ptr);
 
         Parser* parser = parser_new(str_ref(line));
-        ExpressionSyntax* program = parser_parse(parser);
-        DiagnosticBuf diagnostics = parser_take_diagnostics(parser);
+        SyntaxTree* program = parser_parse(parser);
         parser_free(parser);
         styler_apply_style(styler_style_faint, stdout);
         styler_apply_fg(styler_fg_white, stdout);
-        pretty_print((const SyntaxNode*)program, str_null, true);
+        pretty_print((const SyntaxNode*)program->root, str_null, true);
         styler_apply_fg(styler_fg_reset, stdout);
         styler_apply_style(styler_style_reset, stdout);
         (void)fflush(stdout);
-        expression_syntax_free(program);
 
+        DiagnosticBuf diagnostics = program->diagnostics;
         if (diagnostics.len > 0) {
             styler_apply_style(styler_style_faint, stdout);
             styler_apply_fg(styler_fg_red, stdout);
@@ -46,7 +45,7 @@ int main(void) {
             (void)fflush(stdout);
         }
 
-        diagnostic_buf_free(diagnostics);
+        syntax_tree_free(program);
         str_free(line);
     }
 
