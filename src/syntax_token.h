@@ -17,6 +17,7 @@ typedef struct SyntaxToken {
 } SyntaxToken;
 
 SyntaxToken* syntax_token_new(SyntaxKind kind, size_t position, str text, Object* value);
+SyntaxToken* syntax_token_dup(const SyntaxToken* token);
 void syntax_token_free(SyntaxToken* token);
 
 #endif  // MINSC_TOKEN_H_

@@ -11,6 +11,7 @@ add_subdirectory(deps/buf)
 add_subdirectory(deps/linenoise)
 add_subdirectory(deps/println)
 add_subdirectory(deps/str)
+add_subdirectory(deps/styler)
 
 set(MINSC_SRC_REL
     main.c
@@ -28,4 +29,5 @@ prepend_path(MINSC_SRC_REL src/ MINSC_SRC)
 add_executable(minsc ${MINSC_SRC})
 target_link_libraries(
   minsc PRIVATE println::println linenoise::linenoise str::str buf::buf
+                styler::styler
 )

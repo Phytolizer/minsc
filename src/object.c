@@ -11,6 +11,17 @@ Object* object_new_u64(uint64_t value) {
     return (Object*)object;
 }
 
+Object* object_dup(const Object* object) {
+    if (object == NULL) {
+        return NULL;
+    }
+    switch (object->type) {
+        case OBJECT_TYPE_U64:
+            return object_new_u64(((ObjectU64*)object)->value);
+    }
+    return NULL;
+}
+
 void object_free(Object* object) {
     free(object);
 }

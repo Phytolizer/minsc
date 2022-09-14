@@ -20,6 +20,7 @@ typedef struct ObjectU64 {
 } ObjectU64;
 
 Object* object_new_u64(uint64_t value);
+Object* object_dup(const Object* object);
 void object_free(Object* object);
 
 str object_string(Object* object);

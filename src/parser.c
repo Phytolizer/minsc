@@ -58,7 +58,7 @@ ExpressionSyntax* parser_parse(Parser* parser) {
     ExpressionSyntax* left = parse_primary_expression(parser);
     while (current(parser)->kind == SYNTAX_KIND_PLUS_TOKEN ||
            current(parser)->kind == SYNTAX_KIND_MINUS_TOKEN) {
-        SyntaxToken* operator_token = next_token(parser);
+        SyntaxToken* operator_token = syntax_token_dup(next_token(parser));
         ExpressionSyntax* right = parse_primary_expression(parser);
         left = binary_expression_syntax_new(left, operator_token, right);
     }
@@ -91,6 +91,7 @@ static SyntaxToken* match_token(Parser* parser, SyntaxKind kind) {
 }
 
 static ExpressionSyntax* parse_primary_expression(Parser* parser) {
-    SyntaxToken* number_token = match_token(parser, SYNTAX_KIND_NUMBER_TOKEN);
+    SyntaxToken* number_token =
+            syntax_token_dup(match_token(parser, SYNTAX_KIND_NUMBER_TOKEN));
     return literal_expression_syntax_new(number_token);
 }
