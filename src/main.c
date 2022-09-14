@@ -55,11 +55,9 @@ int main(void) {
             int64_t result = evaluator_evaluate(evaluator);
             evaluator_free(evaluator);
 
-            styler_apply_style(styler_style_faint, stdout);
             styler_apply_fg(styler_fg_green, stdout);
             printfln("%" PRId64, result);
             styler_apply_fg(styler_fg_reset, stdout);
-            styler_apply_style(styler_style_reset, stdout);
             (void)fflush(stdout);
         }
 
