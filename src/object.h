@@ -16,12 +16,14 @@ typedef struct Object {
 
 typedef struct ObjectU64 {
     Object base;
-    uint64_t value;
-} ObjectU64;
+    int64_t value;
+} ObjectI64;
 
-Object* object_new_u64(uint64_t value);
+Object* object_new_i64(int64_t value);
 Object* object_dup(const Object* object);
 void object_free(Object* object);
+
+int64_t object_as_i64(const Object* object);
 
 str object_string(Object* object);
 

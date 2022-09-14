@@ -119,3 +119,14 @@ Str2U64Result str2u64(str in, int base) {
 
     return (Str2U64Result){.value = i, .endptr = end};
 }
+
+Str2I64Result str2i64(str s, int base) {
+    Str2U64Result r = str2u64(s, base);
+    if (r.err != 0) {
+        return (Str2I64Result){.err = r.err};
+    }
+    if (r.value > INT64_MAX) {
+        return (Str2I64Result){.err = ERANGE};
+    }
+    return (Str2I64Result){.value = (int64_t)r.value, .endptr = r.endptr};
+}

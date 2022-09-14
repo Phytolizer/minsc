@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
+#include "buf/buf.h"
 #include "is_derived.h"
 #include "minsc_assert.h"
 

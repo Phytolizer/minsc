@@ -1,6 +1,7 @@
 #ifndef MINSC_TOKEN_H_
 #define MINSC_TOKEN_H_
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <str/str.h>
 

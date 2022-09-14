@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 
+#include "buf/buf.h"
 #include "expression_syntax.h"
 #include "syntax_token.h"
 

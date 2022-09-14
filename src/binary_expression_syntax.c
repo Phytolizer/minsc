@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 
+#include "buf/buf.h"
 #include "minsc_assert.h"
 
 ExpressionSyntax* binary_expression_syntax_new(ExpressionSyntax* left,

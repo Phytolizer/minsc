@@ -33,15 +33,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "str/str.h"
 
 #include <errno.h>
-#include <fcntl.h>
-#include <limits.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <sys/uio.h>
-#include <unistd.h>
+#include <strings.h>
 
 // compatibility
 #ifndef _GNU_SOURCE

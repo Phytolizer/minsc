@@ -2,6 +2,7 @@
 #define MINSC_BINARY_EXPRESSION_SYNTAX_H_
 
 #include "expression_syntax.h"
+#include "syntax_node.h"
 #include "syntax_token.h"
 
 typedef struct BinaryExpressionSyntax {

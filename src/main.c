@@ -1,13 +1,22 @@
+#include <inttypes.h>
 #include <linenoise.h>
 #include <println/println.h>
 #include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <str/str.h>
-#include <string.h>
 #include <styler/styler.h>
 
+#include "buf/buf.h"
+#include "diagnostic.h"
+#include "evaluator.h"
+#include "object.h"
 #include "parser.h"
+#include "syntax_kind.h"
+#include "syntax_node.h"
 #include "syntax_token.h"
+#include "syntax_tree.h"
 
 static void pretty_print(const SyntaxNode* root, str indent, bool is_last);
 
@@ -40,6 +49,17 @@ int main(void) {
             for (uint64_t i = 0; i < diagnostics.len; i++) {
                 printfln(str_fmt, str_arg(diagnostics.ptr[i]));
             }
+            styler_apply_fg(styler_fg_reset, stdout);
+            styler_apply_style(styler_style_reset, stdout);
+            (void)fflush(stdout);
+        } else {
+            Evaluator* evaluator = evaluator_new(program->root);
+            int64_t result = evaluator_evaluate(evaluator);
+            evaluator_free(evaluator);
+
+            styler_apply_style(styler_style_faint, stdout);
+            styler_apply_fg(styler_fg_green, stdout);
+            printfln("%" PRId64, result);
             styler_apply_fg(styler_fg_reset, stdout);
             styler_apply_style(styler_style_reset, stdout);
             (void)fflush(stdout);

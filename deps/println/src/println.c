@@ -1,5 +1,7 @@
 #include "println/println.h"
 
+#include <stdarg.h>
+
 extern int println(void) {
     return printf("\n");
 }

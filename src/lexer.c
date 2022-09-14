@@ -1,12 +1,14 @@
 #include "lexer.h"
 
-#include <println/println.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <str/strtox.h>
 
+#include "buf/buf.h"
 #include "diagnostic.h"
 #include "minsc_assert.h"
+#include "object.h"
+#include "str/str.h"
 #include "wrap_ctype.h"
 
 struct Lexer {
@@ -49,7 +51,7 @@ SyntaxToken* lexer_next_token(Lexer* lexer) {
 
         str text = str_ref_chars(lexer->source.ptr + start,
                                  lexer->position - start);
-        Str2U64Result result = str2u64(text, 10);
+        Str2I64Result result = str2i64(text, 10);
         if (result.err) {
             BUF_PUSH(
                     &lexer->diagnostics,
@@ -57,7 +59,7 @@ SyntaxToken* lexer_next_token(Lexer* lexer) {
         }
         str owned_text = str_null;
         str_cpy(&owned_text, text);
-        Object* value = result.err ? NULL : object_new_u64(result.value);
+        Object* value = result.err ? NULL : object_new_i64(result.value);
         return syntax_token_new(
                 SYNTAX_KIND_NUMBER_TOKEN, start, owned_text, value);
     }

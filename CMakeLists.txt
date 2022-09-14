@@ -26,6 +26,7 @@ set(MINSC_SRC_REL
     syntax_node.c
     diagnostic.c
     syntax_tree.c
+    evaluator.c
 )
 prepend_path(MINSC_SRC_REL src/ MINSC_SRC)
 add_executable(minsc ${MINSC_SRC})
