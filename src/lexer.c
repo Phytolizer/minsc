@@ -49,8 +49,9 @@ SyntaxToken* lexer_next_token(Lexer* lexer) {
                                  lexer->position - start);
         Str2U64Result result = str2u64(text, 10);
         if (result.err) {
-            fprintfln(stderr, "TODO");
-            abort();
+            BUF_PUSH(
+                    &lexer->diagnostics,
+                    str_printf("ERROR: The number %s is too large.", text.ptr));
         }
         str owned_text = str_null;
         str_cpy(&owned_text, text);
@@ -108,6 +109,9 @@ SyntaxToken* lexer_next_token(Lexer* lexer) {
             char text[] = {current(lexer)};
             str owned_text = str_null;
             str_cpy(&owned_text, str_ref_chars(text, 1));
+            BUF_PUSH(&lexer->diagnostics,
+                     str_printf("ERROR: Unexpected character '%c'.",
+                                current(lexer)));
             lexer->position++;
             return syntax_token_new(
                     SYNTAX_KIND_BAD_TOKEN, start, owned_text, NULL);
