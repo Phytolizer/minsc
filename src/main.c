@@ -26,13 +26,12 @@ int main(void) {
         Parser* parser = parser_new(str_ref(line));
         ExpressionSyntax* program = parser_parse(parser);
         parser_free(parser);
-        // styler_apply_style(styler_style_faint, stdout);
-        // styler_apply_fg(styler_fg_white, stdout);
-        printf("\x1b[2;37m");
+        styler_apply_style(styler_style_faint, stdout);
+        styler_apply_fg(styler_fg_white, stdout);
         pretty_print((const SyntaxNode*)program, str_null, true);
-        printf("\x1b[0m");
-        // styler_apply_fg(styler_fg_reset, stdout);
-        // styler_apply_style(styler_style_reset, stdout);
+        styler_apply_fg(styler_fg_reset, stdout);
+        styler_apply_style(styler_style_reset, stdout);
+        (void)fflush(stdout);
         expression_syntax_free(program);
 
         str_free(line);
