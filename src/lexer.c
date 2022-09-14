@@ -55,7 +55,7 @@ SyntaxToken* lexer_next_token(Lexer* lexer) {
         }
         str owned_text = str_null;
         str_cpy(&owned_text, text);
-        Object* value = object_new_u64(result.value);
+        Object* value = result.err ? NULL : object_new_u64(result.value);
         return syntax_token_new(
                 SYNTAX_KIND_NUMBER_TOKEN, start, owned_text, value);
     }
