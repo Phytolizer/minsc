@@ -1,0 +1,6 @@
+{
+    "analyze": [
+        "--analyzer-config",
+        "clang-tidy:take-config-from-directory=true"
+    ]
+}

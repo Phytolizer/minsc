@@ -30,9 +30,6 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#define _DEFAULT_SOURCE  // for strncasecmp()
-#define _XOPEN_SOURCE
-
 #include "str/str.h"
 
 #include <errno.h>
@@ -340,7 +337,7 @@ static const void* memmem(const void* s,
 
     --patt_len;
 
-    for (s = memchr(cs, c, len); cs && cs + patt_len < end;
+    for (cs = memchr(cs, c, len); cs && cs + patt_len < end;
          ++cs, cs = memchr(cs, c, end - cs)) {
         if (memcmp(cs + 1, cpatt, patt_len) == 0) {
             return cs;
