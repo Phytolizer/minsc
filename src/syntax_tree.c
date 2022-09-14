@@ -2,10 +2,13 @@
 
 #include <stdlib.h>
 
+#include "minsc_assert.h"
+
 SyntaxTree* syntax_tree_new(DiagnosticBuf diagnostics,
                             ExpressionSyntax* root,
                             SyntaxToken* end_of_file_token) {
     SyntaxTree* tree = malloc(sizeof(SyntaxTree));
+    MINSC_ASSERT(tree != NULL);
     tree->diagnostics = diagnostics;
     tree->root = root;
     tree->end_of_file_token = end_of_file_token;

@@ -4,8 +4,11 @@
 #include <println/println.h>
 #include <stdlib.h>
 
+#include "minsc_assert.h"
+
 Object* object_new_u64(uint64_t value) {
     ObjectU64* object = malloc(sizeof(ObjectU64));
+    MINSC_ASSERT(object != NULL);
     object->base.type = OBJECT_TYPE_U64;
     object->value = value;
     return (Object*)object;

@@ -2,10 +2,13 @@
 
 #include <stdlib.h>
 
+#include "minsc_assert.h"
+
 ExpressionSyntax* binary_expression_syntax_new(ExpressionSyntax* left,
                                                SyntaxToken* operator_token,
                                                ExpressionSyntax* right) {
     BinaryExpressionSyntax* expression = malloc(sizeof(BinaryExpressionSyntax));
+    MINSC_ASSERT(expression != NULL);
     expression->base.base.type = SYNTAX_NODE_TYPE_EXPRESSION;
     expression->base.type = EXPRESSION_SYNTAX_TYPE_BINARY;
     expression->left = left;

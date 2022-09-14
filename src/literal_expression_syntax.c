@@ -4,10 +4,12 @@
 #include <stdlib.h>
 
 #include "is_derived.h"
+#include "minsc_assert.h"
 
 ExpressionSyntax* literal_expression_syntax_new(SyntaxToken* literal_token) {
     LiteralExpressionSyntax* expression =
             malloc(sizeof(LiteralExpressionSyntax));
+    MINSC_ASSERT(expression != NULL);
     expression->base.base.type = SYNTAX_NODE_TYPE_EXPRESSION;
     expression->base.type = EXPRESSION_SYNTAX_TYPE_LITERAL;
     expression->literal_token = literal_token;

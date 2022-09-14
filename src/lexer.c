@@ -6,6 +6,7 @@
 #include <str/strtox.h>
 
 #include "diagnostic.h"
+#include "minsc_assert.h"
 #include "wrap_ctype.h"
 
 struct Lexer {
@@ -18,6 +19,7 @@ static char current(const Lexer* lexer);
 
 Lexer* lexer_new(str source) {
     Lexer* lexer = malloc(sizeof(Lexer));
+    MINSC_ASSERT(lexer != NULL);
     lexer->source = source;
     lexer->position = 0;
     lexer->diagnostics = (DiagnosticBuf)BUF_NEW;
