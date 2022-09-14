@@ -3,12 +3,14 @@
 
 #include <str/str.h>
 
+#include "diagnostic.h"
 #include "syntax_token.h"
 
 typedef struct Lexer Lexer;
 
 Lexer* lexer_new(str source);
 void lexer_free(Lexer* lexer);
+DiagnosticBuf lexer_take_diagnostics(Lexer* lexer);
 
 SyntaxToken* lexer_next_token(Lexer* lexer);
 

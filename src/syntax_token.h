@@ -14,10 +14,19 @@ typedef struct SyntaxToken {
     size_t position;
     str text;
     Object* value;
+    // dup does nothing on manufactured tokens
+    bool manufactured;
 } SyntaxToken;
 
-SyntaxToken* syntax_token_new(SyntaxKind kind, size_t position, str text, Object* value);
-SyntaxToken* syntax_token_dup(const SyntaxToken* token);
+SyntaxToken* syntax_token_new(SyntaxKind kind,
+                              size_t position,
+                              str text,
+                              Object* value);
+SyntaxToken* syntax_token_new_manufactured(SyntaxKind kind,
+                                           size_t position,
+                                           str text,
+                                           Object* value);
+SyntaxToken* syntax_token_dup(SyntaxToken* token);
 void syntax_token_free(SyntaxToken* token);
 
 #endif  // MINSC_TOKEN_H_

@@ -5,11 +5,13 @@
 #include <stdlib.h>
 #include <str/strtox.h>
 
+#include "diagnostic.h"
 #include "wrap_ctype.h"
 
 struct Lexer {
     str source;
     size_t position;
+    DiagnosticBuf diagnostics;
 };
 
 static char current(const Lexer* lexer);
@@ -18,12 +20,20 @@ Lexer* lexer_new(str source) {
     Lexer* lexer = malloc(sizeof(Lexer));
     lexer->source = source;
     lexer->position = 0;
+    lexer->diagnostics = (DiagnosticBuf)BUF_NEW;
     return lexer;
 }
 
 void lexer_free(Lexer* lexer) {
+    diagnostic_buf_free(lexer->diagnostics);
     str_free(lexer->source);
     free(lexer);
+}
+
+DiagnosticBuf lexer_take_diagnostics(Lexer* lexer) {
+    DiagnosticBuf diagnostics = lexer->diagnostics;
+    lexer->diagnostics = (DiagnosticBuf)BUF_NEW;
+    return diagnostics;
 }
 
 SyntaxToken* lexer_next_token(Lexer* lexer) {

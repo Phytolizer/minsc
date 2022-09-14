@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 #include "binary_expression_syntax.h"
+#include "diagnostic.h"
 #include "lexer.h"
 #include "literal_expression_syntax.h"
 
@@ -12,6 +13,7 @@ typedef BUF(SyntaxToken*) SyntaxTokenBuf;
 struct Parser {
     SyntaxTokenBuf tokens;
     size_t position;
+    DiagnosticBuf diagnostics;
 };
 
 static SyntaxToken* peek(const Parser* parser, size_t offset);
@@ -38,11 +40,13 @@ Parser* parser_new(str text) {
         }
     }
 
+    DiagnosticBuf diagnostics = lexer_take_diagnostics(lexer);
     lexer_free(lexer);
 
     Parser* parser = malloc(sizeof(Parser));
     parser->tokens = tokens;
     parser->position = 0;
+    parser->diagnostics = diagnostics;
     return parser;
 }
 
@@ -51,6 +55,7 @@ void parser_free(Parser* parser) {
         syntax_token_free(parser->tokens.ptr[i]);
     }
     BUF_FREE(parser->tokens);
+    diagnostic_buf_free(parser->diagnostics);
     free(parser);
 }
 
@@ -63,6 +68,12 @@ ExpressionSyntax* parser_parse(Parser* parser) {
         left = binary_expression_syntax_new(left, operator_token, right);
     }
     return left;
+}
+
+DiagnosticBuf parser_take_diagnostics(Parser* parser) {
+    DiagnosticBuf diagnostics = parser->diagnostics;
+    parser->diagnostics = (DiagnosticBuf)BUF_NEW;
+    return diagnostics;
 }
 
 static SyntaxToken* peek(const Parser* parser, size_t offset) {
@@ -87,7 +98,14 @@ static SyntaxToken* match_token(Parser* parser, SyntaxKind kind) {
     if (current(parser)->kind == kind) {
         return next_token(parser);
     }
-    return syntax_token_new(kind, current(parser)->position, str_null, NULL);
+
+    BUF_PUSH(&parser->diagnostics,
+             str_printf("ERROR: Unexpected token <" str_fmt
+                        ">, expected <" str_fmt ">",
+                        str_arg(syntax_kind_string(current(parser)->kind)),
+                        str_arg(syntax_kind_string(kind))));
+    return syntax_token_new_manufactured(
+            kind, current(parser)->position, str_null, NULL);
 }
 
 static ExpressionSyntax* parse_primary_expression(Parser* parser) {

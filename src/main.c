@@ -25,6 +25,7 @@ int main(void) {
 
         Parser* parser = parser_new(str_ref(line));
         ExpressionSyntax* program = parser_parse(parser);
+        DiagnosticBuf diagnostics = parser_take_diagnostics(parser);
         parser_free(parser);
         styler_apply_style(styler_style_faint, stdout);
         styler_apply_fg(styler_fg_white, stdout);
@@ -34,6 +35,18 @@ int main(void) {
         (void)fflush(stdout);
         expression_syntax_free(program);
 
+        if (diagnostics.len > 0) {
+            styler_apply_style(styler_style_faint, stdout);
+            styler_apply_fg(styler_fg_red, stdout);
+            for (uint64_t i = 0; i < diagnostics.len; i++) {
+                printfln(str_fmt, str_arg(diagnostics.ptr[i]));
+            }
+            styler_apply_fg(styler_fg_reset, stdout);
+            styler_apply_style(styler_style_reset, stdout);
+            (void)fflush(stdout);
+        }
+
+        diagnostic_buf_free(diagnostics);
         str_free(line);
     }
 

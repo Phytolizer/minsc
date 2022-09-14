@@ -10,10 +10,23 @@ SyntaxToken* syntax_token_new(SyntaxKind kind,
     token->position = position;
     token->text = text;
     token->value = value;
+    token->manufactured = false;
     return token;
 }
 
-SyntaxToken* syntax_token_dup(const SyntaxToken* token) {
+SyntaxToken* syntax_token_new_manufactured(SyntaxKind kind,
+                                           size_t position,
+                                           str text,
+                                           Object* value) {
+    SyntaxToken* token = syntax_token_new(kind, position, text, value);
+    token->manufactured = true;
+    return token;
+}
+
+SyntaxToken* syntax_token_dup(SyntaxToken* token) {
+    if (token->manufactured) {
+        return token;
+    }
     str text_dup = str_null;
     str_cpy(&text_dup, token->text);
     Object* value_dup = object_dup(token->value);
