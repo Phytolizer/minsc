@@ -3,7 +3,6 @@
 
 #pragma once
 
-#include <stdbool.h>
 #include <stdio.h>
 
 #if defined(__unix__) || defined(__unix) || defined(__linux__) || \

@@ -1,9 +1,14 @@
 #include "evaluator.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "binary_expression_syntax.h"
 #include "literal_expression_syntax.h"
 #include "minsc_assert.h"
+#include "object.h"
 #include "println/println.h"
+#include "syntax_token.h"
 
 struct Evaluator {
     ExpressionSyntax* root;

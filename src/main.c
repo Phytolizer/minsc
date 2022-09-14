@@ -2,9 +2,7 @@
 #include <linenoise.h>
 #include <println/println.h>
 #include <stdbool.h>
-#include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <str/str.h>
 #include <styler/styler.h>
 

@@ -1,6 +1,8 @@
 #ifndef MINSC_EVALUATOR_H_
 #define MINSC_EVALUATOR_H_
 
+#include <stdint.h>
+
 #include "expression_syntax.h"
 
 typedef struct Evaluator Evaluator;
