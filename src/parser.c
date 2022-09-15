@@ -25,7 +25,8 @@ static SyntaxToken* peek(const Parser* parser, size_t offset);
 static SyntaxToken* current(const Parser* parser);
 static SyntaxToken* next_token(Parser* parser);
 static SyntaxToken* match_token(Parser* parser, SyntaxKind kind);
-static ExpressionSyntax* parse_binary_expression(Parser* parser);
+static ExpressionSyntax* parse_term(Parser* parser);
+static ExpressionSyntax* parse_factor(Parser* parser);
 static ExpressionSyntax* parse_primary_expression(Parser* parser);
 
 Parser* parser_new(str text) {
@@ -66,7 +67,7 @@ void parser_free(Parser* parser) {
 }
 
 SyntaxTree* parser_parse(Parser* parser) {
-    ExpressionSyntax* root = parse_binary_expression(parser);
+    ExpressionSyntax* root = parse_term(parser);
     SyntaxToken* end_of_file_token = syntax_token_dup(
             match_token(parser, SYNTAX_KIND_END_OF_FILE_TOKEN));
     DiagnosticBuf diagnostics = parser_take_diagnostics(parser);
@@ -111,10 +112,21 @@ static SyntaxToken* match_token(Parser* parser, SyntaxKind kind) {
             kind, current(parser)->position, str_null, NULL);
 }
 
-static ExpressionSyntax* parse_binary_expression(Parser* parser) {
-    ExpressionSyntax* left = parse_primary_expression(parser);
+static ExpressionSyntax* parse_term(Parser* parser) {
+    ExpressionSyntax* left = parse_factor(parser);
     while (current(parser)->kind == SYNTAX_KIND_PLUS_TOKEN ||
            current(parser)->kind == SYNTAX_KIND_MINUS_TOKEN) {
+        SyntaxToken* operator_token = syntax_token_dup(next_token(parser));
+        ExpressionSyntax* right = parse_factor(parser);
+        left = binary_expression_syntax_new(left, operator_token, right);
+    }
+    return left;
+}
+
+static ExpressionSyntax* parse_factor(Parser* parser) {
+    ExpressionSyntax* left = parse_primary_expression(parser);
+    while (current(parser)->kind == SYNTAX_KIND_STAR_TOKEN ||
+           current(parser)->kind == SYNTAX_KIND_SLASH_TOKEN) {
         SyntaxToken* operator_token = syntax_token_dup(next_token(parser));
         ExpressionSyntax* right = parse_primary_expression(parser);
         left = binary_expression_syntax_new(left, operator_token, right);
