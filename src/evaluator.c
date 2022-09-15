@@ -7,6 +7,7 @@
 #include "literal_expression_syntax.h"
 #include "minsc_assert.h"
 #include "object.h"
+#include "parenthesized_expression_syntax.h"
 #include "println/println.h"
 #include "syntax_token.h"
 
@@ -54,8 +55,12 @@ static int64_t evaluate_expression(ExpressionSyntax* expression) {
                     MINSC_ASSERT(0);
             }
         }
+        case EXPRESSION_SYNTAX_TYPE_PARENTHESIZED: {
+            ParenthesizedExpressionSyntax* parenthesized =
+                    (ParenthesizedExpressionSyntax*)expression;
+            return evaluate_expression(parenthesized->expression);
+        }
     }
 
-    fprintfln(stderr, "ERROR: corrupt expression or not handled in switch");
-    abort();
+    MINSC_ABORT("corrupt expression or not handled in switch");
 }

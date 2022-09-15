@@ -4,6 +4,7 @@
 
 #include "buf/buf.h"
 #include "expression_syntax.h"
+#include "minsc_assert.h"
 #include "syntax_token.h"
 
 SyntaxKind syntax_node_kind(const SyntaxNode* node) {
@@ -14,7 +15,7 @@ SyntaxKind syntax_node_kind(const SyntaxNode* node) {
             return expression_syntax_kind((const ExpressionSyntax*)node);
     }
 
-    abort();
+    MINSC_ABORT("Invalid syntax node type");
 }
 
 SyntaxNodeChildren syntax_node_children(const SyntaxNode* node) {
@@ -26,5 +27,5 @@ SyntaxNodeChildren syntax_node_children(const SyntaxNode* node) {
             return expression_syntax_children((const ExpressionSyntax*)node);
     }
 
-    abort();
+    MINSC_ABORT("Invalid syntax node type");
 }

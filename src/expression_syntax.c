@@ -4,6 +4,8 @@
 
 #include "binary_expression_syntax.h"
 #include "literal_expression_syntax.h"
+#include "minsc_assert.h"
+#include "parenthesized_expression_syntax.h"
 
 SyntaxKind expression_syntax_kind(const ExpressionSyntax* expression) {
     switch (expression->type) {
@@ -11,9 +13,11 @@ SyntaxKind expression_syntax_kind(const ExpressionSyntax* expression) {
             return SYNTAX_KIND_LITERAL_EXPRESSION;
         case EXPRESSION_SYNTAX_TYPE_BINARY:
             return SYNTAX_KIND_BINARY_EXPRESSION;
+        case EXPRESSION_SYNTAX_TYPE_PARENTHESIZED:
+            return SYNTAX_KIND_PARENTHESIZED_EXPRESSION;
     }
 
-    abort();
+    MINSC_ABORT("Invalid expression syntax type");
 }
 
 void expression_syntax_free(ExpressionSyntax* expression) {
@@ -25,6 +29,12 @@ void expression_syntax_free(ExpressionSyntax* expression) {
         case EXPRESSION_SYNTAX_TYPE_BINARY:
             binary_expression_syntax_free((BinaryExpressionSyntax*)expression);
             break;
+        case EXPRESSION_SYNTAX_TYPE_PARENTHESIZED:
+            parenthesized_expresion_syntax_free(
+                    (ParenthesizedExpressionSyntax*)expression);
+            break;
+        default:
+            MINSC_ABORT("Invalid expression syntax type");
     }
 }
 
@@ -37,7 +47,10 @@ SyntaxNodeChildren expression_syntax_children(
         case EXPRESSION_SYNTAX_TYPE_BINARY:
             return binary_expression_syntax_children(
                     (const BinaryExpressionSyntax*)expression);
+        case EXPRESSION_SYNTAX_TYPE_PARENTHESIZED:
+            return parenthesized_expression_syntax_children(
+                    (const ParenthesizedExpressionSyntax*)expression);
     }
 
-    abort();
+    MINSC_ABORT("Invalid expression syntax type");
 }

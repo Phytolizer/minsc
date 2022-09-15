@@ -44,7 +44,6 @@ str object_string(Object* object) {
             return str_printf("%" PRIu64, i64->value);
         }
         default:
-            fprintfln(stderr, "TODO");
-            abort();
+            MINSC_ABORT("Unhandled object type");
     }
 }

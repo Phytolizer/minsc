@@ -3,11 +3,16 @@
 
 #include <stdlib.h>
 
+#define MINSC_ABORT(msg) \
+    do { \
+        (void)fprintf(stderr, "%s: FATAL: %s\n", __func__, msg); \
+        abort(); \
+    } while (0)
+
 #define MINSC_ASSERT(x) \
     do { \
         if (!(x)) { \
-            (void)fprintf(stderr, "Assertion failed: %s\n", #x); \
-            abort(); \
+            MINSC_ABORT("Assertion failed: " #x); \
         } \
     } while (0)
 
