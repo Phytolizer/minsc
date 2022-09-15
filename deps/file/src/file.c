@@ -164,7 +164,7 @@ static PlatformMkdirResult platform_mkdir(str path) {
 #ifdef _WIN32
     BOOL result = CreateDirectoryA(path.ptr, NULL);
     if (result) {
-        return SUM_OK(str_copy(path));
+        return (PlatformMkdirResult)SUM_NOTHING;
     }
 
     DWORD error = GetLastError();
