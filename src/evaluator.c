@@ -51,7 +51,7 @@ static int64_t evaluate_expression(ExpressionSyntax* expression) {
                 case SYNTAX_KIND_SLASH_TOKEN:
                     return left / right;
                 default:
-                    MINSC_ASSERT(0);
+                    MINSC_ABORT("Unexpected binary operator");
             }
         }
         case EXPRESSION_SYNTAX_TYPE_PARENTHESIZED: {
