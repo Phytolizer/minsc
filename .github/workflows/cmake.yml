@@ -33,8 +33,11 @@ jobs:
     
     - uses: johnwason/vcpkg-action@v2
       with:
+        # required because the action runs vcpkg install
+        pkgs: hedley
         triplet: ${{ matrix.triplet }}
-        revision: 1912e1a397ac4f79fc51e4ed2190de25278d31b8
+        # not supported yet :/
+        # revision: 1912e1a397ac4f79fc51e4ed2190de25278d31b8
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
