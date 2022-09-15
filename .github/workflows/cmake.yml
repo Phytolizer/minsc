@@ -31,22 +31,16 @@ jobs:
       with:
         submodules: true
     
-    - uses: johnwason/vcpkg-action@v2
+    - uses: lukka/get-cmake@latest
+    
+    - uses: lukka/run-vcpkg@v10
       with:
-        # required because the action runs vcpkg install
-        pkgs: hedley
-        triplet: ${{ matrix.triplet }}
-        # not supported yet :/
-        # revision: 1912e1a397ac4f79fc51e4ed2190de25278d31b8
+        vcpkgGitCommitId: a1737683a6f8ec5d8673890581c2a8c55838d411
 
-    - name: Configure CMake
-      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: cmake --preset ${{ matrix.preset }}
-
-    - name: Build
-      # Build your program with the given configuration
-      run: cmake --build --preset ${{ matrix.preset }}
+    - uses: lukka/run-cmake@v10
+      with:
+        configurePreset: ${{ matrix.preset }}
+        buildPreset: ${{ matrix.preset }}
 
     # don't have tests yet
 #     - name: Test
