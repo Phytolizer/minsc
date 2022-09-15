@@ -61,8 +61,7 @@
             "displayName": "x64 Debug",
             "inherits": [
                 "windows-base",
-                "vcpkg-base",
-                "wflags"
+                "vcpkg-base"
             ],
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
