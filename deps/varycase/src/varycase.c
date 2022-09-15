@@ -184,6 +184,7 @@ int main(int argc, char** argv) {
         fprintfln(stderr,
                   "ERROR: Failed to open file " str_fmt " for writing",
                   str_arg(output));
+        BUF_FREE(xmacros);
         str_free(input_contents);
         str_free(output);
         return EXIT_FAILURE;
