@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
+#include <hedley.h>
 #include <stdbool.h>
 #include <stdio.h>
 
@@ -86,11 +87,6 @@ static inline bool str_is_ref(const str s) {
 // ------------------------------------------------------------------- free
 // memory allocated for the string
 void str_free(str s);
-
-// automatic cleanup
-void str_free_(const str* ps);
-
-#define str_auto str __attribute__((cleanup(str_free_)))
 
 // string movements
 // ----------------------------------------------------------------------- free
@@ -191,7 +187,7 @@ str str_acquire_chars(const char* s, size_t n);
 // take ownership of the given string
 str str_acquire(const char* s);
 
-str str_printf(const char* fmt, ...) __attribute__((format(printf, 1, 2)));
+str str_printf(const char* fmt, ...) HEDLEY_PRINTF_FORMAT(1, 2);
 
 #define str_after(s, i) str_ref_chars(str_ptr(s) + (i), str_len(s) - (i))
 #define str_upto(s, i) str_ref_chars(str_ptr(s), (i))

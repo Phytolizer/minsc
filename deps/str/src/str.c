@@ -59,13 +59,6 @@ void str_free(const str s) {
     }
 }
 
-// version of str_free() for str_auto macro
-void str_free_(const str* const ps) {
-    if (ps) {
-        str_free(*ps);
-    }
-}
-
 // memory allocation helpers
 #define REALLOC(p, n) \
     ({ \
