@@ -120,7 +120,10 @@ typedef struct PlatformStatResult {
 
 static PlatformStatResult platform_stat(str path) {
 #ifdef _WIN32
-    DWORD attributes = GetFileAttributesA(path.ptr);
+    str path_zero = str_null;
+    str_cpy(&path_zero, path);
+    DWORD attributes = GetFileAttributesA(path_zero.ptr);
+    str_free(path_zero);
     return (PlatformStatResult){
             .valid = attributes != INVALID_FILE_ATTRIBUTES,
             .attributes = attributes,
