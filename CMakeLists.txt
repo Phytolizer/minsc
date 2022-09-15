@@ -8,10 +8,15 @@ include(PrependPath)
 set(CMAKE_C_STANDARD 11)
 
 add_subdirectory(deps/buf)
+add_subdirectory(deps/c-argparser)
 add_subdirectory(deps/linenoise)
 add_subdirectory(deps/println)
 add_subdirectory(deps/str)
 add_subdirectory(deps/styler)
+add_subdirectory(deps/sum)
+add_subdirectory(deps/varycase)
+
+add_subdirectory(deps/file)
 
 set(MINSC_SRC_REL
     main.c

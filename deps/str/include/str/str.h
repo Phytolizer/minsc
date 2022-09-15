@@ -194,11 +194,21 @@ str str_acquire(const char* s);
 str str_printf(const char* fmt, ...) __attribute__((format(printf, 1, 2)));
 
 #define str_after(s, i) str_ref_chars(str_ptr(s) + (i), str_len(s) - (i))
+#define str_upto(s, i) str_ref_chars(str_ptr(s), (i))
 
 // searching and sorting
 // -------------------------------------------------------------------- string
 // partitioning (substring search)
 bool str_partition(str src, str patt, str* prefix, str* suffix);
+
+bool str_find_last_char(str src, char ch, size_t* pos);
+bool str_find_last_str(str src, str patt, size_t* pos);
+
+#define str_find_last(s, val, pos) \
+    _Generic((val), char \
+             : str_find_last_char, int \
+             : str_find_last_char, str \
+             : str_find_last_str)(s, val, pos)
 
 // comparison functions
 typedef int (*str_cmp_func)(const void*, const void*);

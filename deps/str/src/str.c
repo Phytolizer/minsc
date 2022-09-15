@@ -378,6 +378,42 @@ bool str_partition(const str src,
     return false;
 }
 
+bool str_find_last_char(str src, char ch, size_t* pos) {
+    size_t i = src.len;
+
+    while (i > 0) {
+        if (src.ptr[--i] == ch) {
+            if (pos) {
+                *pos = i;
+            }
+
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool str_find_last_str(str src, str patt, size_t* pos) {
+    if (patt.len > 0 && !str_is_empty(src)) {
+        const char* s = str_end(src) - patt.len;
+
+        while (s >= src.ptr) {
+            if (memcmp(s, patt.ptr, patt.len) == 0) {
+                if (pos) {
+                    *pos = s - src.ptr;
+                }
+
+                return true;
+            }
+
+            --s;
+        }
+    }
+
+    return false;
+}
+
 // comparison functions
 int str_order_asc(const void* const s1, const void* const s2) {
     return str_cmp(*(const str*)s1, *(const str*)s2);

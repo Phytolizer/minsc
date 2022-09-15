@@ -1,0 +1,3 @@
+#pragma once
+
+#define PROJECT_DESCRIPTION "@PROJECT_DESCRIPTION@"
