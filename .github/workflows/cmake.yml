@@ -16,13 +16,25 @@ jobs:
         include:
           - os: windows-latest
             preset: dist-win
+            triplet: x64-windows
           - os: ubuntu-latest
             preset: dist
+            triplet: x64-linux
 
     runs-on: ${{ matrix.os }}
+    
+    env:
+      VCPKG_ROOT: ${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        submodules: true
+    
+    - uses: johnwason/vcpkg-action@v2
+      with:
+        triplet: ${{ matrix.triplet }}
+        revision: 1912e1a397ac4f79fc51e4ed2190de25278d31b8
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
