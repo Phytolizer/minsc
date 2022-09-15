@@ -15,9 +15,38 @@
 #include "syntax_token.h"
 #include "syntax_tree.h"
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 static void pretty_print(const SyntaxNode* root, str indent, bool is_last);
 
+static void ensure_ansi_escape_sequences_work(void) {
+#ifdef _WIN32
+    // Enable ANSI escape sequences on Windows 10
+    // https://docs.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences
+    HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (out == INVALID_HANDLE_VALUE) {
+        fprintfln(stderr, "Failed to get stdout handle");
+        exit(EXIT_FAILURE);
+    }
+
+    DWORD mode = 0;
+    if (!GetConsoleMode(out, &mode)) {
+        fprintfln(stderr, "Failed to get console mode");
+        return;
+    }
+
+    mode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+    if (!SetConsoleMode(out, mode)) {
+        fprintfln(stderr, "Failed to set console mode");
+        return;
+    }
+#endif
+}
+
 int main(void) {
+    ensure_ansi_escape_sequences_work();
     linenoiseHistoryLoad("minsc.history");
 
     bool show_tree = false;
