@@ -10,7 +10,6 @@
 #include "diagnostic.h"
 #include "evaluator.h"
 #include "object.h"
-#include "parser.h"
 #include "syntax_kind.h"
 #include "syntax_node.h"
 #include "syntax_token.h"
@@ -30,9 +29,7 @@ int main(void) {
 
         linenoiseHistoryAdd(line.ptr);
 
-        Parser* parser = parser_new(str_ref(line));
-        SyntaxTree* program = parser_parse(parser);
-        parser_free(parser);
+        SyntaxTree* program = syntax_tree_parse(str_ref(line));
         styler_apply_style(styler_style_faint, stdout);
         styler_apply_fg(styler_fg_white, stdout);
         pretty_print((const SyntaxNode*)program->root, str_null, true);

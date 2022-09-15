@@ -16,4 +16,6 @@ SyntaxTree* syntax_tree_new(DiagnosticBuf diagnostics,
                             SyntaxToken* end_of_file_token);
 void syntax_tree_free(SyntaxTree* tree);
 
+SyntaxTree* syntax_tree_parse(str text);
+
 #endif  // MINSC_SYNTAX_TREE_H_
