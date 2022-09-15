@@ -1,6 +1,3 @@
 [submodule "deps/c-argparser/repo"]
 	path = deps/c-argparser/repo
 	url = https://github.com/Phytolizer/c-argparser
-[submodule "deps/linenoise/repo"]
-	path = deps/linenoise/repo
-	url = https://github.com/msteveb/linenoise.git
