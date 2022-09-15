@@ -3,3 +3,4 @@ CMakeUserPresets.json
 .clangd
 .codechecker/
 infer-out/
+minsc.history
