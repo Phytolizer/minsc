@@ -152,7 +152,7 @@ bool file_isdir(str filename) {
     }
 
 #ifdef _WIN32
-    return (stat.attributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
+    return (stat_result.attributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
 #else
     return S_ISDIR(stat_result.st.st_mode);
 #endif
