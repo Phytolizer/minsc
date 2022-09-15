@@ -127,7 +127,10 @@ static PlatformStatResult platform_stat(str path) {
     };
 #else
     struct stat st;
-    int result = stat(path.ptr, &st);
+    str path_zero = str_null;
+    str_cpy(&path_zero, path);
+    int result = stat(path_zero.ptr, &st);
+    str_free(path_zero);
     return (PlatformStatResult){
             .valid = result == 0,
             .st = st,

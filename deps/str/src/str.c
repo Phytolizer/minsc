@@ -414,6 +414,36 @@ bool str_find_last_str(str src, str patt, size_t* pos) {
     return false;
 }
 
+bool str_find_char(str src, char ch, size_t* pos) {
+    const char* s = memchr(str_ptr(src), ch, src.len);
+
+    if (s) {
+        if (pos) {
+            *pos = s - str_ptr(src);
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+bool str_find_str(str src, str patt, size_t* pos) {
+    if (patt.len > 0 && !str_is_empty(src)) {
+        const char* s = memmem(str_ptr(src), src.len, str_ptr(patt), patt.len);
+
+        if (s) {
+            if (pos) {
+                *pos = s - str_ptr(src);
+            }
+
+            return true;
+        }
+    }
+
+    return false;
+}
+
 // comparison functions
 int str_order_asc(const void* const s1, const void* const s2) {
     return str_cmp(*(const str*)s1, *(const str*)s2);

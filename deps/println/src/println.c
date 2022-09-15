@@ -6,6 +6,10 @@ extern int println(void) {
     return printf("\n");
 }
 
+extern int fprintln(FILE* stream) {
+    return fprintf(stream, "\n");
+}
+
 extern int printfln(const char* format, ...) {
     va_list args;
     va_start(args, format);

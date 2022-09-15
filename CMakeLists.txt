@@ -4,6 +4,7 @@ project(minsc LANGUAGES C)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(PrependPath)
+include(VaryCase)
 
 set(CMAKE_C_STANDARD 11)
 
@@ -36,6 +37,12 @@ set(MINSC_SRC_REL
 )
 prepend_path(MINSC_SRC_REL src/ MINSC_SRC)
 add_executable(minsc ${MINSC_SRC})
+set(MINSC_INC_REL syntax_kind.inc)
+prepend_path(MINSC_INC_REL src/ MINSC_INC)
+foreach(inc ${MINSC_INC})
+  message(STATUS "${inc}")
+  vary_case(${inc} include uppercamel minsc)
+endforeach()
 target_link_libraries(
   minsc PRIVATE println::println linenoise::linenoise str::str buf::buf
                 styler::styler

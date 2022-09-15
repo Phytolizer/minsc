@@ -11,7 +11,7 @@ configure_file(cmake/config.h.cmake-in include/config.h)
 add_executable(varycase src/varycase.c)
 target_link_libraries(
   varycase PRIVATE argparser::argparser println::println str::str sum::sum
-                   file::file
+                   file::file buf::buf
 )
 target_include_directories(
   varycase PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/include"

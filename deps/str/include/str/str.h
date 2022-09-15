@@ -210,6 +210,15 @@ bool str_find_last_str(str src, str patt, size_t* pos);
              : str_find_last_char, str \
              : str_find_last_str)(s, val, pos)
 
+bool str_find_char(str src, char ch, size_t* pos);
+bool str_find_str(str src, str patt, size_t* pos);
+
+#define str_find(s, val, pos) \
+    _Generic((val), char \
+             : str_find_char, int \
+             : str_find_char, str \
+             : str_find_str)(s, val, pos)
+
 // comparison functions
 typedef int (*str_cmp_func)(const void*, const void*);
 
