@@ -32,7 +32,7 @@ static PlatformFile platform_fopen(str path) {
                                 OPEN_EXISTING,
                                 FILE_ATTRIBUTE_NORMAL,
                                 NULL);
-    return (platform_file){
+    return (PlatformFile){
             .handle = handle,
             .valid = handle != INVALID_HANDLE_VALUE,
     };
