@@ -17,6 +17,22 @@
             }
         },
         {
+            "name": "windows-base",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_C_COMPILER": "cl.exe"
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            }
+        },
+        {
             "name": "vcpkg-base",
             "hidden": true,
             "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
@@ -31,7 +47,23 @@
         {
             "name": "dev",
             "displayName": "x64 Debug",
-            "inherits": ["linux-base", "vcpkg-base", "wflags"],
+            "inherits": [
+                "linux-base",
+                "vcpkg-base",
+                "wflags"
+            ],
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "dev-win",
+            "displayName": "x64 Debug",
+            "inherits": [
+                "windows-base",
+                "vcpkg-base",
+                "wflags"
+            ],
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug"
             }
@@ -39,10 +71,12 @@
         {
             "name": "dev-san",
             "displayName": "x64 Debug (Sanitizers)",
-            "inherits": ["dev", "wflags"],
+            "inherits": [
+                "dev",
+                "wflags"
+            ],
             "cacheVariables": {
                 "CMAKE_C_FLAGS": "-fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer",
-                "CMAKE_CXX_FLAGS": "-fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer",
                 "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=address -fsanitize=undefined"
             }
         },
@@ -50,6 +84,14 @@
             "name": "dist",
             "displayName": "x64 Release",
             "inherits": "dev",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "dist-win",
+            "displayName": "x64 Release",
+            "inherits": "dev-win",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release"
             }
