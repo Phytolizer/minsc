@@ -42,6 +42,24 @@ static void ensure_ansi_escape_sequences_work(void) {
         fprintfln(stderr, "Failed to set console mode");
         return;
     }
+
+    HANDLE in = GetStdHandle(STD_INPUT_HANDLE);
+    if (in == INVALID_HANDLE_VALUE) {
+        fprintfln(stderr, "Failed to get stdin handle");
+        exit(EXIT_FAILURE);
+    }
+
+    DWORD in_mode = 0;
+    if (!GetConsoleMode(in, &in_mode)) {
+        fprintfln(stderr, "Failed to get console mode");
+        return;
+    }
+
+    in_mode |= ENABLE_VIRTUAL_TERMINAL_INPUT;
+    if (!SetConsoleMode(in, in_mode)) {
+        fprintfln(stderr, "Failed to set console mode");
+        return;
+    }
 #endif
 }
 
