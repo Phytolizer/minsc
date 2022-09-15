@@ -20,6 +20,8 @@ static void pretty_print(const SyntaxNode* root, str indent, bool is_last);
 int main(void) {
     linenoiseHistoryLoad("minsc.history");
 
+    bool show_tree = false;
+
     while (true) {
         char* raw_line = linenoise(">> ");
         if (raw_line == NULL) {
@@ -29,13 +31,30 @@ int main(void) {
 
         linenoiseHistoryAdd(line.ptr);
 
+        if (str_eq(line, str_lit("#showTree"))) {
+            str_free(line);
+            show_tree = !show_tree;
+            printfln("%s",
+                     show_tree ? "Showing parse trees."
+                               : "Not showing parse trees.");
+            continue;
+        }
+        if (str_eq(line, str_lit("#cls"))) {
+            str_free(line);
+            printf("\x1b[2J\x1b[H");
+            (void)fflush(stdout);
+            continue;
+        }
+
         SyntaxTree* program = syntax_tree_parse(str_ref(line));
-        styler_apply_style(styler_style_faint, stdout);
-        styler_apply_fg(styler_fg_white, stdout);
-        pretty_print((const SyntaxNode*)program->root, str_null, true);
-        styler_apply_fg(styler_fg_reset, stdout);
-        styler_apply_style(styler_style_reset, stdout);
-        (void)fflush(stdout);
+        if (show_tree) {
+            styler_apply_style(styler_style_faint, stdout);
+            styler_apply_fg(styler_fg_white, stdout);
+            pretty_print((const SyntaxNode*)program->root, str_null, true);
+            styler_apply_fg(styler_fg_reset, stdout);
+            styler_apply_style(styler_style_reset, stdout);
+            (void)fflush(stdout);
+        }
 
         DiagnosticBuf diagnostics = program->diagnostics;
         if (diagnostics.len > 0) {
