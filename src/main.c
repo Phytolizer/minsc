@@ -1,3 +1,4 @@
+#include <buf/buf.h>
 #include <inttypes.h>
 #include <linenoise.h>
 #include <println/println.h>
@@ -6,7 +7,6 @@
 #include <str/str.h>
 #include <styler/styler.h>
 
-#include "buf/buf.h"
 #include "diagnostic.h"
 #include "evaluator.h"
 #include "object.h"

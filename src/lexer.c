@@ -1,14 +1,14 @@
 #include "lexer.h"
 
+#include <buf/buf.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <str/str.h>
 #include <str/strtox.h>
 
-#include "buf/buf.h"
 #include "diagnostic.h"
 #include "minsc_assert.h"
 #include "object.h"
-#include "str/str.h"
 #include "wrap_ctype.h"
 
 struct Lexer {

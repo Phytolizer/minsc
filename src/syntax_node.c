@@ -1,8 +1,8 @@
 #include "syntax_node.h"
 
+#include <buf/buf.h>
 #include <stdlib.h>
 
-#include "buf/buf.h"
 #include "expression_syntax.h"
 #include "minsc_assert.h"
 #include "syntax_token.h"

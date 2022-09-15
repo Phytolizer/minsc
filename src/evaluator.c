@@ -8,7 +8,6 @@
 #include "minsc_assert.h"
 #include "object.h"
 #include "parenthesized_expression_syntax.h"
-#include "println/println.h"
 #include "syntax_token.h"
 
 struct Evaluator {
