@@ -96,5 +96,25 @@
                 "CMAKE_BUILD_TYPE": "Release"
             }
         }
+    ],
+    "buildPresets": [
+        {
+            "name": "dev",
+            "configurePreset": "dev"
+        },
+        {
+            "name": "dev-win",
+            "configurePreset": "dev-win",
+            "configuration": "Debug"
+        },
+        {
+            "name": "dist",
+            "configurePreset": "dist"
+        },
+        {
+            "name": "dist-win",
+            "configurePreset": "dist-win",
+            "configuration": "Release"
+        }
     ]
 }
