@@ -34,6 +34,7 @@ set(MINSC_SRC_REL
     syntax_tree.c
     evaluator.c
     parenthesized_expression_syntax.c
+    syntax_facts.c
 )
 prepend_path(MINSC_SRC_REL src/ MINSC_SRC)
 add_executable(minsc ${MINSC_SRC})
