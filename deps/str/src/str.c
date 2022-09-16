@@ -37,10 +37,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdlib.h>
 #include <string.h>
 #ifdef _WIN32
-#define STRICMP _strnicmp
+#define STRNICMP _strnicmp
 #else
 #include <strings.h>
-#define STRICMP strncasecmp
+#define STRNICMP strncasecmp
 #endif
 
 // compatibility
@@ -118,7 +118,7 @@ int str_cmp_ci(const str s1, const str s2) {
     const size_t n2 = s2.len;
 
     // either string may be missing a null terminator, hence "strNcasecmp"
-    const int res = STRICMP(str_ptr(s1), str_ptr(s2), (n1 < n2) ? n1 : n2);
+    const int res = STRNICMP(str_ptr(s1), str_ptr(s2), (n1 < n2) ? n1 : n2);
 
     if (res != 0 || n1 == n2) {
         return res;
