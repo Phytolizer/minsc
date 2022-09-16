@@ -7,6 +7,7 @@
 #include <str/str.h>
 #include <styler/styler.h>
 
+#include "minsc/code_analysis/binding/binder.h"
 #include "minsc/code_analysis/evaluator.h"
 #include "minsc/code_analysis/syntax/diagnostic.h"
 #include "minsc/code_analysis/syntax/syntax_kind.h"
@@ -94,6 +95,15 @@ int main(void) {
         }
 
         SyntaxTree* program = syntax_tree_parse(str_ref(line));
+
+        Binder* binder = binder_new();
+        BoundExpression* bound_expression =
+                binder_bind_expression(binder, program->root);
+
+        DiagnosticBuf diagnostics = program->diagnostics;
+        BUF_CONCAT(&diagnostics, binder_take_diagnostics(binder));
+        binder_free(binder);
+
         if (show_tree) {
             styler_apply_style(styler_style_faint, stdout);
             styler_apply_fg(styler_fg_white, stdout);
@@ -103,7 +113,6 @@ int main(void) {
             (void)fflush(stdout);
         }
 
-        DiagnosticBuf diagnostics = program->diagnostics;
         if (diagnostics.len > 0) {
             styler_apply_style(styler_style_faint, stdout);
             styler_apply_fg(styler_fg_red, stdout);
@@ -112,9 +121,10 @@ int main(void) {
             }
             styler_apply_fg(styler_fg_reset, stdout);
             styler_apply_style(styler_style_reset, stdout);
+            diagnostic_buf_free(diagnostics);
             (void)fflush(stdout);
         } else {
-            Evaluator* evaluator = evaluator_new(program->root);
+            Evaluator* evaluator = evaluator_new(bound_expression);
             int64_t result = evaluator_evaluate(evaluator);
             evaluator_free(evaluator);
 
@@ -124,6 +134,7 @@ int main(void) {
             (void)fflush(stdout);
         }
 
+        bound_expression_free(bound_expression);
         syntax_tree_free(program);
         str_free(line);
     }

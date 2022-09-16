@@ -27,4 +27,6 @@ int64_t object_as_i64(const Object* object);
 
 str object_string(Object* object);
 
+str object_type_string(ObjectType type);
+
 #endif  // MINSC_OBJECT_H_

@@ -3,11 +3,11 @@
 
 #include <stdint.h>
 
-#include "syntax/expression_syntax.h"
+#include "binding/bound_expression.h"
 
 typedef struct Evaluator Evaluator;
 
-Evaluator* evaluator_new(ExpressionSyntax* root);
+Evaluator* evaluator_new(BoundExpression* root);
 void evaluator_free(Evaluator* evaluator);
 
 int64_t evaluator_evaluate(Evaluator* evaluator);

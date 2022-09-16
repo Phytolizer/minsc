@@ -79,3 +79,10 @@
     } while (false)
 
 #define BUF_LAST(buf) ((buf).ptr[(buf).len - 1])
+
+#define BUF_CONCAT(buf, other) \
+    do { \
+        for (uint64_t i = 0; i < (other).len; i++) { \
+            BUF_PUSH(buf, (other).ptr[i]); \
+        } \
+    } while (false)

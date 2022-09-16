@@ -7,6 +7,18 @@
 
 #include "minsc/support/minsc_assert.h"
 
+static const char* const OBJECT_TYPE_STRINGS[] = {
+#define X(x) #x,
+#include "minsc/runtime/object_type_uppercamel.inc"
+#undef X
+};
+
+static const size_t OBJECT_TYPE_STRING_LENGTHS[] = {
+#define X(x) sizeof(#x) - 1,
+#include "minsc/runtime/object_type_uppercamel.inc"
+#undef X
+};
+
 Object* object_new_i64(int64_t value) {
     ObjectI64* object = malloc(sizeof(ObjectI64));
     MINSC_ASSERT(object != NULL);
@@ -20,6 +32,8 @@ Object* object_dup(const Object* object) {
         return NULL;
     }
     switch (object->type) {
+        case OBJECT_TYPE_NULL:
+            MINSC_ABORT("Corrupt object: non-NULL object with type NULL");
         case OBJECT_TYPE_I64:
             return object_new_i64(((ObjectI64*)object)->value);
     }
@@ -44,5 +58,15 @@ str object_string(Object* object) {
         }
         default:
             MINSC_ABORT("Unhandled object type");
+    }
+}
+
+str object_type_string(ObjectType type) {
+    switch (type) {
+#define X(x) case OBJECT_TYPE_##x:
+#include "minsc/runtime/object_type.inc"
+#undef X
+        return str_ref_chars(OBJECT_TYPE_STRINGS[type],
+                             OBJECT_TYPE_STRING_LENGTHS[type]);
     }
 }
