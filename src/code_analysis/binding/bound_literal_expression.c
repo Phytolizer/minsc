@@ -19,7 +19,8 @@ extern void bound_literal_expression_free(BoundLiteralExpression* expression) {
 }
 
 extern ObjectType bound_literal_expression_type(
-        const BoundLiteralExpression* expression) {
+    const BoundLiteralExpression* expression
+) {
     if (expression->value == NULL) {
         return OBJECT_TYPE_NULL;
     }

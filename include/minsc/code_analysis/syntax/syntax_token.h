@@ -19,14 +19,14 @@ typedef struct SyntaxToken {
     bool manufactured;
 } SyntaxToken;
 
-SyntaxToken* syntax_token_new(SyntaxKind kind,
-                              size_t position,
-                              str text,
-                              Object* value);
-SyntaxToken* syntax_token_new_manufactured(SyntaxKind kind,
-                                           size_t position,
-                                           str text,
-                                           Object* value);
+SyntaxToken*
+syntax_token_new(SyntaxKind kind, size_t position, str text, Object* value);
+SyntaxToken* syntax_token_new_manufactured(
+    SyntaxKind kind,
+    size_t position,
+    str text,
+    Object* value
+);
 SyntaxToken* syntax_token_dup(SyntaxToken* token);
 void syntax_token_free(SyntaxToken* token);
 

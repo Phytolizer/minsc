@@ -2,8 +2,10 @@
 
 #include "minsc/support/minsc_assert.h"
 
-ExpressionSyntax* unary_expression_syntax_new(SyntaxToken* operator_token,
-                                              ExpressionSyntax* operand) {
+ExpressionSyntax* unary_expression_syntax_new(
+    SyntaxToken* operator_token,
+    ExpressionSyntax* operand
+) {
     UnaryExpressionSyntax* syntax = malloc(sizeof(UnaryExpressionSyntax));
     MINSC_ASSERT(syntax != NULL);
     syntax->base.base.type = SYNTAX_NODE_TYPE_EXPRESSION;
@@ -20,7 +22,8 @@ void unary_expression_syntax_free(UnaryExpressionSyntax* expression) {
 }
 
 SyntaxNodeChildren unary_expression_syntax_children(
-        const UnaryExpressionSyntax* expression) {
+    const UnaryExpressionSyntax* expression
+) {
     SyntaxNodeChildren children = BUF_NEW;
     BUF_PUSH(&children, (const SyntaxNode*)expression->operator_token);
     BUF_PUSH(&children, (const SyntaxNode*)expression->operand);

@@ -8,5 +8,8 @@ IndentCaseLabels: true
 BinPackParameters: false
 BinPackArguments: false
 IndentWidth: 4
-ContinuationIndentWidth: 8
+ContinuationIndentWidth: 4
 IndentExternBlock: NoIndent
+AlignAfterOpenBracket: BlockIndent
+AllowAllArgumentsOnNextLine: false
+AllowAllParametersOfDeclarationOnNextLine: false

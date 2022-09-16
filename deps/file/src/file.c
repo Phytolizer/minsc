@@ -26,16 +26,18 @@ typedef struct {
 
 static PlatformFile platform_fopen(str path) {
 #ifdef _WIN32
-    HANDLE handle = CreateFileA(path.ptr,
-                                GENERIC_READ,
-                                FILE_SHARE_READ,
-                                NULL,
-                                OPEN_EXISTING,
-                                FILE_ATTRIBUTE_NORMAL,
-                                NULL);
+    HANDLE handle = CreateFileA(
+        path.ptr,
+        GENERIC_READ,
+        FILE_SHARE_READ,
+        NULL,
+        OPEN_EXISTING,
+        FILE_ATTRIBUTE_NORMAL,
+        NULL
+    );
     return (PlatformFile){
-            .handle = handle,
-            .valid = handle != INVALID_HANDLE_VALUE,
+        .handle = handle,
+        .valid = handle != INVALID_HANDLE_VALUE,
     };
 #else
     int fd = open(path.ptr, O_RDONLY);
@@ -78,8 +80,10 @@ static size_t platform_fread(PlatformFile f, char* buf, size_t len) {
 SlurpFileResult slurp_file(str filename) {
     PlatformFile f = platform_fopen(filename);
     if (!f.valid) {
-        str msg = str_printf("failed to open '" str_fmt "' for reading",
-                             str_arg(filename));
+        str msg = str_printf(
+            "failed to open '" str_fmt "' for reading",
+            str_arg(filename)
+        );
         return (SlurpFileResult)SUM_ERR(msg);
     }
 
@@ -88,9 +92,10 @@ SlurpFileResult slurp_file(str filename) {
     char* buf = malloc(len + 1);
     if (buf == NULL) {
         platform_fclose(f);
-        str msg = str_printf("failed to allocate memory for '" str_fmt
-                             "' contents",
-                             str_arg(filename));
+        str msg = str_printf(
+            "failed to allocate memory for '" str_fmt "' contents",
+            str_arg(filename)
+        );
         return (SlurpFileResult)SUM_ERR(msg);
     }
 
@@ -98,8 +103,10 @@ SlurpFileResult slurp_file(str filename) {
     if (read != len) {
         platform_fclose(f);
         free(buf);
-        str msg = str_printf("failed to read '" str_fmt "' contents",
-                             str_arg(filename));
+        str msg = str_printf(
+            "failed to read '" str_fmt "' contents",
+            str_arg(filename)
+        );
         return (SlurpFileResult)SUM_ERR(msg);
     }
 
@@ -126,8 +133,8 @@ static PlatformStatResult platform_stat(str path) {
     DWORD attributes = GetFileAttributesA(path_zero.ptr);
     str_free(path_zero);
     return (PlatformStatResult){
-            .valid = attributes != INVALID_FILE_ATTRIBUTES,
-            .attributes = attributes,
+        .valid = attributes != INVALID_FILE_ATTRIBUTES,
+        .attributes = attributes,
     };
 #else
     struct stat st;
@@ -136,8 +143,8 @@ static PlatformStatResult platform_stat(str path) {
     int result = stat(path_zero.ptr, &st);
     str_free(path_zero);
     return (PlatformStatResult){
-            .valid = result == 0,
-            .st = st,
+        .valid = result == 0,
+        .st = st,
     };
 #endif
 }
@@ -219,8 +226,10 @@ FileMkdirRecError file_mkdir_rec(str path) {
             str_free(path);
             return (FileMkdirRecError)SUM_NOTHING;
         }
-        str msg = str_printf("'" str_fmt "' exists and is not a directory",
-                             str_arg(path));
+        str msg = str_printf(
+            "'" str_fmt "' exists and is not a directory",
+            str_arg(path)
+        );
         str_free(path);
         return (FileMkdirRecError)SUM_JUST(msg);
     }

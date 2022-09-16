@@ -19,8 +19,10 @@ extern str syntax_kind_string(SyntaxKind kind) {
 #define X(x) case SYNTAX_KIND_##x:
 #include "minsc/code_analysis/syntax/syntax_kind.inc"
 #undef X
-        return str_ref_chars(SYNTAX_KIND_STRINGS[kind],
-                             SYNTAX_KIND_STRING_LENGTHS[kind]);
+        return str_ref_chars(
+            SYNTAX_KIND_STRINGS[kind],
+            SYNTAX_KIND_STRING_LENGTHS[kind]
+        );
         default:
             return str_lit("SYNTAX_KIND_UNKNOWN");
     }

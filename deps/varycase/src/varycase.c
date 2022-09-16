@@ -79,22 +79,26 @@ static void varycase(str ident, str new_case, FILE* fp) {
 }
 
 int main(int argc, char** argv) {
-    Arg help_arg = ARG_FLAG(.shortname = 'h',
-                            .longname = arg_str_lit("help"),
-                            .help = arg_str_lit("Show this help message"));
+    Arg help_arg = ARG_FLAG(
+            .shortname = 'h',
+            .longname = arg_str_lit("help"),
+            .help = arg_str_lit("Show this help message")
+    );
     Arg case_arg =
-            ARG_POS(arg_str_lit("CASE"), arg_str_lit("Case to convert to"));
+        ARG_POS(arg_str_lit("CASE"), arg_str_lit("Case to convert to"));
     Arg input_arg =
-            ARG_POS(arg_str_lit("INPUT"), arg_str_lit("String to convert"));
+        ARG_POS(arg_str_lit("INPUT"), arg_str_lit("String to convert"));
     Arg output_arg =
-            ARG_OPT(.shortname = 'o',
-                    .longname = arg_str_lit("output"),
-                    .help = arg_str_lit(
-                            "Output file (default <INPUT>_<CASE>.inc)"));
+        ARG_OPT(.shortname = 'o',
+                .longname = arg_str_lit("output"),
+                .help =
+                    arg_str_lit("Output file (default <INPUT>_<CASE>.inc)"));
     Arg* args[] = {&help_arg, &case_arg, &input_arg, &output_arg};
-    ArgParser parser = arg_parser_new(arg_str_lit("varycase"),
-                                      arg_str_lit(PROJECT_DESCRIPTION),
-                                      (ArgBuf)ARG_BUF_ARRAY(args));
+    ArgParser parser = arg_parser_new(
+        arg_str_lit("varycase"),
+        arg_str_lit(PROJECT_DESCRIPTION),
+        (ArgBuf)ARG_BUF_ARRAY(args)
+    );
     ArgParseErr err = arg_parser_parse(&parser, argc, argv);
     if (help_arg.flagValue) {
         arg_parser_show_help(&parser, stdout);
@@ -131,19 +135,23 @@ int main(int argc, char** argv) {
         PathExtension ext = extension(input_noext);
         if (ext.present) {
             input_noext =
-                    str_upto(input_noext, ext.value.ptr - input_noext.ptr - 1);
+                str_upto(input_noext, ext.value.ptr - input_noext.ptr - 1);
         }
-        output = str_printf(ARG_STR_FMT "_" ARG_STR_FMT ".inc",
-                            str_arg(input_noext),
-                            ARG_STR_ARG(case_arg.value));
+        output = str_printf(
+            ARG_STR_FMT "_" ARG_STR_FMT ".inc",
+            str_arg(input_noext),
+            ARG_STR_ARG(case_arg.value)
+        );
     }
 
     SlurpFileResult slurp = slurp_file(input);
     if (!slurp.ok) {
-        fprintfln(stderr,
-                  "ERROR: Failed to read file " str_fmt ": " str_fmt,
-                  str_arg(input),
-                  str_arg(slurp.get.error));
+        fprintfln(
+            stderr,
+            "ERROR: Failed to read file " str_fmt ": " str_fmt,
+            str_arg(input),
+            str_arg(slurp.get.error)
+        );
         str_free(slurp.get.error);
         str_free(output);
         return EXIT_FAILURE;
@@ -157,18 +165,22 @@ int main(int argc, char** argv) {
         if (!file_exists(dir)) {
             FileMkdirRecError mkdir_err = file_mkdir_rec(dir);
             if (mkdir_err.present) {
-                fprintfln(stderr,
-                          "ERROR: Failed to create directory " str_fmt,
-                          str_arg(dir));
+                fprintfln(
+                    stderr,
+                    "ERROR: Failed to create directory " str_fmt,
+                    str_arg(dir)
+                );
                 str_free(dir);
                 str_free(input_contents);
                 str_free(output);
                 return EXIT_FAILURE;
             }
         } else if (!file_isdir(dir)) {
-            fprintfln(stderr,
-                      "ERROR: " str_fmt " is not a directory",
-                      str_arg(dir));
+            fprintfln(
+                stderr,
+                "ERROR: " str_fmt " is not a directory",
+                str_arg(dir)
+            );
             str_free(dir);
             str_free(input_contents);
             str_free(output);
@@ -181,9 +193,11 @@ int main(int argc, char** argv) {
 
     FILE* output_fp = fopen(output.ptr, "w");
     if (output_fp == NULL) {
-        fprintfln(stderr,
-                  "ERROR: Failed to open file " str_fmt " for writing",
-                  str_arg(output));
+        fprintfln(
+            stderr,
+            "ERROR: Failed to open file " str_fmt " for writing",
+            str_arg(output)
+        );
         BUF_FREE(xmacros);
         str_free(input_contents);
         str_free(output);

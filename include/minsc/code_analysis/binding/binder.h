@@ -10,8 +10,8 @@ typedef struct Binder Binder;
 Binder* binder_new(void);
 void binder_free(Binder* binder);
 
-BoundExpression* binder_bind_expression(Binder* binder,
-                                        ExpressionSyntax* expression);
+BoundExpression*
+binder_bind_expression(Binder* binder, ExpressionSyntax* expression);
 
 DiagnosticBuf binder_take_diagnostics(Binder* binder);
 

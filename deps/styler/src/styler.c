@@ -26,20 +26,20 @@ static styler_winterm_t* get_winterm_mode(void) {
 static bool is_support_color(void) {
 #ifdef STYLER_UNIX
     const char* const terms[] = {
-            "ansi",
-            "color",
-            "console",
-            "cygwin",
-            "gnome",
-            "konsole",
-            "kterm",
-            "linux",
-            "msys",
-            "putty",
-            "rxvt",
-            "screen",
-            "vt100",
-            "xterm",
+        "ansi",
+        "color",
+        "console",
+        "cygwin",
+        "gnome",
+        "konsole",
+        "kterm",
+        "linux",
+        "msys",
+        "putty",
+        "rxvt",
+        "screen",
+        "vt100",
+        "xterm",
     };
 
     const char* env_param = getenv("TERM");
@@ -60,17 +60,18 @@ static bool is_support_color(void) {
 }
 
 #ifdef STYLER_WINDOWS
-typedef BOOL (*get_file_information_by_handle_ex_func_t)(
-        HANDLE hFile,
-        FILE_INFO_BY_HANDLE_CLASS FileInformationClass,
-        LPVOID lpFileInformation,
-        DWORD dwBufferSize);
+typedef BOOL (*get_file_information_by_handle_ex_func_t
+)(HANDLE hFile,
+  FILE_INFO_BY_HANDLE_CLASS FileInformationClass,
+  LPVOID lpFileInformation,
+  DWORD dwBufferSize);
 
 static bool is_msys_pty(int fd) {
     get_file_information_by_handle_ex_func_t ptr_file_info =
-            (get_file_information_by_handle_ex_func_t)GetProcAddress(
-                    GetModuleHandle(TEXT("kernel32.dll")),
-                    "GetFileInformationByHandleEx");
+        (get_file_information_by_handle_ex_func_t)GetProcAddress(
+            GetModuleHandle(TEXT("kernel32.dll")),
+            "GetFileInformationByHandleEx"
+        );
 
     if (ptr_file_info == NULL) {
         return false;
@@ -95,10 +96,12 @@ static bool is_msys_pty(int fd) {
         return false;
     }
 
-    if (!ptr_file_info(handle,
-                       FileNameInfo,
-                       p_name_info,
-                       sizeof(my_file_name_info_t))) {
+    if (!ptr_file_info(
+            handle,
+            FileNameInfo,
+            p_name_info,
+            sizeof(my_file_name_info_t)
+        )) {
         return false;
     }
 
@@ -126,7 +129,7 @@ static bool is_terminal(FILE* stream) {
         if (!init) {
             init = true;
             stdout_term =
-                    _isatty(_fileno(stdout)) || is_msys_pty(_fileno(stdout));
+                _isatty(_fileno(stdout)) || is_msys_pty(_fileno(stdout));
         }
         return stdout_term;
     }
@@ -136,7 +139,7 @@ static bool is_terminal(FILE* stream) {
         if (!init) {
             init = true;
             stderr_term =
-                    _isatty(_fileno(stdout)) || is_msys_pty(_fileno(stdout));
+                _isatty(_fileno(stdout)) || is_msys_pty(_fileno(stdout));
         }
         return stderr_term;
     }
@@ -207,8 +210,8 @@ static bool is_support_ansi(FILE* stream) {
         static bool stdout_ansi;
         if (!init) {
             init = true;
-            stdout_ansi = is_msys_pty(_fileno(stdout)) ||
-                          set_winterm_ansi_colors(stream);
+            stdout_ansi =
+                is_msys_pty(_fileno(stdout)) || set_winterm_ansi_colors(stream);
         }
         return stdout_ansi;
     }
@@ -218,8 +221,8 @@ static bool is_support_ansi(FILE* stream) {
         static bool stderr_ansi;
         if (!init) {
             init = true;
-            stderr_ansi = is_msys_pty(_fileno(stderr)) ||
-                          set_winterm_ansi_colors(stream);
+            stderr_ansi =
+                is_msys_pty(_fileno(stderr)) || set_winterm_ansi_colors(stream);
         }
         return stderr_ansi;
     }
@@ -236,8 +239,10 @@ static const sgr_t* get_default_state(void) {
         CONSOLE_SCREEN_BUFFER_INFO info;
         WORD attrib = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
 
-        if (GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE),
-                                       &info) ||
+        if (GetConsoleScreenBufferInfo(
+                GetStdHandle(STD_OUTPUT_HANDLE),
+                &info
+            ) ||
             GetConsoleScreenBufferInfo(GetStdHandle(STD_ERROR_HANDLE), &info)) {
             attrib = info.wAttributes;
         }
@@ -263,14 +268,14 @@ static sgr_t* get_current_state(void) {
 
 static BYTE ansi_2_attr(BYTE rgb) {
     static const attr_color_t rev[] = {
-            attr_color_black,
-            attr_color_red,
-            attr_color_green,
-            attr_color_yellow,
-            attr_color_blue,
-            attr_color_magenta,
-            attr_color_cyan,
-            attr_color_white,
+        attr_color_black,
+        attr_color_red,
+        attr_color_green,
+        attr_color_yellow,
+        attr_color_blue,
+        attr_color_magenta,
+        attr_color_cyan,
+        attr_color_white,
     };
     return (BYTE)rev[rgb];
 }
@@ -280,14 +285,14 @@ static WORD sgr_2_attr(const sgr_t* state) {
 
     if (state->conceal) {
         if (state->reverse) {
-            attr = (BYTE)(state->foreground_color << 4) |
-                   state->foreground_color;
+            attr =
+                (BYTE)(state->foreground_color << 4) | state->foreground_color;
             if (state->bold) {
                 attr |= FOREGROUND_INTENSITY | BACKGROUND_INTENSITY;
             }
         } else {
-            attr = (BYTE)(state->background_color << 4) |
-                   state->background_color;
+            attr =
+                (BYTE)(state->background_color << 4) | state->background_color;
             if (state->underline) {
                 attr |= FOREGROUND_INTENSITY | BACKGROUND_INTENSITY;
             }
@@ -349,12 +354,12 @@ static void set_win_sgr_bg(styler_bg_t bg, sgr_t* state) {
 
 static void set_win_sgr_fg_bright(styler_fg_bright_t fg, sgr_t* state) {
     state->foreground_color =
-            (BACKGROUND_INTENSITY >> 4) | ansi_2_attr((BYTE)fg - 90);
+        (BACKGROUND_INTENSITY >> 4) | ansi_2_attr((BYTE)fg - 90);
 }
 
 static void set_win_sgr_bg_bright(styler_bg_bright_t bg, sgr_t* state) {
     state->background_color =
-            FOREGROUND_INTENSITY | ansi_2_attr((BYTE)bg - 100);
+        FOREGROUND_INTENSITY | ansi_2_attr((BYTE)bg - 100);
 }
 
 static void set_win_color_ansi(FILE* stream, int value) {
@@ -379,8 +384,8 @@ static void set_win_color_native_bg(FILE* stream, styler_bg_t bg) {
     }
 }
 
-static void set_win_color_native_fg_bright(FILE* stream,
-                                           styler_fg_bright_t fg) {
+static void
+set_win_color_native_fg_bright(FILE* stream, styler_fg_bright_t fg) {
     HANDLE handle = get_console_handle(stream);
     if (handle != INVALID_HANDLE_VALUE) {
         set_win_sgr_fg_bright(fg, get_current_state());
@@ -389,8 +394,8 @@ static void set_win_color_native_fg_bright(FILE* stream,
     }
 }
 
-static void set_win_color_native_bg_bright(FILE* stream,
-                                           styler_bg_bright_t bg) {
+static void
+set_win_color_native_bg_bright(FILE* stream, styler_bg_bright_t bg) {
     HANDLE handle = get_console_handle(stream);
     if (handle != INVALID_HANDLE_VALUE) {
         set_win_sgr_bg_bright(bg, get_current_state());

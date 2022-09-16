@@ -5,9 +5,11 @@
 
 #include "minsc/support/minsc_assert.h"
 
-ExpressionSyntax* binary_expression_syntax_new(ExpressionSyntax* left,
-                                               SyntaxToken* operator_token,
-                                               ExpressionSyntax* right) {
+ExpressionSyntax* binary_expression_syntax_new(
+    ExpressionSyntax* left,
+    SyntaxToken* operator_token,
+    ExpressionSyntax* right
+) {
     BinaryExpressionSyntax* expression = malloc(sizeof(BinaryExpressionSyntax));
     MINSC_ASSERT(expression != NULL);
     expression->base.base.type = SYNTAX_NODE_TYPE_EXPRESSION;
@@ -26,7 +28,8 @@ void binary_expression_syntax_free(BinaryExpressionSyntax* expression) {
 }
 
 SyntaxNodeChildren binary_expression_syntax_children(
-        const BinaryExpressionSyntax* expression) {
+    const BinaryExpressionSyntax* expression
+) {
     SyntaxNodeChildren children = BUF_NEW;
     BUF_PUSH(&children, (SyntaxNode*)expression->left);
     BUF_PUSH(&children, (SyntaxNode*)expression->operator_token);

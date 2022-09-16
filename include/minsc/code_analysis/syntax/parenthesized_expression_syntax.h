@@ -13,12 +13,14 @@ typedef struct ParenthesizedExpressionSyntax {
 } ParenthesizedExpressionSyntax;
 
 ExpressionSyntax* parenthesized_expression_syntax_new(
-        SyntaxToken* open_parenthesis_token,
-        ExpressionSyntax* expression,
-        SyntaxToken* close_parenthesis_token);
+    SyntaxToken* open_parenthesis_token,
+    ExpressionSyntax* expression,
+    SyntaxToken* close_parenthesis_token
+);
 void parenthesized_expresion_syntax_free(ParenthesizedExpressionSyntax* syntax);
 
 SyntaxNodeChildren parenthesized_expression_syntax_children(
-        const ParenthesizedExpressionSyntax* syntax);
+    const ParenthesizedExpressionSyntax* syntax
+);
 
 #endif  // MINSC_PARENTHESIZED_EXPRESSION_SYNTAX_H_

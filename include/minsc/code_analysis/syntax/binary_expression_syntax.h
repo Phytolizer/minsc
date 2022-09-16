@@ -12,12 +12,15 @@ typedef struct BinaryExpressionSyntax {
     ExpressionSyntax* right;
 } BinaryExpressionSyntax;
 
-ExpressionSyntax* binary_expression_syntax_new(ExpressionSyntax* left,
-                                               SyntaxToken* operator_token,
-                                               ExpressionSyntax* right);
+ExpressionSyntax* binary_expression_syntax_new(
+    ExpressionSyntax* left,
+    SyntaxToken* operator_token,
+    ExpressionSyntax* right
+);
 void binary_expression_syntax_free(BinaryExpressionSyntax* expression);
 
 SyntaxNodeChildren binary_expression_syntax_children(
-        const BinaryExpressionSyntax* expression);
+    const BinaryExpressionSyntax* expression
+);
 
 #endif  // MINSC_BINARY_EXPRESSION_SYNTAX_H_

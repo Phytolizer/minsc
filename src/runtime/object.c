@@ -66,7 +66,9 @@ str object_type_string(ObjectType type) {
 #define X(x) case OBJECT_TYPE_##x:
 #include "minsc/runtime/object_type.inc"
 #undef X
-        return str_ref_chars(OBJECT_TYPE_STRINGS[type],
-                             OBJECT_TYPE_STRING_LENGTHS[type]);
+        return str_ref_chars(
+            OBJECT_TYPE_STRINGS[type],
+            OBJECT_TYPE_STRING_LENGTHS[type]
+        );
     }
 }

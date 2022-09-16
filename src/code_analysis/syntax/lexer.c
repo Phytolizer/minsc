@@ -49,19 +49,24 @@ SyntaxToken* lexer_next_token(Lexer* lexer) {
             lexer->position++;
         }
 
-        str text = str_ref_chars(lexer->source.ptr + start,
-                                 lexer->position - start);
+        str text =
+            str_ref_chars(lexer->source.ptr + start, lexer->position - start);
         Str2I64Result result = str2i64(text, 10);
         if (result.err) {
             BUF_PUSH(
-                    &lexer->diagnostics,
-                    str_printf("ERROR: The number %s is too large.", text.ptr));
+                &lexer->diagnostics,
+                str_printf("ERROR: The number %s is too large.", text.ptr)
+            );
         }
         str owned_text = str_null;
         str_cpy(&owned_text, text);
         Object* value = result.err ? NULL : object_new_i64(result.value);
         return syntax_token_new(
-                SYNTAX_KIND_NUMBER_TOKEN, start, owned_text, value);
+            SYNTAX_KIND_NUMBER_TOKEN,
+            start,
+            owned_text,
+            value
+        );
     }
 
     if (wrap_isspace(c)) {
@@ -69,56 +74,89 @@ SyntaxToken* lexer_next_token(Lexer* lexer) {
             lexer->position++;
         }
 
-        str text = str_ref_chars(lexer->source.ptr + start,
-                                 lexer->position - start);
+        str text =
+            str_ref_chars(lexer->source.ptr + start, lexer->position - start);
         str owned_text = str_null;
         str_cpy(&owned_text, text);
         return syntax_token_new(
-                SYNTAX_KIND_WHITESPACE_TOKEN, start, owned_text, NULL);
+            SYNTAX_KIND_WHITESPACE_TOKEN,
+            start,
+            owned_text,
+            NULL
+        );
     }
 
     switch (c) {
         case '+':
             lexer->position++;
             return syntax_token_new(
-                    SYNTAX_KIND_PLUS_TOKEN, start, str_lit("+"), NULL);
+                SYNTAX_KIND_PLUS_TOKEN,
+                start,
+                str_lit("+"),
+                NULL
+            );
         case '-':
             lexer->position++;
             return syntax_token_new(
-                    SYNTAX_KIND_MINUS_TOKEN, start, str_lit("-"), NULL);
+                SYNTAX_KIND_MINUS_TOKEN,
+                start,
+                str_lit("-"),
+                NULL
+            );
         case '*':
             lexer->position++;
             return syntax_token_new(
-                    SYNTAX_KIND_STAR_TOKEN, start, str_lit("*"), NULL);
+                SYNTAX_KIND_STAR_TOKEN,
+                start,
+                str_lit("*"),
+                NULL
+            );
         case '/':
             lexer->position++;
             return syntax_token_new(
-                    SYNTAX_KIND_SLASH_TOKEN, start, str_lit("/"), NULL);
+                SYNTAX_KIND_SLASH_TOKEN,
+                start,
+                str_lit("/"),
+                NULL
+            );
         case '(':
             lexer->position++;
-            return syntax_token_new(SYNTAX_KIND_OPEN_PARENTHESIS_TOKEN,
-                                    start,
-                                    str_lit("("),
-                                    NULL);
+            return syntax_token_new(
+                SYNTAX_KIND_OPEN_PARENTHESIS_TOKEN,
+                start,
+                str_lit("("),
+                NULL
+            );
         case ')':
             lexer->position++;
-            return syntax_token_new(SYNTAX_KIND_CLOSE_PARENTHESIS_TOKEN,
-                                    start,
-                                    str_lit(")"),
-                                    NULL);
+            return syntax_token_new(
+                SYNTAX_KIND_CLOSE_PARENTHESIS_TOKEN,
+                start,
+                str_lit(")"),
+                NULL
+            );
         case '\0':
             return syntax_token_new(
-                    SYNTAX_KIND_END_OF_FILE_TOKEN, start, str_lit(""), NULL);
+                SYNTAX_KIND_END_OF_FILE_TOKEN,
+                start,
+                str_lit(""),
+                NULL
+            );
         default: {
             char text[] = {current(lexer)};
             str owned_text = str_null;
             str_cpy(&owned_text, str_ref_chars(text, 1));
-            BUF_PUSH(&lexer->diagnostics,
-                     str_printf("ERROR: Unexpected character '%c'.",
-                                current(lexer)));
+            BUF_PUSH(
+                &lexer->diagnostics,
+                str_printf("ERROR: Unexpected character '%c'.", current(lexer))
+            );
             lexer->position++;
             return syntax_token_new(
-                    SYNTAX_KIND_BAD_TOKEN, start, owned_text, NULL);
+                SYNTAX_KIND_BAD_TOKEN,
+                start,
+                owned_text,
+                NULL
+            );
         }
     }
 }

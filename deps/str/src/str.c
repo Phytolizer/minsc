@@ -269,10 +269,12 @@ int str_cat_range(str* const dest, const str* src, size_t count) {
 }
 
 // join strings
-int str_join_range(str* const dest,
-                   const str sep,
-                   const str* src,
-                   size_t count) {
+int str_join_range(
+    str* const dest,
+    const str sep,
+    const str* src,
+    size_t count
+) {
     // test for simple cases
     if (str_is_empty(sep)) {
         return str_cat_range(dest, src, count);
@@ -311,10 +313,8 @@ int str_join_range(str* const dest,
 // partitioning
 #ifndef _GNU_SOURCE
 // an implementation of memmem(3) for the str_partition() function below
-static const void* memmem(const void* s,
-                          const size_t len,
-                          const void* patt,
-                          size_t patt_len) {
+static const void*
+memmem(const void* s, const size_t len, const void* patt, size_t patt_len) {
     switch (patt_len) {
         case 0:
             return s;
@@ -341,10 +341,12 @@ static const void* memmem(const void* s,
 }
 #endif  // ifndef _GNU_SOURCE
 
-bool str_partition(const str src,
-                   const str patt,
-                   str* const prefix,
-                   str* const suffix) {
+bool str_partition(
+    const str src,
+    const str patt,
+    str* const prefix,
+    str* const suffix
+) {
     const size_t patt_len = patt.len;
 
     if (patt_len > 0 && !str_is_empty(src)) {
@@ -352,8 +354,10 @@ bool str_partition(const str src,
 
         if (s) {
             if (prefix) {
-                str_assign(prefix,
-                           str_ref_chars(str_ptr(src), s - str_ptr(src)));
+                str_assign(
+                    prefix,
+                    str_ref_chars(str_ptr(src), s - str_ptr(src))
+                );
             }
 
             if (suffix) {
@@ -460,18 +464,19 @@ int str_order_desc_ci(const void* const s1, const void* const s2) {
 }
 
 // sorting
-void str_sort_range(const str_cmp_func cmp,
-                    str* const array,
-                    const size_t count) {
+void str_sort_range(
+    const str_cmp_func cmp,
+    str* const array,
+    const size_t count
+) {
     if (array && count > 1) {
         qsort(array, count, sizeof(array[0]), cmp);
     }
 }
 
 // searching
-const str* str_search_range(const str key,
-                            const str* const array,
-                            const size_t count) {
+const str*
+str_search_range(const str key, const str* const array, const size_t count) {
     if (!array || count == 0) {
         return NULL;
     }
@@ -484,9 +489,11 @@ const str* str_search_range(const str key,
 }
 
 // partitioning
-size_t str_partition_range(bool (*pred)(const str),
-                           str* const array,
-                           const size_t count) {
+size_t str_partition_range(
+    bool (*pred)(const str),
+    str* const array,
+    const size_t count
+) {
     if (!array) {
         return 0;
     }
@@ -550,9 +557,11 @@ void str_tok_delim(str_tok_state* const state, const str delim_set) {
     }
 }
 
-void str_tok_init(str_tok_state* const state,
-                  const str src,
-                  const str delim_set) {
+void str_tok_init(
+    str_tok_state* const state,
+    const str src,
+    const str delim_set
+) {
     state->src = str_ptr(src);
     state->end = str_end(src);
 

@@ -82,9 +82,10 @@ int main(void) {
         if (str_eq(line, str_lit("#showTree"))) {
             str_free(line);
             show_tree = !show_tree;
-            printfln("%s",
-                     show_tree ? "Showing parse trees."
-                               : "Not showing parse trees.");
+            printfln(
+                "%s",
+                show_tree ? "Showing parse trees." : "Not showing parse trees."
+            );
             continue;
         }
         if (str_eq(line, str_lit("#cls"))) {
@@ -98,7 +99,7 @@ int main(void) {
 
         Binder* binder = binder_new();
         BoundExpression* bound_expression =
-                binder_bind_expression(binder, program->root);
+            binder_bind_expression(binder, program->root);
 
         DiagnosticBuf diagnostics = program->diagnostics;
         BUF_CONCAT(&diagnostics, binder_take_diagnostics(binder));
@@ -144,10 +145,12 @@ int main(void) {
 
 static void pretty_print(const SyntaxNode* root, str indent, bool is_last) {
     str marker = is_last ? str_lit("└───") : str_lit("├───");
-    printf(str_fmt str_fmt str_fmt,
-           str_arg(indent),
-           str_arg(marker),
-           str_arg(syntax_kind_string(syntax_node_kind(root))));
+    printf(
+        str_fmt str_fmt str_fmt,
+        str_arg(indent),
+        str_arg(marker),
+        str_arg(syntax_kind_string(syntax_node_kind(root)))
+    );
     if (root->type == SYNTAX_NODE_TYPE_TOKEN &&
         ((SyntaxToken*)root)->value != NULL) {
         str value = object_string(((SyntaxToken*)root)->value);
