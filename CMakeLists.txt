@@ -21,21 +21,21 @@ add_subdirectory(deps/file)
 
 set(MINSC_SRC_REL
     main.c
-    lexer.c
-    object.c
-    syntax_kind.c
-    syntax_token.c
-    parser.c
-    binary_expression_syntax.c
-    expression_syntax.c
-    literal_expression_syntax.c
-    syntax_node.c
-    diagnostic.c
-    syntax_tree.c
-    evaluator.c
-    parenthesized_expression_syntax.c
-    syntax_facts.c
-    unary_expression_syntax.c
+    code_analysis/syntax/lexer.c
+    code_analysis/syntax/syntax_kind.c
+    code_analysis/syntax/syntax_token.c
+    code_analysis/syntax/parser.c
+    code_analysis/syntax/binary_expression_syntax.c
+    code_analysis/syntax/expression_syntax.c
+    code_analysis/syntax/literal_expression_syntax.c
+    code_analysis/syntax/syntax_node.c
+    code_analysis/syntax/diagnostic.c
+    code_analysis/syntax/syntax_tree.c
+    code_analysis/syntax/evaluator.c
+    code_analysis/syntax/parenthesized_expression_syntax.c
+    code_analysis/syntax/syntax_facts.c
+    code_analysis/syntax/unary_expression_syntax.c
+    runtime/object.c
 )
 prepend_path(MINSC_SRC_REL src/ MINSC_SRC)
 add_executable(minsc ${MINSC_SRC})
