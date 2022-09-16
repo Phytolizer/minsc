@@ -101,7 +101,7 @@ int main(void) {
         BoundExpression* bound_expression =
             binder_bind_expression(binder, program->root);
 
-        DiagnosticBuf diagnostics = program->diagnostics;
+        DiagnosticBuf diagnostics = syntax_tree_take_diagnostics(program);
         BUF_CONCAT(&diagnostics, binder_take_diagnostics(binder));
         binder_free(binder);
 

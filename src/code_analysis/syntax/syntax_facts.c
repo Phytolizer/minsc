@@ -22,3 +22,17 @@ extern size_t unary_operator_precedence(SyntaxKind kind) {
             return 0;
     }
 }
+
+extern SyntaxKind keyword_kind(str text) {
+    SyntaxKind kind;
+
+    if (str_eq(text, str_lit("true"))) {
+        kind = SYNTAX_KIND_TRUE_KEYWORD;
+    } else if (str_eq(text, str_lit("false"))) {
+        kind = SYNTAX_KIND_FALSE_KEYWORD;
+    } else {
+        kind = SYNTAX_KIND_IDENTIFIER_TOKEN;
+    }
+
+    return kind;
+}

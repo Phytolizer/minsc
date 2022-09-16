@@ -18,6 +18,7 @@ SyntaxTree* syntax_tree_new(
 );
 void syntax_tree_free(SyntaxTree* tree);
 
+DiagnosticBuf syntax_tree_take_diagnostics(SyntaxTree* tree);
 SyntaxTree* syntax_tree_parse(str text);
 
 #endif  // MINSC_SYNTAX_TREE_H_

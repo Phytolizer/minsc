@@ -25,6 +25,12 @@ void syntax_tree_free(SyntaxTree* tree) {
     free(tree);
 }
 
+DiagnosticBuf syntax_tree_take_diagnostics(SyntaxTree* tree) {
+    DiagnosticBuf diagnostics = tree->diagnostics;
+    tree->diagnostics = (DiagnosticBuf)BUF_NEW;
+    return diagnostics;
+}
+
 SyntaxTree* syntax_tree_parse(str text) {
     Parser* parser = parser_new(text);
     SyntaxTree* tree = parser_parse(parser);
