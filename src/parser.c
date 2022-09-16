@@ -14,6 +14,7 @@
 #include "minsc/code_analysis/syntax_facts.h"
 #include "minsc/code_analysis/syntax_kind.h"
 #include "minsc/code_analysis/syntax_token.h"
+#include "minsc/code_analysis/unary_expression_syntax.h"
 
 typedef BUF(SyntaxToken*) SyntaxTokenBuf;
 
@@ -116,7 +117,15 @@ static SyntaxToken* match_token(Parser* parser, SyntaxKind kind) {
 
 static ExpressionSyntax* parse_expression(Parser* parser,
                                           size_t parent_precedence) {
-    ExpressionSyntax* left = parse_primary_expression(parser);
+    ExpressionSyntax* left;
+    size_t unary_precedence = unary_operator_precedence(current(parser)->kind);
+    if (unary_precedence != 0 && unary_precedence >= parent_precedence) {
+        SyntaxToken* operator_token = syntax_token_dup(next_token(parser));
+        ExpressionSyntax* operand = parse_expression(parser, unary_precedence);
+        left = unary_expression_syntax_new(operator_token, operand);
+    } else {
+        left = parse_primary_expression(parser);
+    }
 
     while (true) {
         size_t precedence = binary_operator_precedence(current(parser)->kind);

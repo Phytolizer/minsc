@@ -7,6 +7,7 @@
 #include "minsc/code_analysis/literal_expression_syntax.h"
 #include "minsc/code_analysis/parenthesized_expression_syntax.h"
 #include "minsc/code_analysis/syntax_token.h"
+#include "minsc/code_analysis/unary_expression_syntax.h"
 #include "minsc/runtime/object.h"
 #include "minsc/support/minsc_assert.h"
 
@@ -58,6 +59,18 @@ static int64_t evaluate_expression(ExpressionSyntax* expression) {
             ParenthesizedExpressionSyntax* parenthesized =
                     (ParenthesizedExpressionSyntax*)expression;
             return evaluate_expression(parenthesized->expression);
+        }
+        case EXPRESSION_SYNTAX_TYPE_UNARY: {
+            UnaryExpressionSyntax* unary = (UnaryExpressionSyntax*)expression;
+            int64_t operand = evaluate_expression(unary->operand);
+            switch (unary->operator_token->kind) {
+                case SYNTAX_KIND_PLUS_TOKEN:
+                    return operand;
+                case SYNTAX_KIND_MINUS_TOKEN:
+                    return -operand;
+                default:
+                    MINSC_ABORT("Unexpected unary operator");
+            }
         }
     }
 
