@@ -27,6 +27,7 @@ set(MINSC_SRC_REL
     code_analysis/binding/bound_literal_expression.c
     code_analysis/binding/bound_node.c
     code_analysis/binding/bound_unary_expression.c
+    code_analysis/evaluator.c
     code_analysis/syntax/lexer.c
     code_analysis/syntax/syntax_kind.c
     code_analysis/syntax/syntax_token.c
@@ -37,7 +38,6 @@ set(MINSC_SRC_REL
     code_analysis/syntax/syntax_node.c
     code_analysis/syntax/diagnostic.c
     code_analysis/syntax/syntax_tree.c
-    code_analysis/syntax/evaluator.c
     code_analysis/syntax/parenthesized_expression_syntax.c
     code_analysis/syntax/syntax_facts.c
     code_analysis/syntax/unary_expression_syntax.c
