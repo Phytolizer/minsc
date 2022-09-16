@@ -1,9 +1,9 @@
-#include "binary_expression_syntax.h"
+#include "minsc/code_analysis/binary_expression_syntax.h"
 
 #include <buf/buf.h>
 #include <stdlib.h>
 
-#include "minsc_assert.h"
+#include "minsc/support/minsc_assert.h"
 
 ExpressionSyntax* binary_expression_syntax_new(ExpressionSyntax* left,
                                                SyntaxToken* operator_token,

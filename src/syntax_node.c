@@ -1,11 +1,11 @@
-#include "syntax_node.h"
+#include "minsc/code_analysis/syntax_node.h"
 
 #include <buf/buf.h>
 #include <stdlib.h>
 
-#include "expression_syntax.h"
-#include "minsc_assert.h"
-#include "syntax_token.h"
+#include "minsc/code_analysis/expression_syntax.h"
+#include "minsc/code_analysis/syntax_token.h"
+#include "minsc/support/minsc_assert.h"
 
 SyntaxKind syntax_node_kind(const SyntaxNode* node) {
     switch (node->type) {

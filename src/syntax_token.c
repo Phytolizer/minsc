@@ -1,9 +1,9 @@
-#include "syntax_token.h"
+#include "minsc/code_analysis/syntax_token.h"
 
 #include <stdlib.h>
 #include <str/str.h>
 
-#include "minsc_assert.h"
+#include "minsc/support/minsc_assert.h"
 
 SyntaxToken* syntax_token_new(SyntaxKind kind,
                               size_t position,

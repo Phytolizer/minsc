@@ -1,11 +1,11 @@
-#include "literal_expression_syntax.h"
+#include "minsc/code_analysis/literal_expression_syntax.h"
 
 #include <assert.h>
 #include <buf/buf.h>
 #include <stdlib.h>
 
-#include "is_derived.h"
-#include "minsc_assert.h"
+#include "minsc/support/is_derived.h"
+#include "minsc/support/minsc_assert.h"
 
 ExpressionSyntax* literal_expression_syntax_new(SyntaxToken* literal_token) {
     LiteralExpressionSyntax* expression =

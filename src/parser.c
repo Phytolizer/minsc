@@ -1,18 +1,18 @@
-#include "parser.h"
+#include "minsc/code_analysis/parser.h"
 
 #include <buf/buf.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <str/str.h>
 
-#include "binary_expression_syntax.h"
-#include "diagnostic.h"
-#include "expression_syntax.h"
-#include "lexer.h"
-#include "literal_expression_syntax.h"
-#include "parenthesized_expression_syntax.h"
-#include "syntax_kind.h"
-#include "syntax_token.h"
+#include "minsc/code_analysis/binary_expression_syntax.h"
+#include "minsc/code_analysis/diagnostic.h"
+#include "minsc/code_analysis/expression_syntax.h"
+#include "minsc/code_analysis/lexer.h"
+#include "minsc/code_analysis/literal_expression_syntax.h"
+#include "minsc/code_analysis/parenthesized_expression_syntax.h"
+#include "minsc/code_analysis/syntax_kind.h"
+#include "minsc/code_analysis/syntax_token.h"
 
 typedef BUF(SyntaxToken*) SyntaxTokenBuf;
 

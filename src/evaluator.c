@@ -1,14 +1,14 @@
-#include "evaluator.h"
+#include "minsc/code_analysis/evaluator.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "binary_expression_syntax.h"
-#include "literal_expression_syntax.h"
-#include "minsc_assert.h"
-#include "object.h"
-#include "parenthesized_expression_syntax.h"
-#include "syntax_token.h"
+#include "minsc/code_analysis/binary_expression_syntax.h"
+#include "minsc/code_analysis/literal_expression_syntax.h"
+#include "minsc/code_analysis/parenthesized_expression_syntax.h"
+#include "minsc/code_analysis/syntax_token.h"
+#include "minsc/runtime/object.h"
+#include "minsc/support/minsc_assert.h"
 
 struct Evaluator {
     ExpressionSyntax* root;

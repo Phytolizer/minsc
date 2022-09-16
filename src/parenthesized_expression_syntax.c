@@ -1,6 +1,6 @@
-#include "parenthesized_expression_syntax.h"
+#include "minsc/code_analysis/parenthesized_expression_syntax.h"
 
-#include "minsc_assert.h"
+#include "minsc/support/minsc_assert.h"
 
 ExpressionSyntax* parenthesized_expression_syntax_new(
         SyntaxToken* open_parenthesis_token,

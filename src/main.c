@@ -7,13 +7,13 @@
 #include <str/str.h>
 #include <styler/styler.h>
 
-#include "diagnostic.h"
-#include "evaluator.h"
-#include "object.h"
-#include "syntax_kind.h"
-#include "syntax_node.h"
-#include "syntax_token.h"
-#include "syntax_tree.h"
+#include "minsc/code_analysis/diagnostic.h"
+#include "minsc/code_analysis/evaluator.h"
+#include "minsc/code_analysis/syntax_kind.h"
+#include "minsc/code_analysis/syntax_node.h"
+#include "minsc/code_analysis/syntax_token.h"
+#include "minsc/code_analysis/syntax_tree.h"
+#include "minsc/runtime/object.h"
 
 #ifdef _WIN32
 #include <windows.h>

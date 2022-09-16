@@ -38,11 +38,12 @@ set(MINSC_SRC_REL
 prepend_path(MINSC_SRC_REL src/ MINSC_SRC)
 add_executable(minsc ${MINSC_SRC})
 set(MINSC_INC_REL syntax_kind.inc)
-prepend_path(MINSC_INC_REL src/ MINSC_INC)
+prepend_path(MINSC_INC_REL include/minsc/code_analysis/ MINSC_INC)
 foreach(inc ${MINSC_INC})
   message(STATUS "${inc}")
-  vary_case(${inc} include uppercamel minsc)
+  vary_case(${inc} include/minsc/code_analysis uppercamel minsc)
 endforeach()
+target_include_directories(minsc PRIVATE include)
 target_link_libraries(
   minsc PRIVATE println::println linenoise::linenoise str::str buf::buf
                 styler::styler

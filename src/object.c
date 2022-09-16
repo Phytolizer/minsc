@@ -1,11 +1,11 @@
-#include "object.h"
+#include "minsc/runtime/object.h"
 
 #include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <str/str.h>
 
-#include "minsc_assert.h"
+#include "minsc/support/minsc_assert.h"
 
 Object* object_new_i64(int64_t value) {
     ObjectI64* object = malloc(sizeof(ObjectI64));

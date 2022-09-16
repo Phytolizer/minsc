@@ -5,7 +5,7 @@
 #include <stddef.h>
 #include <str/str.h>
 
-#include "object.h"
+#include "minsc/runtime/object.h"
 #include "syntax_kind.h"
 #include "syntax_node.h"
 

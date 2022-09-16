@@ -1,4 +1,4 @@
-#include "lexer.h"
+#include "minsc/code_analysis/lexer.h"
 
 #include <buf/buf.h>
 #include <stddef.h>
@@ -6,10 +6,10 @@
 #include <str/str.h>
 #include <str/strtox.h>
 
-#include "diagnostic.h"
-#include "minsc_assert.h"
-#include "object.h"
-#include "wrap_ctype.h"
+#include "minsc/code_analysis/diagnostic.h"
+#include "minsc/runtime/object.h"
+#include "minsc/support/minsc_assert.h"
+#include "minsc/support/wrap_ctype.h"
 
 struct Lexer {
     str source;
