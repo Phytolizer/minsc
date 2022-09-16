@@ -1,5 +1,6 @@
 #include "file/file.h"
 
+#include <assert.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <str/str.h>
@@ -198,6 +199,7 @@ static str path_normalize(str path) {
     // works on both windows and unix-based OSes, because both can use '/' as
     // path separator
     char* result = malloc(path.len + 1);
+    assert(result != NULL);
     for (size_t i = 0; i < path.len; i++) {
         if (path.ptr[i] == '\\') {
             result[i] = '/';
