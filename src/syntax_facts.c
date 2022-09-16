@@ -1,4 +1,4 @@
-#include "minsc/code_analysis/syntax_facts.h"
+#include "minsc/code_analysis/syntax/syntax_facts.h"
 
 extern size_t binary_operator_precedence(SyntaxKind kind) {
     switch (kind) {

@@ -1,8 +1,8 @@
-#include "minsc/code_analysis/syntax_tree.h"
+#include "minsc/code_analysis/syntax/syntax_tree.h"
 
 #include <stdlib.h>
 
-#include "minsc/code_analysis/parser.h"
+#include "minsc/code_analysis/syntax/parser.h"
 #include "minsc/support/minsc_assert.h"
 
 SyntaxTree* syntax_tree_new(DiagnosticBuf diagnostics,

@@ -1,11 +1,11 @@
-#include "minsc/code_analysis/expression_syntax.h"
+#include "minsc/code_analysis/syntax/expression_syntax.h"
 
 #include <stdlib.h>
 
-#include "minsc/code_analysis/binary_expression_syntax.h"
-#include "minsc/code_analysis/literal_expression_syntax.h"
-#include "minsc/code_analysis/parenthesized_expression_syntax.h"
-#include "minsc/code_analysis/unary_expression_syntax.h"
+#include "minsc/code_analysis/syntax/binary_expression_syntax.h"
+#include "minsc/code_analysis/syntax/literal_expression_syntax.h"
+#include "minsc/code_analysis/syntax/parenthesized_expression_syntax.h"
+#include "minsc/code_analysis/syntax/unary_expression_syntax.h"
 #include "minsc/support/minsc_assert.h"
 
 SyntaxKind expression_syntax_kind(const ExpressionSyntax* expression) {

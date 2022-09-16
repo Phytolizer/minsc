@@ -3,11 +3,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "minsc/code_analysis/binary_expression_syntax.h"
-#include "minsc/code_analysis/literal_expression_syntax.h"
-#include "minsc/code_analysis/parenthesized_expression_syntax.h"
-#include "minsc/code_analysis/syntax_token.h"
-#include "minsc/code_analysis/unary_expression_syntax.h"
+#include "minsc/code_analysis/syntax/binary_expression_syntax.h"
+#include "minsc/code_analysis/syntax/literal_expression_syntax.h"
+#include "minsc/code_analysis/syntax/parenthesized_expression_syntax.h"
+#include "minsc/code_analysis/syntax/syntax_token.h"
+#include "minsc/code_analysis/syntax/unary_expression_syntax.h"
 #include "minsc/runtime/object.h"
 #include "minsc/support/minsc_assert.h"
 

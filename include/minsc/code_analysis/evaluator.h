@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#include "expression_syntax.h"
+#include "syntax/expression_syntax.h"
 
 typedef struct Evaluator Evaluator;
 

@@ -1,4 +1,4 @@
-#include "minsc/code_analysis/parenthesized_expression_syntax.h"
+#include "minsc/code_analysis/syntax/parenthesized_expression_syntax.h"
 
 #include "minsc/support/minsc_assert.h"
 

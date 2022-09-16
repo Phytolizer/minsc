@@ -1,4 +1,4 @@
-#include "minsc/code_analysis/lexer.h"
+#include "minsc/code_analysis/syntax/lexer.h"
 
 #include <buf/buf.h>
 #include <stddef.h>
@@ -6,7 +6,7 @@
 #include <str/str.h>
 #include <str/strtox.h>
 
-#include "minsc/code_analysis/diagnostic.h"
+#include "minsc/code_analysis/syntax/diagnostic.h"
 #include "minsc/runtime/object.h"
 #include "minsc/support/minsc_assert.h"
 #include "minsc/support/wrap_ctype.h"

@@ -1,4 +1,4 @@
-#include "minsc/code_analysis/binary_expression_syntax.h"
+#include "minsc/code_analysis/syntax/binary_expression_syntax.h"
 
 #include <buf/buf.h>
 #include <stdlib.h>

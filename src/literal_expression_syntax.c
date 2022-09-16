@@ -1,4 +1,4 @@
-#include "minsc/code_analysis/literal_expression_syntax.h"
+#include "minsc/code_analysis/syntax/literal_expression_syntax.h"
 
 #include <assert.h>
 #include <buf/buf.h>

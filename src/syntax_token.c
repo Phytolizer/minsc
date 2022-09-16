@@ -1,4 +1,4 @@
-#include "minsc/code_analysis/syntax_token.h"
+#include "minsc/code_analysis/syntax/syntax_token.h"
 
 #include <stdlib.h>
 #include <str/str.h>

@@ -1,4 +1,4 @@
-#include "minsc/code_analysis/diagnostic.h"
+#include "minsc/code_analysis/syntax/diagnostic.h"
 
 #include <buf/buf.h>
 #include <stdint.h>
