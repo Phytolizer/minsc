@@ -1,2 +1,3 @@
 X(NULL)
 X(I64)
+X(BOOL)

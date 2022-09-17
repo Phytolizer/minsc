@@ -10,6 +10,6 @@ typedef struct Evaluator Evaluator;
 Evaluator* evaluator_new(BoundExpression* root);
 void evaluator_free(Evaluator* evaluator);
 
-int64_t evaluator_evaluate(Evaluator* evaluator);
+Object* evaluator_evaluate(Evaluator* evaluator);
 
 #endif  // MINSC_EVALUATOR_H_

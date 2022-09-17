@@ -102,7 +102,9 @@ int main(void) {
             binder_bind_expression(binder, program->root);
 
         DiagnosticBuf diagnostics = syntax_tree_take_diagnostics(program);
-        BUF_CONCAT(&diagnostics, binder_take_diagnostics(binder));
+        DiagnosticBuf binder_diagnostics = binder_take_diagnostics(binder);
+        BUF_CONCAT(&diagnostics, binder_diagnostics);
+        BUF_FREE(binder_diagnostics);
         binder_free(binder);
 
         if (show_tree) {
@@ -126,11 +128,14 @@ int main(void) {
             (void)fflush(stdout);
         } else {
             Evaluator* evaluator = evaluator_new(bound_expression);
-            int64_t result = evaluator_evaluate(evaluator);
+            Object* result = evaluator_evaluate(evaluator);
             evaluator_free(evaluator);
+            str result_str = object_string(result);
+            object_free(result);
 
             styler_apply_fg(styler_fg_green, stdout);
-            printfln("%" PRId64, result);
+            printfln(str_fmt, str_arg(result_str));
+            str_free(result_str);
             styler_apply_fg(styler_fg_reset, stdout);
             (void)fflush(stdout);
         }

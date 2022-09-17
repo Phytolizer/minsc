@@ -129,8 +129,7 @@ static BindBinaryOperatorKindResult bind_binary_operator_kind(
 static BoundExpression*
 bind_literal_expression(Binder* binder, LiteralExpressionSyntax* syntax) {
     (void)binder;
-    return bound_literal_expression_new(object_dup(syntax->literal_token->value)
-    );
+    return bound_literal_expression_new(object_dup(syntax->value));
 }
 
 static BoundExpression*
@@ -176,6 +175,7 @@ bind_binary_expression(Binder* binder, BinaryExpressionSyntax* syntax) {
                 str_arg(object_type_string(bound_expression_type(right)))
             )
         );
+        bound_expression_free(right);
         return left;
     }
     return bound_binary_expression_new(operator_kind.value, left, right);

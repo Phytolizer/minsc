@@ -149,16 +149,33 @@ parse_expression(Parser* parser, size_t parent_precedence) {
 }
 
 static ExpressionSyntax* parse_primary_expression(Parser* parser) {
-    if (current(parser)->kind == SYNTAX_KIND_OPEN_PARENTHESIS_TOKEN) {
-        SyntaxToken* left = syntax_token_dup(next_token(parser));
-        ExpressionSyntax* expression = parse_expression(parser, 0);
-        SyntaxToken* right = syntax_token_dup(
-            match_token(parser, SYNTAX_KIND_CLOSE_PARENTHESIS_TOKEN)
-        );
-        return parenthesized_expression_syntax_new(left, expression, right);
+    ExpressionSyntax* result;
+
+    switch (current(parser)->kind) {
+        case SYNTAX_KIND_OPEN_PARENTHESIS_TOKEN: {
+            SyntaxToken* left = syntax_token_dup(next_token(parser));
+            ExpressionSyntax* expression = parse_expression(parser, 0);
+            SyntaxToken* right = syntax_token_dup(
+                match_token(parser, SYNTAX_KIND_CLOSE_PARENTHESIS_TOKEN)
+            );
+            result =
+                parenthesized_expression_syntax_new(left, expression, right);
+        } break;
+        case SYNTAX_KIND_TRUE_KEYWORD:
+        case SYNTAX_KIND_FALSE_KEYWORD: {
+            bool value = current(parser)->kind == SYNTAX_KIND_TRUE_KEYWORD;
+            SyntaxToken* keyword_token = syntax_token_dup(next_token(parser));
+            result = literal_expression_syntax_new(
+                keyword_token,
+                object_new_bool(value)
+            );
+        } break;
+        default: {
+            SyntaxToken* number_token =
+                syntax_token_dup(match_token(parser, SYNTAX_KIND_NUMBER_TOKEN));
+            result = literal_expression_syntax_new(number_token, NULL);
+        } break;
     }
 
-    SyntaxToken* number_token =
-        syntax_token_dup(match_token(parser, SYNTAX_KIND_NUMBER_TOKEN));
-    return literal_expression_syntax_new(number_token);
+    return result;
 }
