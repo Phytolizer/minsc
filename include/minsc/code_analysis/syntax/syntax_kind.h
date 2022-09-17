@@ -1,5 +1,5 @@
-#ifndef MINSC_SYNTAX_KIND_H_
-#define MINSC_SYNTAX_KIND_H_
+#ifndef MINSC_CODE_ANALYSIS_SYNTAX_SYNTAX_KIND_H_
+#define MINSC_CODE_ANALYSIS_SYNTAX_SYNTAX_KIND_H_
 
 #include <str/str.h>
 
@@ -11,4 +11,4 @@ typedef enum {
 
 extern str syntax_kind_string(SyntaxKind kind);
 
-#endif  // MINSC_SYNTAX_KIND_H_
+#endif  // MINSC_CODE_ANALYSIS_SYNTAX_SYNTAX_KIND_H_

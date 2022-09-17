@@ -1,5 +1,5 @@
-#ifndef MINSC_BOUND_UNARY_OPERATOR_H_
-#define MINSC_BOUND_UNARY_OPERATOR_H_
+#ifndef MINSC_CODE_ANALYSIS_BINDING_BOUND_UNARY_OPERATOR_H_
+#define MINSC_CODE_ANALYSIS_BINDING_BOUND_UNARY_OPERATOR_H_
 
 #include "minsc/code_analysis/syntax/syntax_kind.h"
 #include "minsc/runtime/object.h"
@@ -19,4 +19,4 @@ typedef struct BoundUnaryOperator {
 
 const BoundUnaryOperator* bind_unary_operator(SyntaxKind syntax_kind, ObjectType operand_type);
 
-#endif  // MINSC_BOUND_UNARY_OPERATOR_H_
+#endif  // MINSC_CODE_ANALYSIS_BINDING_BOUND_UNARY_OPERATOR_H_

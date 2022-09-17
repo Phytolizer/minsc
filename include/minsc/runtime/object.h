@@ -1,5 +1,5 @@
-#ifndef MINSC_OBJECT_H_
-#define MINSC_OBJECT_H_
+#ifndef MINSC_RUNTIME_OBJECT_H_
+#define MINSC_RUNTIME_OBJECT_H_
 
 #include <stdint.h>
 #include <str/str.h>
@@ -40,4 +40,4 @@ str object_string(Object* object);
 
 str object_type_string(ObjectType type);
 
-#endif  // MINSC_OBJECT_H_
+#endif  // MINSC_RUNTIME_OBJECT_H_

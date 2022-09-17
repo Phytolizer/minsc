@@ -1,5 +1,5 @@
-#ifndef MINSC_LEXER_H_
-#define MINSC_LEXER_H_
+#ifndef MINSC_CODE_ANALYSIS_SYNTAX_LEXER_H_
+#define MINSC_CODE_ANALYSIS_SYNTAX_LEXER_H_
 
 #include <str/str.h>
 
@@ -14,4 +14,4 @@ DiagnosticBuf lexer_take_diagnostics(Lexer* lexer);
 
 SyntaxToken* lexer_next_token(Lexer* lexer);
 
-#endif  // MINSC_LEXER_H_
+#endif  // MINSC_CODE_ANALYSIS_SYNTAX_LEXER_H_

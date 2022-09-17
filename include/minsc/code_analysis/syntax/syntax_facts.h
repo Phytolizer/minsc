@@ -1,5 +1,5 @@
-#ifndef MINSC_SYNTAX_FACTS_H_
-#define MINSC_SYNTAX_FACTS_H_
+#ifndef MINSC_CODE_ANALYSIS_SYNTAX_SYNTAX_FACTS_H_
+#define MINSC_CODE_ANALYSIS_SYNTAX_SYNTAX_FACTS_H_
 
 #include <stddef.h>
 
@@ -10,4 +10,4 @@ extern size_t unary_operator_precedence(SyntaxKind kind);
 
 extern SyntaxKind keyword_kind(str text);
 
-#endif  // MINSC_SYNTAX_FACTS_H_
+#endif  // MINSC_CODE_ANALYSIS_SYNTAX_SYNTAX_FACTS_H_

@@ -1,5 +1,5 @@
-#ifndef MINSC_BINARY_EXPRESSION_SYNTAX_H_
-#define MINSC_BINARY_EXPRESSION_SYNTAX_H_
+#ifndef MINSC_CODE_ANALYSIS_SYNTAX_BINARY_EXPRESSION_SYNTAX_H_
+#define MINSC_CODE_ANALYSIS_SYNTAX_BINARY_EXPRESSION_SYNTAX_H_
 
 #include "expression_syntax.h"
 #include "syntax_node.h"
@@ -21,4 +21,4 @@ void binary_expression_syntax_free(BinaryExpressionSyntax* expression);
 
 SyntaxNodeChildren binary_expression_syntax_children(const BinaryExpressionSyntax* expression);
 
-#endif  // MINSC_BINARY_EXPRESSION_SYNTAX_H_
+#endif  // MINSC_CODE_ANALYSIS_SYNTAX_BINARY_EXPRESSION_SYNTAX_H_

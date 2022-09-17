@@ -1,5 +1,5 @@
-#ifndef MINSC_PARSER_H_
-#define MINSC_PARSER_H_
+#ifndef MINSC_CODE_ANALYSIS_SYNTAX_PARSER_H_
+#define MINSC_CODE_ANALYSIS_SYNTAX_PARSER_H_
 
 #include <str/str.h>
 
@@ -14,4 +14,4 @@ void parser_free(Parser* parser);
 SyntaxTree* parser_parse(Parser* parser);
 DiagnosticBuf parser_take_diagnostics(Parser* parser);
 
-#endif  // MINSC_PARSER_H_
+#endif  // MINSC_CODE_ANALYSIS_SYNTAX_PARSER_H_

@@ -1,5 +1,5 @@
-#ifndef MINSC_BINDER_H_
-#define MINSC_BINDER_H_
+#ifndef MINSC_CODE_ANALYSIS_BINDING_BINDER_H_
+#define MINSC_CODE_ANALYSIS_BINDING_BINDER_H_
 
 #include "bound_expression.h"
 #include "minsc/code_analysis/syntax/diagnostic.h"
@@ -14,4 +14,4 @@ BoundExpression* binder_bind_expression(Binder* binder, ExpressionSyntax* expres
 
 DiagnosticBuf binder_take_diagnostics(Binder* binder);
 
-#endif  // MINSC_BINDER_H_
+#endif  // MINSC_CODE_ANALYSIS_BINDING_BINDER_H_

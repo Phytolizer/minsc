@@ -1,5 +1,5 @@
-#ifndef MINSC_SYNTAX_NODE_H_
-#define MINSC_SYNTAX_NODE_H_
+#ifndef MINSC_CODE_ANALYSIS_SYNTAX_SYNTAX_NODE_H_
+#define MINSC_CODE_ANALYSIS_SYNTAX_SYNTAX_NODE_H_
 
 #include <buf/buf.h>
 
@@ -20,4 +20,4 @@ typedef BUF(const SyntaxNode*) SyntaxNodeChildren;
 SyntaxKind syntax_node_kind(const SyntaxNode* node);
 SyntaxNodeChildren syntax_node_children(const SyntaxNode* node);
 
-#endif  // MINSC_SYNTAX_NODE_H_
+#endif  // MINSC_CODE_ANALYSIS_SYNTAX_SYNTAX_NODE_H_

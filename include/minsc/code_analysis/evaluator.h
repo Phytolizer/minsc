@@ -1,5 +1,5 @@
-#ifndef MINSC_EVALUATOR_H_
-#define MINSC_EVALUATOR_H_
+#ifndef MINSC_CODE_ANALYSIS_EVALUATOR_H_
+#define MINSC_CODE_ANALYSIS_EVALUATOR_H_
 
 #include <stdint.h>
 
@@ -12,4 +12,4 @@ void evaluator_free(Evaluator* evaluator);
 
 Object* evaluator_evaluate(Evaluator* evaluator);
 
-#endif  // MINSC_EVALUATOR_H_
+#endif  // MINSC_CODE_ANALYSIS_EVALUATOR_H_

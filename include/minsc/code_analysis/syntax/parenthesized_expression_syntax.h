@@ -1,5 +1,5 @@
-#ifndef MINSC_PARENTHESIZED_EXPRESSION_SYNTAX_H_
-#define MINSC_PARENTHESIZED_EXPRESSION_SYNTAX_H_
+#ifndef MINSC_CODE_ANALYSIS_SYNTAX_PARENTHESIZED_EXPRESSION_SYNTAX_H_
+#define MINSC_CODE_ANALYSIS_SYNTAX_PARENTHESIZED_EXPRESSION_SYNTAX_H_
 
 #include "expression_syntax.h"
 #include "syntax_node.h"
@@ -23,4 +23,4 @@ SyntaxNodeChildren parenthesized_expression_syntax_children(
     const ParenthesizedExpressionSyntax* syntax
 );
 
-#endif  // MINSC_PARENTHESIZED_EXPRESSION_SYNTAX_H_
+#endif  // MINSC_CODE_ANALYSIS_SYNTAX_PARENTHESIZED_EXPRESSION_SYNTAX_H_

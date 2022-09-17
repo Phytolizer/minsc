@@ -1,5 +1,5 @@
-#ifndef MINSC_BOUND_BINARY_EXPRESSION_H_
-#define MINSC_BOUND_BINARY_EXPRESSION_H_
+#ifndef MINSC_CODE_ANALYSIS_BINDING_BOUND_BINARY_EXPRESSION_H_
+#define MINSC_CODE_ANALYSIS_BINDING_BOUND_BINARY_EXPRESSION_H_
 
 #include "bound_binary_operator.h"
 #include "bound_expression.h"
@@ -20,4 +20,4 @@ extern void bound_binary_expression_free(BoundBinaryExpression* expression);
 
 extern ObjectType bound_binary_expression_type(const BoundBinaryExpression* expression);
 
-#endif  // MINSC_BOUND_BINARY_EXPRESSION_H_
+#endif  // MINSC_CODE_ANALYSIS_BINDING_BOUND_BINARY_EXPRESSION_H_

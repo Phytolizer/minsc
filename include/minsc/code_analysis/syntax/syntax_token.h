@@ -1,5 +1,5 @@
-#ifndef MINSC_TOKEN_H_
-#define MINSC_TOKEN_H_
+#ifndef MINSC_CODE_ANALYSIS_SYNTAX_SYNTAX_TOKEN_H_
+#define MINSC_CODE_ANALYSIS_SYNTAX_SYNTAX_TOKEN_H_
 
 #include <stdbool.h>
 #include <stddef.h>
@@ -25,4 +25,4 @@ syntax_token_new_manufactured(SyntaxKind kind, size_t position, str text, Object
 SyntaxToken* syntax_token_dup(SyntaxToken* token);
 void syntax_token_free(SyntaxToken* token);
 
-#endif  // MINSC_TOKEN_H_
+#endif  // MINSC_CODE_ANALYSIS_SYNTAX_SYNTAX_TOKEN_H_

@@ -1,5 +1,5 @@
-#ifndef MINSC_WRAP_CTYPE_H_
-#define MINSC_WRAP_CTYPE_H_
+#ifndef MINSC_SUPPORT_WRAP_CTYPE_H_
+#define MINSC_SUPPORT_WRAP_CTYPE_H_
 
 #include <ctype.h>
 #include <stdbool.h>
@@ -19,4 +19,4 @@
 #define wrap_tolower(c) ((int)tolower(c))
 #define wrap_toupper(c) ((int)toupper(c))
 
-#endif  // MINSC_WRAP_CTYPE_H_
+#endif  // MINSC_SUPPORT_WRAP_CTYPE_H_

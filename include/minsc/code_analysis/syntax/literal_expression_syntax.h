@@ -1,5 +1,5 @@
-#ifndef MINSC_LITERAL_EXPRESSION_SYNTAX_H_
-#define MINSC_LITERAL_EXPRESSION_SYNTAX_H_
+#ifndef MINSC_CODE_ANALYSIS_SYNTAX_LITERAL_EXPRESSION_SYNTAX_H_
+#define MINSC_CODE_ANALYSIS_SYNTAX_LITERAL_EXPRESSION_SYNTAX_H_
 
 #include "expression_syntax.h"
 #include "minsc/runtime/object.h"
@@ -17,4 +17,4 @@ void literal_expression_syntax_free(LiteralExpressionSyntax* expression);
 
 SyntaxNodeChildren literal_expression_syntax_children(const LiteralExpressionSyntax* expression);
 
-#endif  // MINSC_LITERAL_EXPRESSION_SYNTAX_H_
+#endif  // MINSC_CODE_ANALYSIS_SYNTAX_LITERAL_EXPRESSION_SYNTAX_H_

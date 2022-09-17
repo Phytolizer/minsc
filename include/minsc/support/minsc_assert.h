@@ -1,5 +1,5 @@
-#ifndef MINSC_MINSC_ASSERT_H_
-#define MINSC_MINSC_ASSERT_H_
+#ifndef MINSC_SUPPORT_MINSC_ASSERT_H_
+#define MINSC_SUPPORT_MINSC_ASSERT_H_
 
 #include <stdlib.h>
 
@@ -16,4 +16,4 @@
         } \
     } while (0)
 
-#endif  // MINSC_MINSC_ASSERT_H_
+#endif  // MINSC_SUPPORT_MINSC_ASSERT_H_

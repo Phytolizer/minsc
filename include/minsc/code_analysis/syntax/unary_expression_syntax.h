@@ -1,5 +1,5 @@
-#ifndef MINSC_UNARY_EXPRESSION_SYNTAX_H_
-#define MINSC_UNARY_EXPRESSION_SYNTAX_H_
+#ifndef MINSC_CODE_ANALYSIS_SYNTAX_UNARY_EXPRESSION_SYNTAX_H_
+#define MINSC_CODE_ANALYSIS_SYNTAX_UNARY_EXPRESSION_SYNTAX_H_
 
 #include "expression_syntax.h"
 #include "syntax_token.h"
@@ -16,4 +16,4 @@ void unary_expression_syntax_free(UnaryExpressionSyntax* expression);
 
 SyntaxNodeChildren unary_expression_syntax_children(const UnaryExpressionSyntax* expression);
 
-#endif  // MINSC_UNARY_EXPRESSION_SYNTAX_H_
+#endif  // MINSC_CODE_ANALYSIS_SYNTAX_UNARY_EXPRESSION_SYNTAX_H_

@@ -1,5 +1,5 @@
-#ifndef MINSC_BOUND_UNARY_EXPRESSION_H_
-#define MINSC_BOUND_UNARY_EXPRESSION_H_
+#ifndef MINSC_CODE_ANALYSIS_BINDING_BOUND_UNARY_EXPRESSION_H_
+#define MINSC_CODE_ANALYSIS_BINDING_BOUND_UNARY_EXPRESSION_H_
 
 #include "bound_expression.h"
 #include "bound_unary_operator.h"
@@ -17,4 +17,4 @@ extern void bound_unary_expression_free(BoundUnaryExpression* expression);
 
 extern ObjectType bound_unary_expression_type(const BoundUnaryExpression* expression);
 
-#endif  // MINSC_BOUND_UNARY_EXPRESSION_H_
+#endif  // MINSC_CODE_ANALYSIS_BINDING_BOUND_UNARY_EXPRESSION_H_
