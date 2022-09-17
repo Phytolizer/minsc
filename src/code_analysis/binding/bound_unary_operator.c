@@ -1,5 +1,7 @@
 #include "minsc/code_analysis/binding/bound_unary_operator.h"
 
+#include <stddef.h>
+
 static const BoundUnaryOperator OPERATORS[] = {
     {
         .syntax_kind = SYNTAX_KIND_PLUS_TOKEN,

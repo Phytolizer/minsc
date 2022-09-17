@@ -1,5 +1,11 @@
 #include "minsc/code_analysis/syntax/unary_expression_syntax.h"
 
+#include <buf/buf.h>
+#include <stdlib.h>
+
+#include "minsc/code_analysis/syntax/expression_syntax.h"
+#include "minsc/code_analysis/syntax/syntax_node.h"
+#include "minsc/code_analysis/syntax/syntax_token.h"
 #include "minsc/support/minsc_assert.h"
 
 ExpressionSyntax*

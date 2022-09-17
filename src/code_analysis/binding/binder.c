@@ -1,15 +1,23 @@
 #include "minsc/code_analysis/binding/binder.h"
 
-#include <sum/sum.h>
+#include <buf/buf.h>
+#include <stdlib.h>
+#include <str/str.h>
 
 #include "minsc/code_analysis/binding/bound_binary_expression.h"
+#include "minsc/code_analysis/binding/bound_binary_operator.h"
+#include "minsc/code_analysis/binding/bound_expression.h"
 #include "minsc/code_analysis/binding/bound_literal_expression.h"
 #include "minsc/code_analysis/binding/bound_unary_expression.h"
+#include "minsc/code_analysis/binding/bound_unary_operator.h"
 #include "minsc/code_analysis/syntax/binary_expression_syntax.h"
 #include "minsc/code_analysis/syntax/diagnostic.h"
 #include "minsc/code_analysis/syntax/literal_expression_syntax.h"
 #include "minsc/code_analysis/syntax/parenthesized_expression_syntax.h"
+#include "minsc/code_analysis/syntax/syntax_kind.h"
+#include "minsc/code_analysis/syntax/syntax_token.h"
 #include "minsc/code_analysis/syntax/unary_expression_syntax.h"
+#include "minsc/runtime/object.h"
 #include "minsc/support/minsc_assert.h"
 
 struct Binder {

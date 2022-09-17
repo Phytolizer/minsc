@@ -14,7 +14,9 @@
 #include "minsc/code_analysis/syntax/syntax_facts.h"
 #include "minsc/code_analysis/syntax/syntax_kind.h"
 #include "minsc/code_analysis/syntax/syntax_token.h"
+#include "minsc/code_analysis/syntax/syntax_tree.h"
 #include "minsc/code_analysis/syntax/unary_expression_syntax.h"
+#include "minsc/runtime/object.h"
 
 typedef BUF(SyntaxToken*) SyntaxTokenBuf;
 

@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <str/str.h>
 
+#include "minsc/code_analysis/syntax/syntax_kind.h"
+#include "minsc/code_analysis/syntax/syntax_node.h"
 #include "minsc/support/minsc_assert.h"
 
 SyntaxToken* syntax_token_new(SyntaxKind kind, size_t position, str text, Object* value) {

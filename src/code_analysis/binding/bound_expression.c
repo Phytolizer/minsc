@@ -2,6 +2,7 @@
 
 #include "minsc/code_analysis/binding/bound_binary_expression.h"
 #include "minsc/code_analysis/binding/bound_literal_expression.h"
+#include "minsc/code_analysis/binding/bound_node.h"
 #include "minsc/code_analysis/binding/bound_unary_expression.h"
 #include "minsc/support/minsc_assert.h"
 

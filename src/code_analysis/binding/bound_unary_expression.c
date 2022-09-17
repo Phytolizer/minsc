@@ -2,6 +2,9 @@
 
 #include <stdlib.h>
 
+#include "minsc/code_analysis/binding/bound_expression.h"
+#include "minsc/code_analysis/binding/bound_node.h"
+#include "minsc/code_analysis/binding/bound_unary_operator.h"
 #include "minsc/support/minsc_assert.h"
 
 extern BoundExpression*

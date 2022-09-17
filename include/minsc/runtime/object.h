@@ -1,6 +1,7 @@
 #ifndef MINSC_RUNTIME_OBJECT_H_
 #define MINSC_RUNTIME_OBJECT_H_
 
+#include <stdbool.h>
 #include <stdint.h>
 #include <str/str.h>
 

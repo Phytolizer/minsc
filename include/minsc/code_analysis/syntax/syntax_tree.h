@@ -1,6 +1,8 @@
 #ifndef MINSC_CODE_ANALYSIS_SYNTAX_SYNTAX_TREE_H_
 #define MINSC_CODE_ANALYSIS_SYNTAX_SYNTAX_TREE_H_
 
+#include <str/str.h>
+
 #include "diagnostic.h"
 #include "expression_syntax.h"
 #include "syntax_token.h"

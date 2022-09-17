@@ -2,7 +2,6 @@
 #define PRINTLN_H_
 
 #include <hedley.h>
-#include <stdarg.h>
 #include <stdio.h>
 
 extern int println(void);

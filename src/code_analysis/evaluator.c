@@ -1,11 +1,16 @@
 #include "minsc/code_analysis/evaluator.h"
 
+#include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "minsc/code_analysis/binding/bound_binary_expression.h"
+#include "minsc/code_analysis/binding/bound_binary_operator.h"
+#include "minsc/code_analysis/binding/bound_expression.h"
 #include "minsc/code_analysis/binding/bound_literal_expression.h"
 #include "minsc/code_analysis/binding/bound_unary_expression.h"
+#include "minsc/code_analysis/binding/bound_unary_operator.h"
 #include "minsc/runtime/object.h"
 #include "minsc/support/minsc_assert.h"
 

@@ -1,8 +1,12 @@
 #include "minsc/code_analysis/syntax/syntax_tree.h"
 
+#include <buf/buf.h>
 #include <stdlib.h>
 
+#include "minsc/code_analysis/syntax/diagnostic.h"
+#include "minsc/code_analysis/syntax/expression_syntax.h"
 #include "minsc/code_analysis/syntax/parser.h"
+#include "minsc/code_analysis/syntax/syntax_token.h"
 #include "minsc/support/minsc_assert.h"
 
 SyntaxTree*

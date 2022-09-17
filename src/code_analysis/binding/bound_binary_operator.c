@@ -1,5 +1,7 @@
 #include "minsc/code_analysis/binding/bound_binary_operator.h"
 
+#include <stddef.h>
+
 static const BoundBinaryOperator OPERATORS[] = {
     {
         .syntax_kind = SYNTAX_KIND_PLUS_TOKEN,

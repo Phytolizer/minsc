@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdbool.h>
 #include <str/str.h>
 #include <sum/sum.h>
 

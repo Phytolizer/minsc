@@ -1,9 +1,8 @@
 #ifndef MINSC_CODE_ANALYSIS_EVALUATOR_H_
 #define MINSC_CODE_ANALYSIS_EVALUATOR_H_
 
-#include <stdint.h>
-
 #include "binding/bound_expression.h"
+#include "minsc/runtime/object.h"
 
 typedef struct Evaluator Evaluator;
 

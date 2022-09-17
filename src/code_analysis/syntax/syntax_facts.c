@@ -1,5 +1,7 @@
 #include "minsc/code_analysis/syntax/syntax_facts.h"
 
+#include "minsc/code_analysis/syntax/syntax_kind.h"
+
 extern size_t binary_operator_precedence(SyntaxKind kind) {
     switch (kind) {
         case SYNTAX_KIND_STAR_TOKEN:

@@ -2,6 +2,7 @@
 #define MINSC_CODE_ANALYSIS_SYNTAX_SYNTAX_FACTS_H_
 
 #include <stddef.h>
+#include <str/str.h>
 
 #include "syntax_kind.h"
 

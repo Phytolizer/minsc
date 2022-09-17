@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <str/str.h>
 #include <string.h>
+#include <sum/sum.h>
 
 #ifdef _WIN32
 #include <windows.h>

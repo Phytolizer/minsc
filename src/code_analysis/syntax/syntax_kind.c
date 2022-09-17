@@ -1,5 +1,6 @@
 #include "minsc/code_analysis/syntax/syntax_kind.h"
 
+#include <stddef.h>
 #include <str/str.h>
 
 static const char* const SYNTAX_KIND_STRINGS[] = {

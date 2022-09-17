@@ -2,6 +2,7 @@
 #define MINSC_CODE_ANALYSIS_SYNTAX_UNARY_EXPRESSION_SYNTAX_H_
 
 #include "expression_syntax.h"
+#include "minsc/code_analysis/syntax/syntax_node.h"
 #include "syntax_token.h"
 
 typedef struct UnaryExpressionSyntax {

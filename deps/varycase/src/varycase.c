@@ -1,12 +1,16 @@
 #include <arg/arg.h>
+#include <arg/buf.h>
+#include <arg/str.h>
 #include <buf/buf.h>
 #include <config.h>
 #include <ctype.h>
 #include <file/file.h>
 #include <println/println.h>
+#include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <str/str.h>
-#include <string.h>
 #include <sum/sum.h>
 
 #define str_from_arg_str(arg_str) str_ref_chars((arg_str).ptr, arg_str_len((arg_str)))

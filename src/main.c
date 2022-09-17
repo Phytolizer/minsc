@@ -8,6 +8,7 @@
 #include <styler/styler.h>
 
 #include "minsc/code_analysis/binding/binder.h"
+#include "minsc/code_analysis/binding/bound_expression.h"
 #include "minsc/code_analysis/evaluator.h"
 #include "minsc/code_analysis/syntax/diagnostic.h"
 #include "minsc/code_analysis/syntax/syntax_kind.h"
