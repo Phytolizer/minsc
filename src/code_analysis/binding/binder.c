@@ -85,19 +85,37 @@ DiagnosticBuf binder_take_diagnostics(Binder* binder) {
 
 static BindUnaryOperatorKindResult
 bind_unary_operator_kind(SyntaxKind kind, ObjectType operand_type) {
-    if (operand_type != OBJECT_TYPE_INT64) {
-        return (BindUnaryOperatorKindResult)SUM_NOTHING;
-    }
-    switch (kind) {
-        case SYNTAX_KIND_PLUS_TOKEN:
-            return (BindUnaryOperatorKindResult
-            )SUM_JUST(BOUND_UNARY_OPERATOR_KIND_IDENTITY);
-        case SYNTAX_KIND_MINUS_TOKEN:
-            return (BindUnaryOperatorKindResult
-            )SUM_JUST(BOUND_UNARY_OPERATOR_KIND_NEGATION);
+    BindUnaryOperatorKindResult result = SUM_NOTHING;
+
+    switch (operand_type) {
+        case OBJECT_TYPE_INT64:
+            switch (kind) {
+                case SYNTAX_KIND_PLUS_TOKEN:
+                    result = (BindUnaryOperatorKindResult
+                    )SUM_JUST(BOUND_UNARY_OPERATOR_KIND_IDENTITY);
+                    break;
+                case SYNTAX_KIND_MINUS_TOKEN:
+                    result = (BindUnaryOperatorKindResult
+                    )SUM_JUST(BOUND_UNARY_OPERATOR_KIND_NEGATION);
+                    break;
+                default:
+                    break;
+            }
+            break;
+        case OBJECT_TYPE_BOOL:
+            switch (kind) {
+                case SYNTAX_KIND_BANG_TOKEN:
+                    result = (BindUnaryOperatorKindResult
+                    )SUM_JUST(BOUND_UNARY_OPERATOR_KIND_LOGICAL_NEGATION);
+                    break;
+                default:
+                    break;
+            }
         default:
-            MINSC_ABORT("Unexpected unary operator kind");
+            break;
     }
+
+    return result;
 }
 
 static BindBinaryOperatorKindResult bind_binary_operator_kind(
@@ -105,25 +123,45 @@ static BindBinaryOperatorKindResult bind_binary_operator_kind(
     ObjectType left_type,
     ObjectType right_type
 ) {
-    if (left_type != OBJECT_TYPE_INT64 || right_type != OBJECT_TYPE_INT64) {
-        return (BindBinaryOperatorKindResult)SUM_NOTHING;
+    BindBinaryOperatorKindResult result = SUM_NOTHING;
+
+    if (left_type == OBJECT_TYPE_INT64 && right_type == OBJECT_TYPE_INT64) {
+        switch (kind) {
+            case SYNTAX_KIND_PLUS_TOKEN:
+                result = (BindBinaryOperatorKindResult
+                )SUM_JUST(BOUND_BINARY_OPERATOR_KIND_ADDITION);
+                break;
+            case SYNTAX_KIND_MINUS_TOKEN:
+                result = (BindBinaryOperatorKindResult
+                )SUM_JUST(BOUND_BINARY_OPERATOR_KIND_SUBTRACTION);
+                break;
+            case SYNTAX_KIND_STAR_TOKEN:
+                result = (BindBinaryOperatorKindResult
+                )SUM_JUST(BOUND_BINARY_OPERATOR_KIND_MULTIPLICATION);
+                break;
+            case SYNTAX_KIND_SLASH_TOKEN:
+                result = (BindBinaryOperatorKindResult
+                )SUM_JUST(BOUND_BINARY_OPERATOR_KIND_DIVISION);
+                break;
+            default:
+                break;
+        }
+    } else if (left_type == OBJECT_TYPE_BOOL && right_type == OBJECT_TYPE_BOOL) {
+        switch (kind) {
+            case SYNTAX_KIND_AMPERSAND_AMPERSAND_TOKEN:
+                result = (BindBinaryOperatorKindResult
+                )SUM_JUST(BOUND_BINARY_OPERATOR_KIND_LOGICAL_AND);
+                break;
+            case SYNTAX_KIND_PIPE_PIPE_TOKEN:
+                result = (BindBinaryOperatorKindResult
+                )SUM_JUST(BOUND_BINARY_OPERATOR_KIND_LOGICAL_OR);
+                break;
+            default:
+                break;
+        }
     }
-    switch (kind) {
-        case SYNTAX_KIND_PLUS_TOKEN:
-            return (BindBinaryOperatorKindResult
-            )SUM_JUST(BOUND_BINARY_OPERATOR_KIND_ADDITION);
-        case SYNTAX_KIND_MINUS_TOKEN:
-            return (BindBinaryOperatorKindResult
-            )SUM_JUST(BOUND_BINARY_OPERATOR_KIND_SUBTRACTION);
-        case SYNTAX_KIND_STAR_TOKEN:
-            return (BindBinaryOperatorKindResult
-            )SUM_JUST(BOUND_BINARY_OPERATOR_KIND_MULTIPLICATION);
-        case SYNTAX_KIND_SLASH_TOKEN:
-            return (BindBinaryOperatorKindResult
-            )SUM_JUST(BOUND_BINARY_OPERATOR_KIND_DIVISION);
-        default:
-            MINSC_ABORT("Unexpected binary operator kind");
-    }
+
+    return result;
 }
 
 static BoundExpression*

@@ -18,6 +18,7 @@ struct Lexer {
     DiagnosticBuf diagnostics;
 };
 
+static char peek(const Lexer* lexer, size_t offset);
 static char current(const Lexer* lexer);
 static str ref_text(const Lexer* lexer, size_t start);
 
@@ -47,6 +48,7 @@ SyntaxToken* lexer_next_token(Lexer* lexer) {
     char c = current(lexer);
     SyntaxKind kind;
     Object* value = NULL;
+    bool c_is_error = false;
 
     if (wrap_isdigit(c)) {
         while (wrap_isdigit(current(lexer))) {
@@ -105,20 +107,43 @@ SyntaxToken* lexer_next_token(Lexer* lexer) {
                 lexer->position++;
                 kind = SYNTAX_KIND_CLOSE_PARENTHESIS_TOKEN;
                 break;
+            case '!':
+                lexer->position++;
+                kind = SYNTAX_KIND_BANG_TOKEN;
+                break;
+            case '&':
+                if (peek(lexer, 1) == '&') {
+                    lexer->position += 2;
+                    kind = SYNTAX_KIND_AMPERSAND_AMPERSAND_TOKEN;
+                } else {
+                    lexer->position++;
+                    c_is_error = true;
+                }
+                break;
+            case '|':
+                if (peek(lexer, 1) == '|') {
+                    lexer->position += 2;
+                    kind = SYNTAX_KIND_PIPE_PIPE_TOKEN;
+                } else {
+                    lexer->position++;
+                    c_is_error = true;
+                }
+                break;
             case '\0':
                 kind = SYNTAX_KIND_END_OF_FILE_TOKEN;
                 break;
-            default: {
-                BUF_PUSH(
-                    &lexer->diagnostics,
-                    str_printf(
-                        "ERROR: Unexpected character '%c'.",
-                        current(lexer)
-                    )
-                );
+            default:
                 lexer->position++;
-            }
+                c_is_error = true;
         }
+    }
+
+    if (c_is_error) {
+        BUF_PUSH(
+            &lexer->diagnostics,
+            str_printf("ERROR: Unexpected character '%c'.", c)
+        );
+        kind = SYNTAX_KIND_BAD_TOKEN;
     }
 
     str text = str_null;
@@ -126,11 +151,16 @@ SyntaxToken* lexer_next_token(Lexer* lexer) {
     return syntax_token_new(kind, start, text, value);
 }
 
-static char current(const Lexer* lexer) {
-    if (lexer->position >= lexer->source.len) {
+static char peek(const Lexer* lexer, size_t offset) {
+    size_t position = lexer->position + offset;
+    if (position >= str_len(lexer->source)) {
         return '\0';
     }
-    return lexer->source.ptr[lexer->position];
+    return lexer->source.ptr[position];
+}
+
+static char current(const Lexer* lexer) {
+    return peek(lexer, 0);
 }
 
 static str ref_text(const Lexer* lexer, size_t start) {

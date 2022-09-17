@@ -4,9 +4,13 @@ extern size_t binary_operator_precedence(SyntaxKind kind) {
     switch (kind) {
         case SYNTAX_KIND_STAR_TOKEN:
         case SYNTAX_KIND_SLASH_TOKEN:
-            return 2;
+            return 4;
         case SYNTAX_KIND_PLUS_TOKEN:
         case SYNTAX_KIND_MINUS_TOKEN:
+            return 3;
+        case SYNTAX_KIND_AMPERSAND_AMPERSAND_TOKEN:
+            return 2;
+        case SYNTAX_KIND_PIPE_PIPE_TOKEN:
             return 1;
         default:
             return 0;
@@ -17,7 +21,8 @@ extern size_t unary_operator_precedence(SyntaxKind kind) {
     switch (kind) {
         case SYNTAX_KIND_PLUS_TOKEN:
         case SYNTAX_KIND_MINUS_TOKEN:
-            return 3;
+        case SYNTAX_KIND_BANG_TOKEN:
+            return 5;
         default:
             return 0;
     }

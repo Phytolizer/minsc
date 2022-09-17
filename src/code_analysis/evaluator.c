@@ -55,6 +55,14 @@ static Object* evaluate_expression(BoundExpression* expression) {
                     return object_new_i64(
                         object_unwrap_i64(left) / object_unwrap_i64(right)
                     );
+                case BOUND_BINARY_OPERATOR_KIND_LOGICAL_AND:
+                    return object_new_bool(
+                        object_unwrap_bool(left) && object_unwrap_bool(right)
+                    );
+                case BOUND_BINARY_OPERATOR_KIND_LOGICAL_OR:
+                    return object_new_bool(
+                        object_unwrap_bool(left) || object_unwrap_bool(right)
+                    );
                 default:
                     MINSC_ABORT("Unexpected binary operator");
             }
@@ -67,6 +75,8 @@ static Object* evaluate_expression(BoundExpression* expression) {
                     return operand;
                 case BOUND_UNARY_OPERATOR_KIND_NEGATION:
                     return object_new_i64(-object_unwrap_i64(operand));
+                case BOUND_UNARY_OPERATOR_KIND_LOGICAL_NEGATION:
+                    return object_new_bool(!object_unwrap_bool(operand));
                 default:
                     MINSC_ABORT("Unexpected unary operator");
             }

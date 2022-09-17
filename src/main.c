@@ -76,6 +76,9 @@ int main(void) {
             break;
         }
         str line = str_acquire(raw_line);
+        if (line.len == 0) {
+            continue;
+        }
 
         linenoiseHistoryAdd(line.ptr);
 
