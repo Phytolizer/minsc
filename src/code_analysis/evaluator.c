@@ -55,14 +55,16 @@ static Object* evaluate_expression(BoundExpression* expression) {
                     return object_new_i64(
                         object_unwrap_i64(left) / object_unwrap_i64(right)
                     );
-                case BOUND_BINARY_OPERATOR_KIND_LOGICAL_AND:
-                    return object_new_bool(
-                        object_unwrap_bool(left) && object_unwrap_bool(right)
-                    );
-                case BOUND_BINARY_OPERATOR_KIND_LOGICAL_OR:
-                    return object_new_bool(
-                        object_unwrap_bool(left) || object_unwrap_bool(right)
-                    );
+                case BOUND_BINARY_OPERATOR_KIND_LOGICAL_AND: {
+                    bool left_b = object_unwrap_bool(left);
+                    bool right_b = object_unwrap_bool(right);
+                    return object_new_bool(left_b && right_b);
+                }
+                case BOUND_BINARY_OPERATOR_KIND_LOGICAL_OR: {
+                    bool left_b = object_unwrap_bool(left);
+                    bool right_b = object_unwrap_bool(right);
+                    return object_new_bool(left_b || right_b);
+                }
                 default:
                     MINSC_ABORT("Unexpected binary operator");
             }
