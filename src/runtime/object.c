@@ -86,7 +86,7 @@ str object_string(Object* object) {
     switch (object->type) {
         case OBJECT_TYPE_I64: {
             ObjectI64* i64 = (ObjectI64*)object;
-            return str_printf("%" PRIu64, i64->value);
+            return str_printf("%" PRId64, i64->value);
         }
         case OBJECT_TYPE_BOOL: {
             ObjectBool* boolean = (ObjectBool*)object;
