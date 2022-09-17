@@ -16,16 +16,11 @@ struct Binder {
     DiagnosticBuf diagnostics;
 };
 
+static BoundExpression* bind_literal_expression(Binder* binder, LiteralExpressionSyntax* syntax);
+static BoundExpression* bind_unary_expression(Binder* binder, UnaryExpressionSyntax* syntax);
+static BoundExpression* bind_binary_expression(Binder* binder, BinaryExpressionSyntax* syntax);
 static BoundExpression*
-bind_literal_expression(Binder* binder, LiteralExpressionSyntax* syntax);
-static BoundExpression*
-bind_unary_expression(Binder* binder, UnaryExpressionSyntax* syntax);
-static BoundExpression*
-bind_binary_expression(Binder* binder, BinaryExpressionSyntax* syntax);
-static BoundExpression* bind_parenthesized_expression(
-    Binder* binder,
-    ParenthesizedExpressionSyntax* syntax
-);
+bind_parenthesized_expression(Binder* binder, ParenthesizedExpressionSyntax* syntax);
 
 Binder* binder_new(void) {
     Binder* binder = malloc(sizeof(Binder));
@@ -39,29 +34,16 @@ void binder_free(Binder* binder) {
     free(binder);
 }
 
-BoundExpression*
-binder_bind_expression(Binder* binder, ExpressionSyntax* syntax) {
+BoundExpression* binder_bind_expression(Binder* binder, ExpressionSyntax* syntax) {
     switch (expression_syntax_kind(syntax)) {
         case SYNTAX_KIND_LITERAL_EXPRESSION:
-            return bind_literal_expression(
-                binder,
-                (LiteralExpressionSyntax*)syntax
-            );
+            return bind_literal_expression(binder, (LiteralExpressionSyntax*)syntax);
         case SYNTAX_KIND_UNARY_EXPRESSION:
-            return bind_unary_expression(
-                binder,
-                (UnaryExpressionSyntax*)syntax
-            );
+            return bind_unary_expression(binder, (UnaryExpressionSyntax*)syntax);
         case SYNTAX_KIND_BINARY_EXPRESSION:
-            return bind_binary_expression(
-                binder,
-                (BinaryExpressionSyntax*)syntax
-            );
+            return bind_binary_expression(binder, (BinaryExpressionSyntax*)syntax);
         case SYNTAX_KIND_PARENTHESIZED_EXPRESSION:
-            return bind_parenthesized_expression(
-                binder,
-                (ParenthesizedExpressionSyntax*)syntax
-            );
+            return bind_parenthesized_expression(binder, (ParenthesizedExpressionSyntax*)syntax);
         default:
             MINSC_ABORT("Unexpected expression syntax kind");
     }
@@ -73,19 +55,15 @@ DiagnosticBuf binder_take_diagnostics(Binder* binder) {
     return diagnostics;
 }
 
-static BoundExpression*
-bind_literal_expression(Binder* binder, LiteralExpressionSyntax* syntax) {
+static BoundExpression* bind_literal_expression(Binder* binder, LiteralExpressionSyntax* syntax) {
     (void)binder;
     return bound_literal_expression_new(object_dup(syntax->value));
 }
 
-static BoundExpression*
-bind_unary_expression(Binder* binder, UnaryExpressionSyntax* syntax) {
+static BoundExpression* bind_unary_expression(Binder* binder, UnaryExpressionSyntax* syntax) {
     BoundExpression* operand = binder_bind_expression(binder, syntax->operand);
-    const BoundUnaryOperator* op = bind_unary_operator(
-        syntax->operator_token->kind,
-        bound_expression_type(operand)
-    );
+    const BoundUnaryOperator* op =
+        bind_unary_operator(syntax->operator_token->kind, bound_expression_type(operand));
     if (op == NULL) {
         BUF_PUSH(
             &binder->diagnostics,
@@ -101,8 +79,7 @@ bind_unary_expression(Binder* binder, UnaryExpressionSyntax* syntax) {
     return bound_unary_expression_new(op, operand);
 }
 
-static BoundExpression*
-bind_binary_expression(Binder* binder, BinaryExpressionSyntax* syntax) {
+static BoundExpression* bind_binary_expression(Binder* binder, BinaryExpressionSyntax* syntax) {
     (void)binder;
     BoundExpression* left = binder_bind_expression(binder, syntax->left);
     BoundExpression* right = binder_bind_expression(binder, syntax->right);
@@ -128,9 +105,7 @@ bind_binary_expression(Binder* binder, BinaryExpressionSyntax* syntax) {
     return bound_binary_expression_new(op, left, right);
 }
 
-static BoundExpression* bind_parenthesized_expression(
-    Binder* binder,
-    ParenthesizedExpressionSyntax* syntax
-) {
+static BoundExpression*
+bind_parenthesized_expression(Binder* binder, ParenthesizedExpressionSyntax* syntax) {
     return binder_bind_expression(binder, syntax->expression);
 }

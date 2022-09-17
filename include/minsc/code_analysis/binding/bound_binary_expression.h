@@ -18,8 +18,6 @@ extern BoundExpression* bound_binary_expression_new(
 );
 extern void bound_binary_expression_free(BoundBinaryExpression* expression);
 
-extern ObjectType bound_binary_expression_type(
-    const BoundBinaryExpression* expression
-);
+extern ObjectType bound_binary_expression_type(const BoundBinaryExpression* expression);
 
 #endif  // MINSC_BOUND_BINARY_EXPRESSION_H_

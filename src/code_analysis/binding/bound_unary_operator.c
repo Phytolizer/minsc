@@ -23,12 +23,10 @@ static const BoundUnaryOperator OPERATORS[] = {
 
 static const size_t NUM_OPERATORS = sizeof(OPERATORS) / sizeof(OPERATORS[0]);
 
-const BoundUnaryOperator*
-bind_unary_operator(SyntaxKind syntax_kind, ObjectType operand_type) {
+const BoundUnaryOperator* bind_unary_operator(SyntaxKind syntax_kind, ObjectType operand_type) {
     for (size_t i = 0; i < NUM_OPERATORS; i++) {
         const BoundUnaryOperator* op = &OPERATORS[i];
-        if (op->syntax_kind == syntax_kind &&
-            op->operand_type == operand_type) {
+        if (op->syntax_kind == syntax_kind && op->operand_type == operand_type) {
             return op;
         }
     }

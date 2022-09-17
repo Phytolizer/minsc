@@ -5,8 +5,7 @@
 
 #include "minsc/support/minsc_assert.h"
 
-SyntaxToken*
-syntax_token_new(SyntaxKind kind, size_t position, str text, Object* value) {
+SyntaxToken* syntax_token_new(SyntaxKind kind, size_t position, str text, Object* value) {
     SyntaxToken* token = malloc(sizeof(SyntaxToken));
     MINSC_ASSERT(token != NULL);
     token->base.type = SYNTAX_NODE_TYPE_TOKEN;
@@ -18,12 +17,8 @@ syntax_token_new(SyntaxKind kind, size_t position, str text, Object* value) {
     return token;
 }
 
-SyntaxToken* syntax_token_new_manufactured(
-    SyntaxKind kind,
-    size_t position,
-    str text,
-    Object* value
-) {
+SyntaxToken*
+syntax_token_new_manufactured(SyntaxKind kind, size_t position, str text, Object* value) {
     SyntaxToken* token = syntax_token_new(kind, position, text, value);
     token->manufactured = true;
     return token;

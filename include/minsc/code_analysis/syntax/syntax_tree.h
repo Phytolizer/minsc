@@ -11,11 +11,8 @@ typedef struct SyntaxTree {
     SyntaxToken* end_of_file_token;
 } SyntaxTree;
 
-SyntaxTree* syntax_tree_new(
-    DiagnosticBuf diagnostics,
-    ExpressionSyntax* root,
-    SyntaxToken* end_of_file_token
-);
+SyntaxTree*
+syntax_tree_new(DiagnosticBuf diagnostics, ExpressionSyntax* root, SyntaxToken* end_of_file_token);
 void syntax_tree_free(SyntaxTree* tree);
 
 DiagnosticBuf syntax_tree_take_diagnostics(SyntaxTree* tree);

@@ -25,8 +25,6 @@ extern void bound_binary_expression_free(BoundBinaryExpression* expression) {
     free(expression);
 }
 
-extern ObjectType bound_binary_expression_type(
-    const BoundBinaryExpression* expression
-) {
+extern ObjectType bound_binary_expression_type(const BoundBinaryExpression* expression) {
     return expression->op->result_type;
 }

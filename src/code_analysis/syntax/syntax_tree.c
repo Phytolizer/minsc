@@ -5,11 +5,8 @@
 #include "minsc/code_analysis/syntax/parser.h"
 #include "minsc/support/minsc_assert.h"
 
-SyntaxTree* syntax_tree_new(
-    DiagnosticBuf diagnostics,
-    ExpressionSyntax* root,
-    SyntaxToken* end_of_file_token
-) {
+SyntaxTree*
+syntax_tree_new(DiagnosticBuf diagnostics, ExpressionSyntax* root, SyntaxToken* end_of_file_token) {
     SyntaxTree* tree = malloc(sizeof(SyntaxTree));
     MINSC_ASSERT(tree != NULL);
     tree->diagnostics = diagnostics;

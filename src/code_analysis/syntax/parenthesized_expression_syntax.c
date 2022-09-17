@@ -7,8 +7,7 @@ ExpressionSyntax* parenthesized_expression_syntax_new(
     ExpressionSyntax* expression,
     SyntaxToken* close_parenthesis_token
 ) {
-    ParenthesizedExpressionSyntax* syntax =
-        malloc(sizeof(ParenthesizedExpressionSyntax));
+    ParenthesizedExpressionSyntax* syntax = malloc(sizeof(ParenthesizedExpressionSyntax));
     MINSC_ASSERT(syntax != NULL);
     syntax->base.base.type = SYNTAX_NODE_TYPE_EXPRESSION;
     syntax->base.type = EXPRESSION_SYNTAX_TYPE_PARENTHESIZED;
@@ -18,8 +17,7 @@ ExpressionSyntax* parenthesized_expression_syntax_new(
     return (ExpressionSyntax*)syntax;
 }
 
-void parenthesized_expresion_syntax_free(ParenthesizedExpressionSyntax* syntax
-) {
+void parenthesized_expresion_syntax_free(ParenthesizedExpressionSyntax* syntax) {
     syntax_token_free(syntax->open_parenthesis_token);
     expression_syntax_free(syntax->expression);
     syntax_token_free(syntax->close_parenthesis_token);

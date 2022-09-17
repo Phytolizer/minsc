@@ -12,12 +12,9 @@ typedef struct LiteralExpressionSyntax {
     Object* value;
 } LiteralExpressionSyntax;
 
-ExpressionSyntax*
-literal_expression_syntax_new(SyntaxToken* literal_token, Object* value);
+ExpressionSyntax* literal_expression_syntax_new(SyntaxToken* literal_token, Object* value);
 void literal_expression_syntax_free(LiteralExpressionSyntax* expression);
 
-SyntaxNodeChildren literal_expression_syntax_children(
-    const LiteralExpressionSyntax* expression
-);
+SyntaxNodeChildren literal_expression_syntax_children(const LiteralExpressionSyntax* expression);
 
 #endif  // MINSC_LITERAL_EXPRESSION_SYNTAX_H_

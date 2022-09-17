@@ -76,11 +76,8 @@ static const BoundBinaryOperator OPERATORS[] = {
 
 static const size_t NUM_OPERATORS = sizeof(OPERATORS) / sizeof(OPERATORS[0]);
 
-const BoundBinaryOperator* bind_binary_operator(
-    SyntaxKind syntax_kind,
-    ObjectType left_type,
-    ObjectType right_type
-) {
+const BoundBinaryOperator*
+bind_binary_operator(SyntaxKind syntax_kind, ObjectType left_type, ObjectType right_type) {
     for (size_t i = 0; i < NUM_OPERATORS; i++) {
         const BoundBinaryOperator* op = &OPERATORS[i];
         if (op->syntax_kind == syntax_kind && op->left_type == left_type &&

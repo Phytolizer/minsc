@@ -80,10 +80,7 @@ static size_t platform_fread(PlatformFile f, char* buf, size_t len) {
 SlurpFileResult slurp_file(str filename) {
     PlatformFile f = platform_fopen(filename);
     if (!f.valid) {
-        str msg = str_printf(
-            "failed to open '" str_fmt "' for reading",
-            str_arg(filename)
-        );
+        str msg = str_printf("failed to open '" str_fmt "' for reading", str_arg(filename));
         return (SlurpFileResult)SUM_ERR(msg);
     }
 
@@ -92,10 +89,8 @@ SlurpFileResult slurp_file(str filename) {
     char* buf = malloc(len + 1);
     if (buf == NULL) {
         platform_fclose(f);
-        str msg = str_printf(
-            "failed to allocate memory for '" str_fmt "' contents",
-            str_arg(filename)
-        );
+        str msg =
+            str_printf("failed to allocate memory for '" str_fmt "' contents", str_arg(filename));
         return (SlurpFileResult)SUM_ERR(msg);
     }
 
@@ -103,10 +98,7 @@ SlurpFileResult slurp_file(str filename) {
     if (read != len) {
         platform_fclose(f);
         free(buf);
-        str msg = str_printf(
-            "failed to read '" str_fmt "' contents",
-            str_arg(filename)
-        );
+        str msg = str_printf("failed to read '" str_fmt "' contents", str_arg(filename));
         return (SlurpFileResult)SUM_ERR(msg);
     }
 
@@ -226,10 +218,7 @@ FileMkdirRecError file_mkdir_rec(str path) {
             str_free(path);
             return (FileMkdirRecError)SUM_NOTHING;
         }
-        str msg = str_printf(
-            "'" str_fmt "' exists and is not a directory",
-            str_arg(path)
-        );
+        str msg = str_printf("'" str_fmt "' exists and is not a directory", str_arg(path));
         str_free(path);
         return (FileMkdirRecError)SUM_JUST(msg);
     }

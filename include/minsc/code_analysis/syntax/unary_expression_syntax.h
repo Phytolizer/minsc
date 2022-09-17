@@ -10,14 +10,10 @@ typedef struct UnaryExpressionSyntax {
     ExpressionSyntax* operand;
 } UnaryExpressionSyntax;
 
-ExpressionSyntax* unary_expression_syntax_new(
-    SyntaxToken* operator_token,
-    ExpressionSyntax* operand
-);
+ExpressionSyntax*
+unary_expression_syntax_new(SyntaxToken* operator_token, ExpressionSyntax* operand);
 void unary_expression_syntax_free(UnaryExpressionSyntax* expression);
 
-SyntaxNodeChildren unary_expression_syntax_children(
-    const UnaryExpressionSyntax* expression
-);
+SyntaxNodeChildren unary_expression_syntax_children(const UnaryExpressionSyntax* expression);
 
 #endif  // MINSC_UNARY_EXPRESSION_SYNTAX_H_

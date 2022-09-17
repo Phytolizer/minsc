@@ -60,10 +60,7 @@ SyntaxToken* lexer_next_token(Lexer* lexer) {
         if (result.err) {
             BUF_PUSH(
                 &lexer->diagnostics,
-                str_printf(
-                    "ERROR: The number " str_fmt " is too large.",
-                    str_arg(temp_text)
-                )
+                str_printf("ERROR: The number " str_fmt " is too large.", str_arg(temp_text))
             );
         }
         value = result.err ? NULL : object_new_i64(result.value);
@@ -153,10 +150,7 @@ SyntaxToken* lexer_next_token(Lexer* lexer) {
     }
 
     if (c_is_error) {
-        BUF_PUSH(
-            &lexer->diagnostics,
-            str_printf("ERROR: Unexpected character '%c'.", c)
-        );
+        BUF_PUSH(&lexer->diagnostics, str_printf("ERROR: Unexpected character '%c'.", c));
         kind = SYNTAX_KIND_BAD_TOKEN;
     }
 

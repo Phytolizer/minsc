@@ -38,8 +38,7 @@ static Object* evaluate_expression(BoundExpression* expression) {
 
     switch (expression->type) {
         case BOUND_EXPRESSION_TYPE_LITERAL: {
-            BoundLiteralExpression* literal =
-                (BoundLiteralExpression*)expression;
+            BoundLiteralExpression* literal = (BoundLiteralExpression*)expression;
             result = evaluate_literal_expression(literal);
         } break;
         case BOUND_EXPRESSION_TYPE_BINARY: {
@@ -89,24 +88,16 @@ static Object* evaluate_binary_expression(BoundBinaryExpression* binary) {
     Object* right = evaluate_expression(binary->right);
     switch (binary->op->kind) {
         case BOUND_BINARY_OPERATOR_KIND_ADDITION:
-            result = object_new_i64(
-                object_unwrap_i64(left) + object_unwrap_i64(right)
-            );
+            result = object_new_i64(object_unwrap_i64(left) + object_unwrap_i64(right));
             break;
         case BOUND_BINARY_OPERATOR_KIND_SUBTRACTION:
-            result = object_new_i64(
-                object_unwrap_i64(left) - object_unwrap_i64(right)
-            );
+            result = object_new_i64(object_unwrap_i64(left) - object_unwrap_i64(right));
             break;
         case BOUND_BINARY_OPERATOR_KIND_MULTIPLICATION:
-            result = object_new_i64(
-                object_unwrap_i64(left) * object_unwrap_i64(right)
-            );
+            result = object_new_i64(object_unwrap_i64(left) * object_unwrap_i64(right));
             break;
         case BOUND_BINARY_OPERATOR_KIND_DIVISION:
-            result = object_new_i64(
-                object_unwrap_i64(left) / object_unwrap_i64(right)
-            );
+            result = object_new_i64(object_unwrap_i64(left) / object_unwrap_i64(right));
             break;
         case BOUND_BINARY_OPERATOR_KIND_LOGICAL_AND: {
             bool left_b = object_unwrap_bool(left);

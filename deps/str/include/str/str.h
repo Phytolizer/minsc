@@ -158,8 +158,7 @@ int str_cat_range(str* dest, const str* src, size_t count);
 int str_join_range(str* dest, str sep, const str* src, size_t count);
 
 // join string arguments around the separator
-#define str_join(dest, sep, ...) \
-    str_join_range((dest), (sep), ARRAYOF_(__VA_ARGS__))
+#define str_join(dest, sep, ...) str_join_range((dest), (sep), ARRAYOF_(__VA_ARGS__))
 
 #define path_join(dest, ...) str_join((dest), str_lit("/"), __VA_ARGS__)
 
@@ -210,10 +209,7 @@ bool str_find_char(str src, char ch, size_t* pos);
 bool str_find_str(str src, str patt, size_t* pos);
 
 #define str_find(s, val, pos) \
-    _Generic((val), char \
-             : str_find_char, int \
-             : str_find_char, str \
-             : str_find_str)(s, val, pos)
+    _Generic((val), char : str_find_char, int : str_find_char, str : str_find_str)(s, val, pos)
 
 // comparison functions
 typedef int (*str_cmp_func)(const void*, const void*);

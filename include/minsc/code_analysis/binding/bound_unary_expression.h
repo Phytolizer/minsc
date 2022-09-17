@@ -11,14 +11,10 @@ typedef struct BoundUnaryExpression {
     BoundExpression* operand;
 } BoundUnaryExpression;
 
-extern BoundExpression* bound_unary_expression_new(
-    const BoundUnaryOperator* op,
-    BoundExpression* operand
-);
+extern BoundExpression*
+bound_unary_expression_new(const BoundUnaryOperator* op, BoundExpression* operand);
 extern void bound_unary_expression_free(BoundUnaryExpression* expression);
 
-extern ObjectType bound_unary_expression_type(
-    const BoundUnaryExpression* expression
-);
+extern ObjectType bound_unary_expression_type(const BoundUnaryExpression* expression);
 
 #endif  // MINSC_BOUND_UNARY_EXPRESSION_H_

@@ -17,7 +17,6 @@ typedef struct BoundUnaryOperator {
     ObjectType result_type;
 } BoundUnaryOperator;
 
-const BoundUnaryOperator*
-bind_unary_operator(SyntaxKind syntax_kind, ObjectType operand_type);
+const BoundUnaryOperator* bind_unary_operator(SyntaxKind syntax_kind, ObjectType operand_type);
 
 #endif  // MINSC_BOUND_UNARY_OPERATOR_H_

@@ -26,16 +26,13 @@ SyntaxKind expression_syntax_kind(const ExpressionSyntax* expression) {
 void expression_syntax_free(ExpressionSyntax* expression) {
     switch (expression->type) {
         case EXPRESSION_SYNTAX_TYPE_LITERAL:
-            literal_expression_syntax_free((LiteralExpressionSyntax*)expression
-            );
+            literal_expression_syntax_free((LiteralExpressionSyntax*)expression);
             break;
         case EXPRESSION_SYNTAX_TYPE_BINARY:
             binary_expression_syntax_free((BinaryExpressionSyntax*)expression);
             break;
         case EXPRESSION_SYNTAX_TYPE_PARENTHESIZED:
-            parenthesized_expresion_syntax_free(
-                (ParenthesizedExpressionSyntax*)expression
-            );
+            parenthesized_expresion_syntax_free((ParenthesizedExpressionSyntax*)expression);
             break;
         case EXPRESSION_SYNTAX_TYPE_UNARY:
             unary_expression_syntax_free((UnaryExpressionSyntax*)expression);
@@ -45,25 +42,18 @@ void expression_syntax_free(ExpressionSyntax* expression) {
     }
 }
 
-SyntaxNodeChildren expression_syntax_children(const ExpressionSyntax* expression
-) {
+SyntaxNodeChildren expression_syntax_children(const ExpressionSyntax* expression) {
     switch (expression->type) {
         case EXPRESSION_SYNTAX_TYPE_LITERAL:
-            return literal_expression_syntax_children(
-                (const LiteralExpressionSyntax*)expression
-            );
+            return literal_expression_syntax_children((const LiteralExpressionSyntax*)expression);
         case EXPRESSION_SYNTAX_TYPE_BINARY:
-            return binary_expression_syntax_children(
-                (const BinaryExpressionSyntax*)expression
-            );
+            return binary_expression_syntax_children((const BinaryExpressionSyntax*)expression);
         case EXPRESSION_SYNTAX_TYPE_PARENTHESIZED:
             return parenthesized_expression_syntax_children(
                 (const ParenthesizedExpressionSyntax*)expression
             );
         case EXPRESSION_SYNTAX_TYPE_UNARY:
-            return unary_expression_syntax_children(
-                (const UnaryExpressionSyntax*)expression
-            );
+            return unary_expression_syntax_children((const UnaryExpressionSyntax*)expression);
     }
 
     MINSC_ABORT("Invalid expression syntax type");

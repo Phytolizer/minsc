@@ -18,10 +18,7 @@ typedef struct BoundBinaryOperator {
     ObjectType result_type;
 } BoundBinaryOperator;
 
-const BoundBinaryOperator* bind_binary_operator(
-    SyntaxKind syntax_kind,
-    ObjectType left_type,
-    ObjectType right_type
-);
+const BoundBinaryOperator*
+bind_binary_operator(SyntaxKind syntax_kind, ObjectType left_type, ObjectType right_type);
 
 #endif  // MINSC_BOUND_BINARY_OPERATOR_H_

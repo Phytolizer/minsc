@@ -27,9 +27,7 @@ void binary_expression_syntax_free(BinaryExpressionSyntax* expression) {
     free(expression);
 }
 
-SyntaxNodeChildren binary_expression_syntax_children(
-    const BinaryExpressionSyntax* expression
-) {
+SyntaxNodeChildren binary_expression_syntax_children(const BinaryExpressionSyntax* expression) {
     SyntaxNodeChildren children = BUF_NEW;
     BUF_PUSH(&children, (SyntaxNode*)expression->left);
     BUF_PUSH(&children, (SyntaxNode*)expression->operator_token);

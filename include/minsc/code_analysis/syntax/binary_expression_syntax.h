@@ -19,8 +19,6 @@ ExpressionSyntax* binary_expression_syntax_new(
 );
 void binary_expression_syntax_free(BinaryExpressionSyntax* expression);
 
-SyntaxNodeChildren binary_expression_syntax_children(
-    const BinaryExpressionSyntax* expression
-);
+SyntaxNodeChildren binary_expression_syntax_children(const BinaryExpressionSyntax* expression);
 
 #endif  // MINSC_BINARY_EXPRESSION_SYNTAX_H_

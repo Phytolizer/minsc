@@ -37,17 +37,11 @@ extern BoundNodeKind bound_expression_kind(const BoundExpression* expression) {
 extern ObjectType bound_expression_type(const BoundExpression* expression) {
     switch (expression->type) {
         case BOUND_EXPRESSION_TYPE_UNARY:
-            return bound_unary_expression_type(
-                (const BoundUnaryExpression*)expression
-            );
+            return bound_unary_expression_type((const BoundUnaryExpression*)expression);
         case BOUND_EXPRESSION_TYPE_LITERAL:
-            return bound_literal_expression_type(
-                (const BoundLiteralExpression*)expression
-            );
+            return bound_literal_expression_type((const BoundLiteralExpression*)expression);
         case BOUND_EXPRESSION_TYPE_BINARY:
-            return bound_binary_expression_type(
-                (const BoundBinaryExpression*)expression
-            );
+            return bound_binary_expression_type((const BoundBinaryExpression*)expression);
     }
 
     MINSC_ABORT("Invalid bound expression type");

@@ -68,10 +68,8 @@ typedef BOOL (*get_file_information_by_handle_ex_func_t
 
 static bool is_msys_pty(int fd) {
     get_file_information_by_handle_ex_func_t ptr_file_info =
-        (get_file_information_by_handle_ex_func_t)GetProcAddress(
-            GetModuleHandle(TEXT("kernel32.dll")),
-            "GetFileInformationByHandleEx"
-        );
+        (get_file_information_by_handle_ex_func_t
+        )GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "GetFileInformationByHandleEx");
 
     if (ptr_file_info == NULL) {
         return false;
@@ -96,12 +94,7 @@ static bool is_msys_pty(int fd) {
         return false;
     }
 
-    if (!ptr_file_info(
-            handle,
-            FileNameInfo,
-            p_name_info,
-            sizeof(my_file_name_info_t)
-        )) {
+    if (!ptr_file_info(handle, FileNameInfo, p_name_info, sizeof(my_file_name_info_t))) {
         return false;
     }
 
@@ -128,8 +121,7 @@ static bool is_terminal(FILE* stream) {
         static bool stdout_term;
         if (!init) {
             init = true;
-            stdout_term =
-                _isatty(_fileno(stdout)) || is_msys_pty(_fileno(stdout));
+            stdout_term = _isatty(_fileno(stdout)) || is_msys_pty(_fileno(stdout));
         }
         return stdout_term;
     }
@@ -138,8 +130,7 @@ static bool is_terminal(FILE* stream) {
         static bool stderr_term;
         if (!init) {
             init = true;
-            stderr_term =
-                _isatty(_fileno(stdout)) || is_msys_pty(_fileno(stdout));
+            stderr_term = _isatty(_fileno(stdout)) || is_msys_pty(_fileno(stdout));
         }
         return stderr_term;
     }
@@ -210,8 +201,7 @@ static bool is_support_ansi(FILE* stream) {
         static bool stdout_ansi;
         if (!init) {
             init = true;
-            stdout_ansi =
-                is_msys_pty(_fileno(stdout)) || set_winterm_ansi_colors(stream);
+            stdout_ansi = is_msys_pty(_fileno(stdout)) || set_winterm_ansi_colors(stream);
         }
         return stdout_ansi;
     }
@@ -221,8 +211,7 @@ static bool is_support_ansi(FILE* stream) {
         static bool stderr_ansi;
         if (!init) {
             init = true;
-            stderr_ansi =
-                is_msys_pty(_fileno(stderr)) || set_winterm_ansi_colors(stream);
+            stderr_ansi = is_msys_pty(_fileno(stderr)) || set_winterm_ansi_colors(stream);
         }
         return stderr_ansi;
     }
@@ -239,10 +228,7 @@ static const sgr_t* get_default_state(void) {
         CONSOLE_SCREEN_BUFFER_INFO info;
         WORD attrib = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
 
-        if (GetConsoleScreenBufferInfo(
-                GetStdHandle(STD_OUTPUT_HANDLE),
-                &info
-            ) ||
+        if (GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &info) ||
             GetConsoleScreenBufferInfo(GetStdHandle(STD_ERROR_HANDLE), &info)) {
             attrib = info.wAttributes;
         }
@@ -285,14 +271,12 @@ static WORD sgr_2_attr(const sgr_t* state) {
 
     if (state->conceal) {
         if (state->reverse) {
-            attr =
-                (BYTE)(state->foreground_color << 4) | state->foreground_color;
+            attr = (BYTE)(state->foreground_color << 4) | state->foreground_color;
             if (state->bold) {
                 attr |= FOREGROUND_INTENSITY | BACKGROUND_INTENSITY;
             }
         } else {
-            attr =
-                (BYTE)(state->background_color << 4) | state->background_color;
+            attr = (BYTE)(state->background_color << 4) | state->background_color;
             if (state->underline) {
                 attr |= FOREGROUND_INTENSITY | BACKGROUND_INTENSITY;
             }
@@ -306,8 +290,8 @@ static WORD sgr_2_attr(const sgr_t* state) {
             attr |= FOREGROUND_INTENSITY;
         }
     } else {
-        attr = state->foreground_color | (BYTE)(state->background_color << 4) |
-               state->bold | state->underline;
+        attr = state->foreground_color | (BYTE)(state->background_color << 4) | state->bold |
+               state->underline;
     }
 
     return attr;
@@ -353,13 +337,11 @@ static void set_win_sgr_bg(styler_bg_t bg, sgr_t* state) {
 }
 
 static void set_win_sgr_fg_bright(styler_fg_bright_t fg, sgr_t* state) {
-    state->foreground_color =
-        (BACKGROUND_INTENSITY >> 4) | ansi_2_attr((BYTE)fg - 90);
+    state->foreground_color = (BACKGROUND_INTENSITY >> 4) | ansi_2_attr((BYTE)fg - 90);
 }
 
 static void set_win_sgr_bg_bright(styler_bg_bright_t bg, sgr_t* state) {
-    state->background_color =
-        FOREGROUND_INTENSITY | ansi_2_attr((BYTE)bg - 100);
+    state->background_color = FOREGROUND_INTENSITY | ansi_2_attr((BYTE)bg - 100);
 }
 
 static void set_win_color_ansi(FILE* stream, int value) {
@@ -384,8 +366,7 @@ static void set_win_color_native_bg(FILE* stream, styler_bg_t bg) {
     }
 }
 
-static void
-set_win_color_native_fg_bright(FILE* stream, styler_fg_bright_t fg) {
+static void set_win_color_native_fg_bright(FILE* stream, styler_fg_bright_t fg) {
     HANDLE handle = get_console_handle(stream);
     if (handle != INVALID_HANDLE_VALUE) {
         set_win_sgr_fg_bright(fg, get_current_state());
@@ -394,8 +375,7 @@ set_win_color_native_fg_bright(FILE* stream, styler_fg_bright_t fg) {
     }
 }
 
-static void
-set_win_color_native_bg_bright(FILE* stream, styler_bg_bright_t bg) {
+static void set_win_color_native_bg_bright(FILE* stream, styler_bg_bright_t bg) {
     HANDLE handle = get_console_handle(stream);
     if (handle != INVALID_HANDLE_VALUE) {
         set_win_sgr_bg_bright(bg, get_current_state());
@@ -511,8 +491,7 @@ static void set_color_style(FILE* stream, int value) {
 void styler_apply_fg(styler_fg_t fg, FILE* stream) {
     styler_control_t control_mode = *get_control_mode();
 
-    if ((control_mode == styler_control_auto && is_support_color() &&
-         is_terminal(stream)) ||
+    if ((control_mode == styler_control_auto && is_support_color() && is_terminal(stream)) ||
         control_mode == styler_control_force) {
         set_color_fg(stream, fg);
     }
@@ -521,8 +500,7 @@ void styler_apply_fg(styler_fg_t fg, FILE* stream) {
 void styler_apply_bg(styler_bg_t bg, FILE* stream) {
     styler_control_t control_mode = *get_control_mode();
 
-    if ((control_mode == styler_control_auto && is_support_color() &&
-         is_terminal(stream)) ||
+    if ((control_mode == styler_control_auto && is_support_color() && is_terminal(stream)) ||
         control_mode == styler_control_force) {
         set_color_bg(stream, bg);
     }
@@ -531,8 +509,7 @@ void styler_apply_bg(styler_bg_t bg, FILE* stream) {
 void styler_apply_fg_bright(styler_fg_bright_t fg, FILE* stream) {
     styler_control_t control_mode = *get_control_mode();
 
-    if ((control_mode == styler_control_auto && is_support_color() &&
-         is_terminal(stream)) ||
+    if ((control_mode == styler_control_auto && is_support_color() && is_terminal(stream)) ||
         control_mode == styler_control_force) {
         set_color_fg_bright(stream, fg);
     }
@@ -541,8 +518,7 @@ void styler_apply_fg_bright(styler_fg_bright_t fg, FILE* stream) {
 void styler_apply_bg_bright(styler_bg_bright_t bg, FILE* stream) {
     styler_control_t control_mode = *get_control_mode();
 
-    if ((control_mode == styler_control_auto && is_support_color() &&
-         is_terminal(stream)) ||
+    if ((control_mode == styler_control_auto && is_support_color() && is_terminal(stream)) ||
         control_mode == styler_control_force) {
         set_color_bg_bright(stream, bg);
     }
@@ -551,8 +527,7 @@ void styler_apply_bg_bright(styler_bg_bright_t bg, FILE* stream) {
 void styler_apply_style(styler_style_t style, FILE* stream) {
     styler_control_t control_mode = *get_control_mode();
 
-    if ((control_mode == styler_control_auto && is_support_color() &&
-         is_terminal(stream)) ||
+    if ((control_mode == styler_control_auto && is_support_color() && is_terminal(stream)) ||
         control_mode == styler_control_force) {
         set_color_style(stream, style);
     }

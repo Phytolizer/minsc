@@ -9,13 +9,7 @@
 #define BUF_ASSERT(x) \
     do { \
         if (!(x)) { \
-            (void)fprintf( \
-                stderr, \
-                "Assertion failed: %s:%d: %s\n", \
-                __FILE__, \
-                __LINE__, \
-                #x \
-            ); \
+            (void)fprintf(stderr, "Assertion failed: %s:%d: %s\n", __FILE__, __LINE__, #x); \
             abort(); \
         } \
     } while (0)
@@ -53,8 +47,7 @@
     do { \
         if ((buf)->len == (buf)->cap) { \
             (buf)->cap = (buf)->cap ? (buf)->cap * 2 : 1; \
-            (buf)->ptr = \
-                realloc((buf)->ptr, (buf)->cap * sizeof(*(buf)->ptr)); \
+            (buf)->ptr = realloc((buf)->ptr, (buf)->cap * sizeof(*(buf)->ptr)); \
             BUF_ASSERT((buf)->ptr != NULL); \
         } \
         (buf)->ptr[(buf)->len++] = (val); \
@@ -64,11 +57,7 @@
     do { \
         if ((buf)->len > 0) { \
             (buf)->len--; \
-            memmove( \
-                (buf)->ptr, \
-                (buf)->ptr + 1, \
-                (buf)->len * sizeof(*(buf)->ptr) \
-            ); \
+            memmove((buf)->ptr, (buf)->ptr + 1, (buf)->len * sizeof(*(buf)->ptr)); \
         } \
     } while (false)
 
