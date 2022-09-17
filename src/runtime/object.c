@@ -103,5 +103,7 @@ str object_type_string(ObjectType type) {
 #include "minsc/runtime/object_type.inc"
 #undef X
         return str_ref_chars(OBJECT_TYPE_STRINGS[type], OBJECT_TYPE_STRING_LENGTHS[type]);
+        default:
+            return str_lit("OBJECT_TYPE_UNKNOWN");
     }
 }
