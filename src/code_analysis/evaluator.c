@@ -122,6 +122,19 @@ static Object* evaluate_binary_expression(BoundBinaryExpression* binary) {
                 MINSC_ABORT("Unexpected type");
             }
         } break;
+        case BOUND_BINARY_OPERATOR_KIND_INEQUALITY: {
+            if (left->type == OBJECT_TYPE_BOOL) {
+                bool left_b = object_unwrap_bool(left);
+                bool right_b = object_unwrap_bool(right);
+                result = object_new_bool(left_b != right_b);
+            } else if (left->type == OBJECT_TYPE_INT64) {
+                int64_t left_i64 = object_unwrap_i64(left);
+                int64_t right_i64 = object_unwrap_i64(right);
+                result = object_new_bool(left_i64 != right_i64);
+            } else {
+                MINSC_ABORT("Unexpected type");
+            }
+        } break;
         default:
             MINSC_ABORT("Unexpected binary operator");
     }
