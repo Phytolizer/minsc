@@ -85,7 +85,7 @@ DiagnosticBuf binder_take_diagnostics(Binder* binder) {
 
 static BindUnaryOperatorKindResult
 bind_unary_operator_kind(SyntaxKind kind, ObjectType operand_type) {
-    if (operand_type != OBJECT_TYPE_I64) {
+    if (operand_type != OBJECT_TYPE_INT64) {
         return (BindUnaryOperatorKindResult)SUM_NOTHING;
     }
     switch (kind) {
@@ -105,7 +105,7 @@ static BindBinaryOperatorKindResult bind_binary_operator_kind(
     ObjectType left_type,
     ObjectType right_type
 ) {
-    if (left_type != OBJECT_TYPE_I64 || right_type != OBJECT_TYPE_I64) {
+    if (left_type != OBJECT_TYPE_INT64 || right_type != OBJECT_TYPE_INT64) {
         return (BindBinaryOperatorKindResult)SUM_NOTHING;
     }
     switch (kind) {

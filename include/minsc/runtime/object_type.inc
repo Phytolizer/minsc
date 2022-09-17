@@ -1,3 +1,3 @@
 X(NULL)
-X(I64)
+X(INT64)
 X(BOOL)
