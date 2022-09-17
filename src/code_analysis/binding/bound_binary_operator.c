@@ -43,6 +43,35 @@ static const BoundBinaryOperator OPERATORS[] = {
         .right_type = OBJECT_TYPE_BOOL,
         .result_type = OBJECT_TYPE_BOOL,
     },
+    // ==, != for int, bool
+    {
+        .syntax_kind = SYNTAX_KIND_EQUALS_EQUALS_TOKEN,
+        .kind = BOUND_BINARY_OPERATOR_KIND_EQUALITY,
+        .left_type = OBJECT_TYPE_INT64,
+        .right_type = OBJECT_TYPE_INT64,
+        .result_type = OBJECT_TYPE_BOOL,
+    },
+    {
+        .syntax_kind = SYNTAX_KIND_BANG_EQUALS_TOKEN,
+        .kind = BOUND_BINARY_OPERATOR_KIND_INEQUALITY,
+        .left_type = OBJECT_TYPE_INT64,
+        .right_type = OBJECT_TYPE_INT64,
+        .result_type = OBJECT_TYPE_BOOL,
+    },
+    {
+        .syntax_kind = SYNTAX_KIND_EQUALS_EQUALS_TOKEN,
+        .kind = BOUND_BINARY_OPERATOR_KIND_EQUALITY,
+        .left_type = OBJECT_TYPE_BOOL,
+        .right_type = OBJECT_TYPE_BOOL,
+        .result_type = OBJECT_TYPE_BOOL,
+    },
+    {
+        .syntax_kind = SYNTAX_KIND_BANG_EQUALS_TOKEN,
+        .kind = BOUND_BINARY_OPERATOR_KIND_INEQUALITY,
+        .left_type = OBJECT_TYPE_BOOL,
+        .right_type = OBJECT_TYPE_BOOL,
+        .result_type = OBJECT_TYPE_BOOL,
+    },
 };
 
 static const size_t NUM_OPERATORS = sizeof(OPERATORS) / sizeof(OPERATORS[0]);

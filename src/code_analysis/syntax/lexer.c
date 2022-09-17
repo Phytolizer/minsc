@@ -108,8 +108,13 @@ SyntaxToken* lexer_next_token(Lexer* lexer) {
                 kind = SYNTAX_KIND_CLOSE_PARENTHESIS_TOKEN;
                 break;
             case '!':
-                lexer->position++;
-                kind = SYNTAX_KIND_BANG_TOKEN;
+                if (peek(lexer, 1) == '=') {
+                    lexer->position += 2;
+                    kind = SYNTAX_KIND_BANG_EQUALS_TOKEN;
+                } else {
+                    lexer->position++;
+                    kind = SYNTAX_KIND_BANG_TOKEN;
+                }
                 break;
             case '&':
                 if (peek(lexer, 1) == '&') {
@@ -124,6 +129,15 @@ SyntaxToken* lexer_next_token(Lexer* lexer) {
                 if (peek(lexer, 1) == '|') {
                     lexer->position += 2;
                     kind = SYNTAX_KIND_PIPE_PIPE_TOKEN;
+                } else {
+                    lexer->position++;
+                    c_is_error = true;
+                }
+                break;
+            case '=':
+                if (peek(lexer, 1) == '=') {
+                    lexer->position += 2;
+                    kind = SYNTAX_KIND_EQUALS_EQUALS_TOKEN;
                 } else {
                     lexer->position++;
                     c_is_error = true;
