@@ -5,7 +5,7 @@
 #include "minsc/support/minsc_assert.h"
 
 extern BoundExpression* bound_binary_expression_new(
-    BoundBinaryOperatorKind operator_kind,
+    const BoundBinaryOperator* op,
     BoundExpression* left,
     BoundExpression* right
 ) {
@@ -13,7 +13,7 @@ extern BoundExpression* bound_binary_expression_new(
     MINSC_ASSERT(expression != NULL);
     expression->base.base.type = BOUND_NODE_TYPE_EXPRESSION;
     expression->base.type = BOUND_EXPRESSION_TYPE_BINARY;
-    expression->operator_kind = operator_kind;
+    expression->op = op;
     expression->left = left;
     expression->right = right;
     return (BoundExpression*)expression;
@@ -28,5 +28,5 @@ extern void bound_binary_expression_free(BoundBinaryExpression* expression) {
 extern ObjectType bound_binary_expression_type(
     const BoundBinaryExpression* expression
 ) {
-    return bound_expression_type(expression->left);
+    return expression->op->result_type;
 }

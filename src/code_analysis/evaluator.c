@@ -38,7 +38,7 @@ static Object* evaluate_expression(BoundExpression* expression) {
             BoundBinaryExpression* binary = (BoundBinaryExpression*)expression;
             Object* left = evaluate_expression(binary->left);
             Object* right = evaluate_expression(binary->right);
-            switch (binary->operator_kind) {
+            switch (binary->op->kind) {
                 case BOUND_BINARY_OPERATOR_KIND_ADDITION:
                     return object_new_i64(
                         object_unwrap_i64(left) + object_unwrap_i64(right)
@@ -72,7 +72,7 @@ static Object* evaluate_expression(BoundExpression* expression) {
         case BOUND_EXPRESSION_TYPE_UNARY: {
             BoundUnaryExpression* unary = (BoundUnaryExpression*)expression;
             Object* operand = evaluate_expression(unary->operand);
-            switch (unary->operator_kind) {
+            switch (unary->op->kind) {
                 case BOUND_UNARY_OPERATOR_KIND_IDENTITY:
                     return operand;
                 case BOUND_UNARY_OPERATOR_KIND_NEGATION:

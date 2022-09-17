@@ -1,23 +1,18 @@
 #ifndef MINSC_BOUND_BINARY_EXPRESSION_H_
 #define MINSC_BOUND_BINARY_EXPRESSION_H_
 
+#include "bound_binary_operator.h"
 #include "bound_expression.h"
-
-typedef enum {
-#define X(x) BOUND_BINARY_OPERATOR_KIND_##x,
-#include "bound_binary_operator_kind.inc"
-#undef X
-} BoundBinaryOperatorKind;
 
 typedef struct BoundBinaryExpression {
     BoundExpression base;
-    BoundBinaryOperatorKind operator_kind;
+    const BoundBinaryOperator* op;
     BoundExpression* left;
     BoundExpression* right;
 } BoundBinaryExpression;
 
 extern BoundExpression* bound_binary_expression_new(
-    BoundBinaryOperatorKind operator_kind,
+    const BoundBinaryOperator* op,
     BoundExpression* left,
     BoundExpression* right
 );

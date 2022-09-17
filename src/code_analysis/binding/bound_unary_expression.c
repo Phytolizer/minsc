@@ -5,14 +5,14 @@
 #include "minsc/support/minsc_assert.h"
 
 extern BoundExpression* bound_unary_expression_new(
-    BoundUnaryOperatorKind operator_kind,
+    const BoundUnaryOperator* op,
     BoundExpression* operand
 ) {
     BoundUnaryExpression* expression = malloc(sizeof(BoundUnaryExpression));
     MINSC_ASSERT(expression != NULL);
     expression->base.base.type = BOUND_NODE_TYPE_EXPRESSION;
     expression->base.type = BOUND_EXPRESSION_TYPE_UNARY;
-    expression->operator_kind = operator_kind;
+    expression->op = op;
     expression->operand = operand;
     return (BoundExpression*)expression;
 }
@@ -25,5 +25,5 @@ extern void bound_unary_expression_free(BoundUnaryExpression* expression) {
 extern ObjectType bound_unary_expression_type(
     const BoundUnaryExpression* expression
 ) {
-    return bound_expression_type(expression->operand);
+    return expression->op->result_type;
 }

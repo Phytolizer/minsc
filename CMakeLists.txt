@@ -23,10 +23,12 @@ set(MINSC_SRC_REL
     main.c
     code_analysis/binding/binder.c
     code_analysis/binding/bound_binary_expression.c
+    code_analysis/binding/bound_binary_operator.c
     code_analysis/binding/bound_expression.c
     code_analysis/binding/bound_literal_expression.c
     code_analysis/binding/bound_node.c
     code_analysis/binding/bound_unary_expression.c
+    code_analysis/binding/bound_unary_operator.c
     code_analysis/evaluator.c
     code_analysis/syntax/lexer.c
     code_analysis/syntax/syntax_kind.c
