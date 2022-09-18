@@ -1,5 +1,7 @@
 #include "minsc/code_analysis/syntax/syntax_facts.h"
 
+#include <str/str.h>
+
 #include "minsc/code_analysis/syntax/syntax_kind.h"
 
 extern size_t binary_operator_precedence(SyntaxKind kind) {

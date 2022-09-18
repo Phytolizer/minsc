@@ -2,6 +2,7 @@
 
 #include <buf/buf.h>
 #include <stdlib.h>
+#include <str/str.h>
 
 #include "minsc/code_analysis/syntax/diagnostic.h"
 #include "minsc/code_analysis/syntax/expression_syntax.h"

@@ -7,6 +7,8 @@ set(MINSC_SRC_REL
     code_analysis/binding/bound_node.c
     code_analysis/binding/bound_unary_expression.c
     code_analysis/binding/bound_unary_operator.c
+    code_analysis/compilation.c
+    code_analysis/evaluation_result.c
     code_analysis/evaluator.c
     code_analysis/syntax/lexer.c
     code_analysis/syntax/syntax_kind.c

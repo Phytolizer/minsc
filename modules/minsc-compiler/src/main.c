@@ -7,9 +7,8 @@
 #include <str/str.h>
 #include <styler/styler.h>
 
-#include "minsc/code_analysis/binding/binder.h"
-#include "minsc/code_analysis/binding/bound_expression.h"
-#include "minsc/code_analysis/evaluator.h"
+#include "minsc/code_analysis/compilation.h"
+#include "minsc/code_analysis/evaluation_result.h"
 #include "minsc/code_analysis/syntax/diagnostic.h"
 #include "minsc/code_analysis/syntax/syntax_kind.h"
 #include "minsc/code_analysis/syntax/syntax_node.h"
@@ -98,14 +97,8 @@ int main(void) {
 
         SyntaxTree* program = syntax_tree_parse(str_ref(line));
 
-        Binder* binder = binder_new();
-        BoundExpression* bound_expression = binder_bind_expression(binder, program->root);
-
-        DiagnosticBuf diagnostics = syntax_tree_take_diagnostics(program);
-        DiagnosticBuf binder_diagnostics = binder_take_diagnostics(binder);
-        BUF_CONCAT(&diagnostics, binder_diagnostics);
-        BUF_FREE(binder_diagnostics);
-        binder_free(binder);
+        Compilation* compilation = compilation_new(program);
+        EvaluationResult result = compilation_evaluate(compilation);
 
         if (show_tree) {
             styler_apply_style(styler_style_faint, stdout);
@@ -115,6 +108,9 @@ int main(void) {
             styler_apply_style(styler_style_reset, stdout);
             (void)fflush(stdout);
         }
+
+        compilation_free(compilation);
+        DiagnosticBuf diagnostics = result.diagnostics;
 
         if (diagnostics.len > 0) {
             styler_apply_style(styler_style_faint, stdout);
@@ -127,11 +123,8 @@ int main(void) {
             diagnostic_buf_free(diagnostics);
             (void)fflush(stdout);
         } else {
-            Evaluator* evaluator = evaluator_new(bound_expression);
-            Object* result = evaluator_evaluate(evaluator);
-            evaluator_free(evaluator);
-            str result_str = object_string(result);
-            object_free(result);
+            str result_str = object_string(result.value);
+            object_free(result.value);
 
             styler_apply_fg(styler_fg_green, stdout);
             printfln(str_fmt, str_arg(result_str));
@@ -140,8 +133,6 @@ int main(void) {
             (void)fflush(stdout);
         }
 
-        bound_expression_free(bound_expression);
-        syntax_tree_free(program);
         str_free(line);
     }
 
