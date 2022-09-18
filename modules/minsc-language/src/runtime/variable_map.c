@@ -33,13 +33,14 @@ void variable_map_define(VariableMap** map, str name, Object* value) {
     if (variable == NULL) {
         variable = malloc(sizeof(VariableMap));
         MINSC_ASSERT(variable != NULL);
-        variable->name = str_dup(name);
+        variable->name = name;
         // NOLINTNEXTLINE(readability-isolate-declaration): uthash requires this
         HASH_ADD_KEYPTR(hh, *map, variable->name.ptr, variable->name.len, variable);
     } else {
         object_free(variable->value);
+        str_free(name);
     }
-    variable->value = object_dup(value);
+    variable->value = value;
 }
 
 Object* variable_map_get(VariableMap* map, str name) {
