@@ -45,7 +45,7 @@ uint64_t hash_djb2(const uint8_t* mem, size_t len);
 
 #define HASH_STRING_HASH_INSERT(name, hash, k, v) \
     do { \
-        if ((hash)->count >= (hash)->capacity * HASH_MAX_LOAD) { \
+        while ((hash)->count + 1 >= (hash)->capacity * HASH_MAX_LOAD) { \
             uint64_t new_capacity = (hash)->capacity * 2 + 1; \
             struct name##Bucket* new_buckets = malloc(new_capacity * sizeof(struct name##Bucket)); \
             HASH_ASSERT(new_buckets != NULL); \
