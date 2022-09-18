@@ -190,6 +190,8 @@ str str_printf(const char* fmt, ...) HEDLEY_PRINTF_FORMAT(1, 2);
 
 #define str_after(s, i) str_ref_chars(str_ptr(s) + (i), str_len(s) - (i))
 #define str_upto(s, i) str_ref_chars(str_ptr(s), (i))
+#define str_substr(s, i, n) str_ref_chars(str_ptr(s) + (i), (n))
+#define str_substr_bounds(s, i, j) str_substr((s), (i), (j) - (i))
 
 // searching and sorting
 // -------------------------------------------------------------------- string

@@ -115,13 +115,27 @@ int main(void) {
         if (!diagnostic_bag_empty(diagnostics)) {
             DiagnosticBuf view = diagnostic_bag_iter(diagnostics);
 
-            styler_apply_style(styler_style_faint, stdout);
-            styler_apply_fg(styler_fg_red, stdout);
             for (uint64_t i = 0; i < view.len; i++) {
-                printfln(str_fmt, str_arg(view.ptr[i].message));
+                styler_apply_style(styler_style_faint, stdout);
+                styler_apply_fg(styler_fg_red, stdout);
+                Diagnostic diagnostic = view.ptr[i];
+                printfln(str_fmt, str_arg(diagnostic.message));
+                styler_apply_fg(styler_fg_reset, stdout);
+                styler_apply_style(styler_style_reset, stdout);
+
+                str prefix = str_upto(line, diagnostic.span.start);
+                str error =
+                    str_substr_bounds(line, diagnostic.span.start, text_span_end(diagnostic.span));
+                str suffix = str_after(line, text_span_end(diagnostic.span));
+
+                printf("    " str_fmt, str_arg(prefix));
+                styler_apply_style(styler_style_faint, stdout);
+                styler_apply_fg(styler_fg_red, stdout);
+                printf(str_fmt, str_arg(error));
+                styler_apply_fg(styler_fg_reset, stdout);
+                styler_apply_style(styler_style_reset, stdout);
+                printfln(str_fmt, str_arg(suffix));
             }
-            styler_apply_fg(styler_fg_reset, stdout);
-            styler_apply_style(styler_style_reset, stdout);
             diagnostic_bag_free(diagnostics);
             (void)fflush(stdout);
         } else {
