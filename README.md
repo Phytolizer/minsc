@@ -7,10 +7,14 @@ small tasks in a robust, cross-platform way.
 
 ## The Language
 
-Currently the language is a glorified calculator.
+Currently the language is expression-only.
 It supports the four functions you'd expect from
-any calculator, as well as the unary `+` and `-` operators.
+any calculator, logical operators, and equality operators,
+as well as the unary `+`, `-`, and `!` operators.
 You may also parenthesize these expressions to specify order of evaluation.
+
+Variables have extremely limited support; they are declared ad-hoc by assignment,
+like Python, and can be referenced later.
 
 There are two meta-commands:
  - `#cls` Clears the console window.
@@ -21,7 +25,7 @@ There are two meta-commands:
 The implementation closely mirrors the original C# version (seen [here](https://github.com/terrajobst/minsk)).
  - Input is tokenized ([lexer.c](/src/code_analysis/syntax/lexer.c)).
  - An abstract syntax tree is built (the root node is in [expression_syntax.h](/include/minsc/code_analysis/syntax/expression_syntax.h), and the parser in [parser.c](/src/code_analysis/syntax/parser.c)).
- - Type checking occurs in [binder.c](/src/code_analysis/binding/binder.c) (though currently there is only one type).
+ - Type checking occurs in [binder.c](/src/code_analysis/binding/binder.c).
  - The expression is evaluated ([evaluator.c](/src/code_analysis/evaluator.c)).
 
 ## Mini-Libraries
@@ -47,6 +51,14 @@ Cross-platform file operations. Current support:
 Dependencies:
  - [str](#str)
  - [sum](#sum)
+
+### hash
+
+Tiny library for string hash tables. Largely untested.
+
+Dependencies:
+ - [str](#str)
+ - [println](#println)
 
 ### linenoise
 
