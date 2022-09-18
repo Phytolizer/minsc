@@ -84,6 +84,10 @@ uint64_t hash_djb2(const uint8_t* mem, size_t len);
 
 #define HASH_STRING_HASH_FIND(name, hash, k, pval) \
     do { \
+        if ((hash)->capacity == 0) { \
+            *(pval) = NULL; \
+            break; \
+        } \
         uint64_t h = hash_djb2((uint8_t*)str_ptr(k), str_len(k)); \
         uint64_t index = h % (hash)->capacity; \
         *(pval) = NULL; \

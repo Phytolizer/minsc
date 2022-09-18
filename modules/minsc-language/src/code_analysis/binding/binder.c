@@ -134,6 +134,7 @@ static BoundExpression* bind_name_expression(Binder* binder, NameExpressionSynta
             syntax_token_span(syntax->identifier_token),
             name
         );
+        str_free(name);
         return bound_literal_expression_new(object_new_i64(0));
     }
 
