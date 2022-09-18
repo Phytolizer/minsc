@@ -37,8 +37,10 @@ uint64_t hash_djb2(const uint8_t* mem, size_t len);
 #define HASH_STRING_HASH_FREE(hash, value_destructor) \
     do { \
         for (uint64_t i = 0; i < (hash).capacity; i++) { \
-            str_free((hash).buckets[i].key); \
-            value_destructor((hash).buckets[i].value); \
+            if (!str_is_empty((hash).buckets[i].key)) { \
+                str_free((hash).buckets[i].key); \
+                value_destructor((hash).buckets[i].value); \
+            } \
         } \
         free((hash).buckets); \
     } while (0)
