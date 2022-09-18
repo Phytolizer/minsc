@@ -52,17 +52,9 @@ Dependencies:
  - [str](#str)
  - [sum](#sum)
 
-### hash
-
-Tiny library for string hash tables. Largely untested.
-
-Dependencies:
- - [str](#str)
- - [println](#println)
-
 ### linenoise
 
-This is not my repo, just a fork. See [the original](https://github.com/msteveb/linenoise).
+This is not my repo.
 
 ### println
 
@@ -94,6 +86,10 @@ Some extremely useful sum types, inspired by Haskell and Rust, though much less 
 They are all implemented as macros, and I use them pervasively.
 
 Dependencies: None.
+
+### uthash
+
+Not my repo.
 
 ## Mini-Programs
 

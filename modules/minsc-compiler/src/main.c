@@ -69,7 +69,7 @@ int main(void) {
     linenoiseHistoryLoad("minsc.history");
 
     bool show_tree = false;
-    VariableMap variables = variable_map_new();
+    VariableMap* variables = variable_map_new();
 
     while (true) {
         char* raw_line = linenoise(">> ");

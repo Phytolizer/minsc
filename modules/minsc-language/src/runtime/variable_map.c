@@ -1,19 +1,53 @@
 #include "minsc/runtime/variable_map.h"
 
-VariableMap variable_map_new(void) {
-    return (VariableMap)HASH_STRING_HASH_NEW;
+#include <uthash.h>
+
+#include "minsc/support/minsc_assert.h"
+
+struct VariableMap {
+    str name;
+    Object* value;
+    UT_hash_handle hh;
+};
+
+VariableMap* variable_map_new(void) {
+    return NULL;
 }
 
-void variable_map_free(VariableMap map) {
-    HASH_STRING_HASH_FREE(map, object_free);
+void variable_map_free(VariableMap* map) {
+    VariableMap* variable;
+    VariableMap* tmp;
+
+    HASH_ITER(hh, map, variable, tmp) {
+        HASH_DEL(map, variable);
+        str_free(variable->name);
+        object_free(variable->value);
+        free(variable);
+    }
 }
 
-void variable_map_define(VariableMap* map, str name, Object* value) {
-    HASH_STRING_HASH_INSERT(VariableMap, map, name, value, object_free);
+void variable_map_define(VariableMap** map, str name, Object* value) {
+    VariableMap* variable;
+    // NOLINTNEXTLINE(readability-isolate-declaration): uthash requires this
+    HASH_FIND(hh, *map, name.ptr, name.len, variable);
+    if (variable == NULL) {
+        variable = malloc(sizeof(VariableMap));
+        MINSC_ASSERT(variable != NULL);
+        variable->name = str_dup(name);
+        // NOLINTNEXTLINE(readability-isolate-declaration): uthash requires this
+        HASH_ADD_KEYPTR(hh, *map, variable->name.ptr, variable->name.len, variable);
+    } else {
+        object_free(variable->value);
+    }
+    variable->value = object_dup(value);
 }
 
 Object* variable_map_get(VariableMap* map, str name) {
-    Object* value;
-    HASH_STRING_HASH_FIND(VariableMap, map, name, &value);
-    return value;
+    VariableMap* variable;
+    // NOLINTNEXTLINE(readability-isolate-declaration): uthash requires this
+    HASH_FIND(hh, map, name.ptr, name.len, variable);
+    if (variable == NULL) {
+        return NULL;
+    }
+    return variable->value;
 }

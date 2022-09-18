@@ -8,7 +8,7 @@
 
 typedef struct Binder Binder;
 
-Binder* binder_new(VariableMap* variables);
+Binder* binder_new(VariableMap** variables);
 void binder_free(Binder* binder);
 
 BoundExpression* binder_bind_expression(Binder* binder, ExpressionSyntax* expression);

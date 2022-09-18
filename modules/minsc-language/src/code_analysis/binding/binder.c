@@ -25,7 +25,7 @@
 
 struct Binder {
     DiagnosticBag* diagnostics;
-    VariableMap* variables;
+    VariableMap** variables;
 };
 
 static BoundExpression* bind_literal_expression(Binder* binder, LiteralExpressionSyntax* syntax);
@@ -37,7 +37,7 @@ static BoundExpression* bind_name_expression(Binder* binder, NameExpressionSynta
 static BoundExpression*
 bind_assignment_expression(Binder* binder, AssignmentExpressionSyntax* syntax);
 
-Binder* binder_new(VariableMap* variables) {
+Binder* binder_new(VariableMap** variables) {
     Binder* binder = malloc(sizeof(Binder));
     MINSC_ASSERT(binder != NULL);
     binder->diagnostics = diagnostic_bag_new();
@@ -127,7 +127,7 @@ bind_parenthesized_expression(Binder* binder, ParenthesizedExpressionSyntax* syn
 
 static BoundExpression* bind_name_expression(Binder* binder, NameExpressionSyntax* syntax) {
     str name = str_dup(syntax->identifier_token->text);
-    Object* value = variable_map_get(binder->variables, name);
+    Object* value = variable_map_get(*binder->variables, name);
     if (value == NULL) {
         diagnostic_bag_report_undefined_name(
             binder->diagnostics,

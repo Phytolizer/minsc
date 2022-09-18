@@ -18,7 +18,7 @@
 
 struct Evaluator {
     BoundExpression* root;
-    VariableMap* variables;
+    VariableMap** variables;
 };
 
 static Object* evaluate_expression(Evaluator* evaluator, BoundExpression* expression);
@@ -30,7 +30,7 @@ evaluate_variable_expression(Evaluator* evaluator, BoundVariableExpression* vari
 static Object*
 evaluate_assignment_expression(Evaluator* evaluator, BoundAssignmentExpression* assignment);
 
-Evaluator* evaluator_new(BoundExpression* root, VariableMap* variables) {
+Evaluator* evaluator_new(BoundExpression* root, VariableMap** variables) {
     Evaluator* evaluator = malloc(sizeof(Evaluator));
     MINSC_ASSERT(evaluator != NULL);
     evaluator->root = root;
@@ -166,7 +166,7 @@ static Object* evaluate_binary_expression(Evaluator* evaluator, BoundBinaryExpre
 
 static Object*
 evaluate_variable_expression(Evaluator* evaluator, BoundVariableExpression* variable) {
-    return object_dup(variable_map_get(evaluator->variables, variable->name));
+    return object_dup(variable_map_get(*evaluator->variables, variable->name));
 }
 
 static Object*

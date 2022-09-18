@@ -7,7 +7,7 @@
 
 typedef struct Evaluator Evaluator;
 
-Evaluator* evaluator_new(BoundExpression* root, VariableMap* variables);
+Evaluator* evaluator_new(BoundExpression* root, VariableMap** variables);
 void evaluator_free(Evaluator* evaluator);
 
 Object* evaluator_evaluate(Evaluator* evaluator);

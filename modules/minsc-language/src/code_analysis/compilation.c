@@ -25,7 +25,7 @@ void compilation_free(Compilation* compilation) {
     free(compilation);
 }
 
-EvaluationResult compilation_evaluate(Compilation* compilation, VariableMap* variables) {
+EvaluationResult compilation_evaluate(Compilation* compilation, VariableMap** variables) {
     Binder* binder = binder_new(variables);
     BoundExpression* bound_expression = binder_bind_expression(binder, compilation->syntax->root);
 

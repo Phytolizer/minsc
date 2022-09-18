@@ -18,7 +18,7 @@ add_subdirectory(deps/sum)
 add_subdirectory(deps/varycase)
 
 add_subdirectory(deps/file)
-add_subdirectory(deps/hash)
+add_subdirectory(deps/uthash)
 
 add_subdirectory(modules/minsc-language)
 add_subdirectory(modules/minsc-compiler)
