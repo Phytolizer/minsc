@@ -1,8 +1,8 @@
 #ifndef MINSC_CODE_ANALYSIS_BINDING_BOUND_BINARY_EXPRESSION_H_
 #define MINSC_CODE_ANALYSIS_BINDING_BOUND_BINARY_EXPRESSION_H_
 
-#include "bound_binary_operator.h"
-#include "bound_expression.h"
+#include "minsc/code_analysis/binding/bound_binary_operator.h"
+#include "minsc/code_analysis/binding/bound_expression.h"
 #include "minsc/runtime/object.h"
 
 typedef struct BoundBinaryExpression {

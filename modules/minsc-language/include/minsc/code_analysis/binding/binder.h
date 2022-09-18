@@ -1,7 +1,7 @@
 #ifndef MINSC_CODE_ANALYSIS_BINDING_BINDER_H_
 #define MINSC_CODE_ANALYSIS_BINDING_BINDER_H_
 
-#include "bound_expression.h"
+#include "minsc/code_analysis/binding/bound_expression.h"
 #include "minsc/code_analysis/syntax/diagnostic.h"
 #include "minsc/code_analysis/syntax/expression_syntax.h"
 

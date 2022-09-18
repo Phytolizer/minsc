@@ -5,7 +5,7 @@
 
 typedef enum {
 #define X(x) SYNTAX_KIND_##x,
-#include "syntax_kind.inc"
+#include "minsc/code_analysis/syntax/syntax_kind.inc"
 #undef X
 } SyntaxKind;
 

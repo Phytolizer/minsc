@@ -1,9 +1,9 @@
 #ifndef MINSC_CODE_ANALYSIS_SYNTAX_BINARY_EXPRESSION_SYNTAX_H_
 #define MINSC_CODE_ANALYSIS_SYNTAX_BINARY_EXPRESSION_SYNTAX_H_
 
-#include "expression_syntax.h"
-#include "syntax_node.h"
-#include "syntax_token.h"
+#include "minsc/code_analysis/syntax/expression_syntax.h"
+#include "minsc/code_analysis/syntax/syntax_node.h"
+#include "minsc/code_analysis/syntax/syntax_token.h"
 
 typedef struct BinaryExpressionSyntax {
     ExpressionSyntax base;

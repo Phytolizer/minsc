@@ -3,9 +3,9 @@
 
 #include <str/str.h>
 
-#include "diagnostic.h"
-#include "expression_syntax.h"
-#include "syntax_token.h"
+#include "minsc/code_analysis/syntax/diagnostic.h"
+#include "minsc/code_analysis/syntax/expression_syntax.h"
+#include "minsc/code_analysis/syntax/syntax_token.h"
 
 typedef struct SyntaxTree {
     DiagnosticBuf diagnostics;

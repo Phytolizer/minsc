@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include <str/str.h>
 
-#include "syntax_kind.h"
+#include "minsc/code_analysis/syntax/syntax_kind.h"
 
 extern size_t binary_operator_precedence(SyntaxKind kind);
 extern size_t unary_operator_precedence(SyntaxKind kind);

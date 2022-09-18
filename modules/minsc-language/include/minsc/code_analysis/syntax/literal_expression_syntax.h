@@ -1,10 +1,10 @@
 #ifndef MINSC_CODE_ANALYSIS_SYNTAX_LITERAL_EXPRESSION_SYNTAX_H_
 #define MINSC_CODE_ANALYSIS_SYNTAX_LITERAL_EXPRESSION_SYNTAX_H_
 
-#include "expression_syntax.h"
+#include "minsc/code_analysis/syntax/expression_syntax.h"
+#include "minsc/code_analysis/syntax/syntax_node.h"
+#include "minsc/code_analysis/syntax/syntax_token.h"
 #include "minsc/runtime/object.h"
-#include "syntax_node.h"
-#include "syntax_token.h"
 
 typedef struct LiteralExpressionSyntax {
     ExpressionSyntax base;

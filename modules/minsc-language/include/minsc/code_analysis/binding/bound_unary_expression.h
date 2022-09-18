@@ -1,8 +1,8 @@
 #ifndef MINSC_CODE_ANALYSIS_BINDING_BOUND_UNARY_EXPRESSION_H_
 #define MINSC_CODE_ANALYSIS_BINDING_BOUND_UNARY_EXPRESSION_H_
 
-#include "bound_expression.h"
-#include "bound_unary_operator.h"
+#include "minsc/code_analysis/binding/bound_expression.h"
+#include "minsc/code_analysis/binding/bound_unary_operator.h"
 #include "minsc/runtime/object.h"
 
 typedef struct BoundUnaryExpression {

@@ -6,7 +6,7 @@
 
 typedef enum {
 #define X(x) BOUND_BINARY_OPERATOR_KIND_##x,
-#include "bound_binary_operator_kind.inc"
+#include "minsc/code_analysis/binding/bound_binary_operator_kind.inc"
 #undef X
 } BoundBinaryOperatorKind;
 

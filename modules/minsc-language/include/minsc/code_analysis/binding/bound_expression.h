@@ -1,12 +1,12 @@
 #ifndef MINSC_CODE_ANALYSIS_BINDING_BOUND_EXPRESSION_H_
 #define MINSC_CODE_ANALYSIS_BINDING_BOUND_EXPRESSION_H_
 
-#include "bound_node.h"
+#include "minsc/code_analysis/binding/bound_node.h"
 #include "minsc/runtime/object.h"
 
 typedef enum {
 #define X(x) BOUND_EXPRESSION_TYPE_##x,
-#include "bound_expression_type.inc"
+#include "minsc/code_analysis/binding/bound_expression_type.inc"
 #undef X
 } BoundExpressionType;
 

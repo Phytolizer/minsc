@@ -3,8 +3,8 @@
 
 #include <str/str.h>
 
-#include "diagnostic.h"
-#include "syntax_token.h"
+#include "minsc/code_analysis/syntax/diagnostic.h"
+#include "minsc/code_analysis/syntax/syntax_token.h"
 
 typedef struct Lexer Lexer;
 

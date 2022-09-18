@@ -7,7 +7,7 @@
 
 typedef enum {
 #define X(x) OBJECT_TYPE_##x,
-#include "object_type.inc"
+#include "minsc/runtime/object_type.inc"
 #undef X
 } ObjectType;
 

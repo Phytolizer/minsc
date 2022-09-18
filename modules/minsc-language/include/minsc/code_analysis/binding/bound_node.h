@@ -3,13 +3,13 @@
 
 typedef enum {
 #define X(x) BOUND_NODE_TYPE_##x,
-#include "bound_node_type.inc"
+#include "minsc/code_analysis/binding/bound_node_type.inc"
 #undef X
 } BoundNodeType;
 
 typedef enum {
 #define X(x) BOUND_NODE_KIND_##x,
-#include "bound_node_kind.inc"
+#include "minsc/code_analysis/binding/bound_node_kind.inc"
 #undef X
 } BoundNodeKind;
 

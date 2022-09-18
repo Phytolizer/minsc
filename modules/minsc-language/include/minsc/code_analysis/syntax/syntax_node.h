@@ -3,11 +3,11 @@
 
 #include <buf/buf.h>
 
-#include "syntax_kind.h"
+#include "minsc/code_analysis/syntax/syntax_kind.h"
 
 typedef enum {
 #define X(x) SYNTAX_NODE_TYPE_##x,
-#include "syntax_node_type.inc"
+#include "minsc/code_analysis/syntax/syntax_node_type.inc"
 #undef X
 } SyntaxNodeType;
 

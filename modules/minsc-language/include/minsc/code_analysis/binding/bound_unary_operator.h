@@ -6,7 +6,7 @@
 
 typedef enum BoundUnaryOperatorKind {
 #define X(x) BOUND_UNARY_OPERATOR_KIND_##x,
-#include "bound_unary_operator_kind.inc"
+#include "minsc/code_analysis/binding/bound_unary_operator_kind.inc"
 #undef X
 } BoundUnaryOperatorKind;
 

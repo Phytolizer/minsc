@@ -1,7 +1,7 @@
 #ifndef MINSC_CODE_ANALYSIS_BINDING_BOUND_LITERAL_EXPRESSION_H_
 #define MINSC_CODE_ANALYSIS_BINDING_BOUND_LITERAL_EXPRESSION_H_
 
-#include "bound_expression.h"
+#include "minsc/code_analysis/binding/bound_expression.h"
 #include "minsc/runtime/object.h"
 
 typedef struct BoundLiteralExpression {

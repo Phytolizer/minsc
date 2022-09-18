@@ -1,12 +1,12 @@
 #ifndef MINSC_CODE_ANALYSIS_SYNTAX_EXPRESSION_SYNTAX_H_
 #define MINSC_CODE_ANALYSIS_SYNTAX_EXPRESSION_SYNTAX_H_
 
-#include "syntax_kind.h"
-#include "syntax_node.h"
+#include "minsc/code_analysis/syntax/syntax_kind.h"
+#include "minsc/code_analysis/syntax/syntax_node.h"
 
 typedef enum {
 #define X(x) EXPRESSION_SYNTAX_TYPE_##x,
-#include "expression_syntax_type.inc"
+#include "minsc/code_analysis/syntax/expression_syntax_type.inc"
 #undef X
 } ExpressionSyntaxType;
 
