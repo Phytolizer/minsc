@@ -146,5 +146,21 @@ static BoundExpression*
 bind_assignment_expression(Binder* binder, AssignmentExpressionSyntax* syntax) {
     str name = str_dup(syntax->identifier_token->text);
     BoundExpression* bound_expression = binder_bind_expression(binder, syntax->expression);
+
+    ObjectType rhs_type = bound_expression_type(bound_expression);
+    Object* default_value;
+    switch (rhs_type) {
+        case OBJECT_TYPE_INT64:
+            default_value = object_new_i64(0);
+            break;
+        case OBJECT_TYPE_BOOL:
+            default_value = object_new_bool(false);
+            break;
+        default:
+            MINSC_ABORT("Unexpected type");
+    }
+
+    variable_map_define(binder->variables, str_dup(name), default_value);
+
     return bound_assignment_expression_new(name, bound_expression);
 }

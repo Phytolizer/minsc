@@ -45,7 +45,7 @@ uint64_t hash_djb2(const uint8_t* mem, size_t len);
         free((hash).buckets); \
     } while (0)
 
-#define HASH_STRING_HASH_INSERT(name, hash, k, v) \
+#define HASH_STRING_HASH_INSERT(name, hash, k, v, value_destructor) \
     do { \
         while ((hash)->count + 1 >= (hash)->capacity * HASH_MAX_LOAD) { \
             uint64_t new_capacity = (hash)->capacity * 2 + 1; \
@@ -78,7 +78,12 @@ uint64_t hash_djb2(const uint8_t* mem, size_t len);
         ) { \
             index = (index + 1) % (hash)->capacity; \
         } \
-        str_free((hash)->buckets[index].key); \
+        if (!str_is_empty((hash)->buckets[index].key)) { \
+            str_free((hash)->buckets[index].key); \
+            value_destructor((hash)->buckets[index].value); \
+        } else { \
+            (hash)->count++; \
+        } \
         (hash)->buckets[index].key = k; \
         (hash)->buckets[index].value = v; \
         (hash)->count++; \

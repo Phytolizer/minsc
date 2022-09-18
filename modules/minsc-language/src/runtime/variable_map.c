@@ -9,7 +9,7 @@ void variable_map_free(VariableMap map) {
 }
 
 void variable_map_define(VariableMap* map, str name, Object* value) {
-    HASH_STRING_HASH_INSERT(VariableMap, map, name, value);
+    HASH_STRING_HASH_INSERT(VariableMap, map, name, value, object_free);
 }
 
 Object* variable_map_get(VariableMap* map, str name) {
