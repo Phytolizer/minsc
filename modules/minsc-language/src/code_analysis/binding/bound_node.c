@@ -3,7 +3,7 @@
 #include "minsc/code_analysis/binding/bound_expression.h"
 #include "minsc/support/minsc_assert.h"
 
-extern void bound_node_free(BoundNode* node) {
+void bound_node_free(BoundNode* node) {
     switch (node->type) {
         case BOUND_NODE_TYPE_EXPRESSION:
             bound_expression_free((BoundExpression*)node);
@@ -13,7 +13,7 @@ extern void bound_node_free(BoundNode* node) {
     MINSC_ABORT("Invalid bound node type");
 }
 
-extern BoundNodeKind bound_node_kind(const BoundNode* node) {
+BoundNodeKind bound_node_kind(const BoundNode* node) {
     switch (node->type) {
         case BOUND_NODE_TYPE_EXPRESSION:
             return bound_expression_kind((const BoundExpression*)node);

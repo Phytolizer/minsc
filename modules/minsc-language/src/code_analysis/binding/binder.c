@@ -11,7 +11,6 @@
 #include "minsc/code_analysis/binding/bound_unary_expression.h"
 #include "minsc/code_analysis/binding/bound_unary_operator.h"
 #include "minsc/code_analysis/syntax/binary_expression_syntax.h"
-#include "minsc/code_analysis/syntax/diagnostic.h"
 #include "minsc/code_analysis/syntax/literal_expression_syntax.h"
 #include "minsc/code_analysis/syntax/parenthesized_expression_syntax.h"
 #include "minsc/code_analysis/syntax/syntax_kind.h"
@@ -21,7 +20,7 @@
 #include "minsc/support/minsc_assert.h"
 
 struct Binder {
-    DiagnosticBuf diagnostics;
+    DiagnosticBag* diagnostics;
 };
 
 static BoundExpression* bind_literal_expression(Binder* binder, LiteralExpressionSyntax* syntax);
@@ -33,12 +32,12 @@ bind_parenthesized_expression(Binder* binder, ParenthesizedExpressionSyntax* syn
 Binder* binder_new(void) {
     Binder* binder = malloc(sizeof(Binder));
     MINSC_ASSERT(binder != NULL);
-    binder->diagnostics = (DiagnosticBuf)BUF_NEW;
+    binder->diagnostics = diagnostic_bag_new();
     return binder;
 }
 
 void binder_free(Binder* binder) {
-    diagnostic_buf_free(binder->diagnostics);
+    diagnostic_bag_free(binder->diagnostics);
     free(binder);
 }
 
@@ -57,9 +56,9 @@ BoundExpression* binder_bind_expression(Binder* binder, ExpressionSyntax* syntax
     }
 }
 
-DiagnosticBuf binder_take_diagnostics(Binder* binder) {
-    DiagnosticBuf diagnostics = binder->diagnostics;
-    binder->diagnostics = (DiagnosticBuf)BUF_NEW;
+DiagnosticBag* binder_take_diagnostics(Binder* binder) {
+    DiagnosticBag* diagnostics = binder->diagnostics;
+    binder->diagnostics = NULL;
     return diagnostics;
 }
 
@@ -73,14 +72,11 @@ static BoundExpression* bind_unary_expression(Binder* binder, UnaryExpressionSyn
     const BoundUnaryOperator* op =
         bind_unary_operator(syntax->operator_token->kind, bound_expression_type(operand));
     if (op == NULL) {
-        BUF_PUSH(
-            &binder->diagnostics,
-            str_printf(
-                "Unary operator '" str_fmt "' is not "
-                "defined for type '" str_fmt "'",
-                str_arg(syntax->operator_token->text),
-                str_arg(object_type_string(bound_expression_type(operand)))
-            )
+        diagnostic_bag_report_undefined_unary_operator(
+            binder->diagnostics,
+            syntax_token_span(syntax->operator_token),
+            syntax->operator_token->text,
+            bound_expression_type(operand)
         );
         return operand;
     }
@@ -97,15 +93,12 @@ static BoundExpression* bind_binary_expression(Binder* binder, BinaryExpressionS
         bound_expression_type(right)
     );
     if (op == NULL) {
-        BUF_PUSH(
-            &binder->diagnostics,
-            str_printf(
-                "Binary operator '" str_fmt "' is not "
-                "defined for types '" str_fmt "' and '" str_fmt "'",
-                str_arg(syntax->operator_token->text),
-                str_arg(object_type_string(bound_expression_type(left))),
-                str_arg(object_type_string(bound_expression_type(right)))
-            )
+        diagnostic_bag_report_undefined_binary_operator(
+            binder->diagnostics,
+            syntax_token_span(syntax->operator_token),
+            syntax->operator_token->text,
+            bound_expression_type(left),
+            bound_expression_type(right)
         );
         bound_expression_free(right);
         return left;

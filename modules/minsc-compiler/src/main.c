@@ -8,8 +8,8 @@
 #include <styler/styler.h>
 
 #include "minsc/code_analysis/compilation.h"
+#include "minsc/code_analysis/diagnostic_bag.h"
 #include "minsc/code_analysis/evaluation_result.h"
-#include "minsc/code_analysis/syntax/diagnostic.h"
 #include "minsc/code_analysis/syntax/syntax_kind.h"
 #include "minsc/code_analysis/syntax/syntax_node.h"
 #include "minsc/code_analysis/syntax/syntax_token.h"
@@ -110,17 +110,19 @@ int main(void) {
         }
 
         compilation_free(compilation);
-        DiagnosticBuf diagnostics = result.diagnostics;
+        DiagnosticBag* diagnostics = result.diagnostics;
 
-        if (diagnostics.len > 0) {
+        if (!diagnostic_bag_empty(diagnostics)) {
+            DiagnosticBuf view = diagnostic_bag_iter(diagnostics);
+
             styler_apply_style(styler_style_faint, stdout);
             styler_apply_fg(styler_fg_red, stdout);
-            for (uint64_t i = 0; i < diagnostics.len; i++) {
-                printfln(str_fmt, str_arg(diagnostics.ptr[i]));
+            for (uint64_t i = 0; i < view.len; i++) {
+                printfln(str_fmt, str_arg(view.ptr[i].message));
             }
             styler_apply_fg(styler_fg_reset, stdout);
             styler_apply_style(styler_style_reset, stdout);
-            diagnostic_buf_free(diagnostics);
+            diagnostic_bag_free(diagnostics);
             (void)fflush(stdout);
         } else {
             str result_str = object_string(result.value);

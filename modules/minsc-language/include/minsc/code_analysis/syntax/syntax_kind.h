@@ -9,6 +9,6 @@ typedef enum {
 #undef X
 } SyntaxKind;
 
-extern str syntax_kind_string(SyntaxKind kind);
+str syntax_kind_string(SyntaxKind kind);
 
 #endif  // MINSC_CODE_ANALYSIS_SYNTAX_SYNTAX_KIND_H_

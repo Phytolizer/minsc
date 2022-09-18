@@ -7,7 +7,7 @@
 #include "minsc/code_analysis/binding/bound_unary_operator.h"
 #include "minsc/support/minsc_assert.h"
 
-extern BoundExpression*
+BoundExpression*
 bound_unary_expression_new(const BoundUnaryOperator* op, BoundExpression* operand) {
     BoundUnaryExpression* expression = malloc(sizeof(BoundUnaryExpression));
     MINSC_ASSERT(expression != NULL);
@@ -18,11 +18,11 @@ bound_unary_expression_new(const BoundUnaryOperator* op, BoundExpression* operan
     return (BoundExpression*)expression;
 }
 
-extern void bound_unary_expression_free(BoundUnaryExpression* expression) {
+void bound_unary_expression_free(BoundUnaryExpression* expression) {
     bound_expression_free(expression->operand);
     free(expression);
 }
 
-extern ObjectType bound_unary_expression_type(const BoundUnaryExpression* expression) {
+ObjectType bound_unary_expression_type(const BoundUnaryExpression* expression) {
     return expression->op->result_type;
 }

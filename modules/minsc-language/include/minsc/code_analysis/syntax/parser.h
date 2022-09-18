@@ -3,7 +3,7 @@
 
 #include <str/str.h>
 
-#include "minsc/code_analysis/syntax/diagnostic.h"
+#include "minsc/code_analysis/diagnostic_bag.h"
 #include "minsc/code_analysis/syntax/syntax_tree.h"
 
 typedef struct Parser Parser;
@@ -12,6 +12,6 @@ Parser* parser_new(str text);
 void parser_free(Parser* parser);
 
 SyntaxTree* parser_parse(Parser* parser);
-DiagnosticBuf parser_take_diagnostics(Parser* parser);
+DiagnosticBag* parser_take_diagnostics(Parser* parser);
 
 #endif  // MINSC_CODE_ANALYSIS_SYNTAX_PARSER_H_

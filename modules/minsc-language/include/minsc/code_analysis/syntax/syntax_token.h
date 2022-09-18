@@ -7,6 +7,7 @@
 
 #include "minsc/code_analysis/syntax/syntax_kind.h"
 #include "minsc/code_analysis/syntax/syntax_node.h"
+#include "minsc/code_analysis/text_span.h"
 #include "minsc/runtime/object.h"
 
 typedef struct SyntaxToken {
@@ -24,5 +25,12 @@ SyntaxToken*
 syntax_token_new_manufactured(SyntaxKind kind, size_t position, str text, Object* value);
 SyntaxToken* syntax_token_dup(SyntaxToken* token);
 void syntax_token_free(SyntaxToken* token);
+
+static inline TextSpan syntax_token_span(const SyntaxToken* token) {
+    return (TextSpan){
+        .start = token->position,
+        .length = token->text.len,
+    };
+}
 
 #endif  // MINSC_CODE_ANALYSIS_SYNTAX_SYNTAX_TOKEN_H_

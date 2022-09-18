@@ -7,7 +7,7 @@
 #include <str/str.h>
 #include <str/strtox.h>
 
-#include "minsc/code_analysis/syntax/diagnostic.h"
+#include "minsc/code_analysis/diagnostic_bag.h"
 #include "minsc/code_analysis/syntax/syntax_facts.h"
 #include "minsc/code_analysis/syntax/syntax_kind.h"
 #include "minsc/code_analysis/syntax/syntax_token.h"
@@ -18,7 +18,7 @@
 struct Lexer {
     str source;
     size_t position;
-    DiagnosticBuf diagnostics;
+    DiagnosticBag* diagnostics;
 };
 
 static char peek(const Lexer* lexer, size_t offset);
@@ -30,19 +30,19 @@ Lexer* lexer_new(str source) {
     MINSC_ASSERT(lexer != NULL);
     lexer->source = source;
     lexer->position = 0;
-    lexer->diagnostics = (DiagnosticBuf)BUF_NEW;
+    lexer->diagnostics = diagnostic_bag_new();
     return lexer;
 }
 
 void lexer_free(Lexer* lexer) {
-    diagnostic_buf_free(lexer->diagnostics);
+    diagnostic_bag_free(lexer->diagnostics);
     str_free(lexer->source);
     free(lexer);
 }
 
-DiagnosticBuf lexer_take_diagnostics(Lexer* lexer) {
-    DiagnosticBuf diagnostics = lexer->diagnostics;
-    lexer->diagnostics = (DiagnosticBuf)BUF_NEW;
+DiagnosticBag* lexer_take_diagnostics(Lexer* lexer) {
+    DiagnosticBag* diagnostics = lexer->diagnostics;
+    lexer->diagnostics = NULL;
     return diagnostics;
 }
 
@@ -61,9 +61,10 @@ SyntaxToken* lexer_next_token(Lexer* lexer) {
         str temp_text = ref_text(lexer, start);
         Str2I64Result result = str2i64(temp_text, 10);
         if (result.err) {
-            BUF_PUSH(
-                &lexer->diagnostics,
-                str_printf("ERROR: The number " str_fmt " is too large.", str_arg(temp_text))
+            diagnostic_bag_report_invalid_int64(
+                lexer->diagnostics,
+                (TextSpan){.start = start, .length = lexer->position - start},
+                temp_text
             );
         }
         value = result.err ? NULL : object_new_i64(result.value);
@@ -153,7 +154,7 @@ SyntaxToken* lexer_next_token(Lexer* lexer) {
     }
 
     if (c_is_error) {
-        BUF_PUSH(&lexer->diagnostics, str_printf("ERROR: Unexpected character '%c'.", c));
+        diagnostic_bag_report_bad_character(lexer->diagnostics, start, c);
         kind = SYNTAX_KIND_BAD_TOKEN;
     }
 

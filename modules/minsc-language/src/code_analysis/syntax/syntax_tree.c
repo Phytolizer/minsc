@@ -4,14 +4,16 @@
 #include <stdlib.h>
 #include <str/str.h>
 
-#include "minsc/code_analysis/syntax/diagnostic.h"
 #include "minsc/code_analysis/syntax/expression_syntax.h"
 #include "minsc/code_analysis/syntax/parser.h"
 #include "minsc/code_analysis/syntax/syntax_token.h"
 #include "minsc/support/minsc_assert.h"
 
-SyntaxTree*
-syntax_tree_new(DiagnosticBuf diagnostics, ExpressionSyntax* root, SyntaxToken* end_of_file_token) {
+SyntaxTree* syntax_tree_new(
+    DiagnosticBag* diagnostics,
+    ExpressionSyntax* root,
+    SyntaxToken* end_of_file_token
+) {
     SyntaxTree* tree = malloc(sizeof(SyntaxTree));
     MINSC_ASSERT(tree != NULL);
     tree->diagnostics = diagnostics;
@@ -21,15 +23,15 @@ syntax_tree_new(DiagnosticBuf diagnostics, ExpressionSyntax* root, SyntaxToken* 
 }
 
 void syntax_tree_free(SyntaxTree* tree) {
-    diagnostic_buf_free(tree->diagnostics);
+    diagnostic_bag_free(tree->diagnostics);
     expression_syntax_free(tree->root);
     syntax_token_free(tree->end_of_file_token);
     free(tree);
 }
 
-DiagnosticBuf syntax_tree_take_diagnostics(SyntaxTree* tree) {
-    DiagnosticBuf diagnostics = tree->diagnostics;
-    tree->diagnostics = (DiagnosticBuf)BUF_NEW;
+DiagnosticBag* syntax_tree_take_diagnostics(SyntaxTree* tree) {
+    DiagnosticBag* diagnostics = tree->diagnostics;
+    tree->diagnostics = NULL;
     return diagnostics;
 }
 

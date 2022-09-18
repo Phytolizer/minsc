@@ -6,7 +6,7 @@
 #include "minsc/code_analysis/binding/bound_unary_expression.h"
 #include "minsc/support/minsc_assert.h"
 
-extern void bound_expression_free(BoundExpression* expression) {
+void bound_expression_free(BoundExpression* expression) {
     switch (expression->type) {
         case BOUND_EXPRESSION_TYPE_UNARY:
             bound_unary_expression_free((BoundUnaryExpression*)expression);
@@ -22,7 +22,7 @@ extern void bound_expression_free(BoundExpression* expression) {
     }
 }
 
-extern BoundNodeKind bound_expression_kind(const BoundExpression* expression) {
+BoundNodeKind bound_expression_kind(const BoundExpression* expression) {
     switch (expression->type) {
         case BOUND_EXPRESSION_TYPE_UNARY:
             return BOUND_NODE_KIND_UNARY_EXPRESSION;
@@ -35,7 +35,7 @@ extern BoundNodeKind bound_expression_kind(const BoundExpression* expression) {
     MINSC_ABORT("Invalid bound expression type");
 }
 
-extern ObjectType bound_expression_type(const BoundExpression* expression) {
+ObjectType bound_expression_type(const BoundExpression* expression) {
     switch (expression->type) {
         case BOUND_EXPRESSION_TYPE_UNARY:
             return bound_unary_expression_type((const BoundUnaryExpression*)expression);

@@ -6,9 +6,9 @@
 
 #include "minsc/code_analysis/syntax/syntax_kind.h"
 
-extern size_t binary_operator_precedence(SyntaxKind kind);
-extern size_t unary_operator_precedence(SyntaxKind kind);
+size_t binary_operator_precedence(SyntaxKind kind);
+size_t unary_operator_precedence(SyntaxKind kind);
 
-extern SyntaxKind keyword_kind(str text);
+SyntaxKind keyword_kind(str text);
 
 #endif  // MINSC_CODE_ANALYSIS_SYNTAX_SYNTAX_FACTS_H_

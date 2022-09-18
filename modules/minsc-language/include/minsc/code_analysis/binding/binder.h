@@ -2,7 +2,7 @@
 #define MINSC_CODE_ANALYSIS_BINDING_BINDER_H_
 
 #include "minsc/code_analysis/binding/bound_expression.h"
-#include "minsc/code_analysis/syntax/diagnostic.h"
+#include "minsc/code_analysis/diagnostic_bag.h"
 #include "minsc/code_analysis/syntax/expression_syntax.h"
 
 typedef struct Binder Binder;
@@ -12,6 +12,6 @@ void binder_free(Binder* binder);
 
 BoundExpression* binder_bind_expression(Binder* binder, ExpressionSyntax* expression);
 
-DiagnosticBuf binder_take_diagnostics(Binder* binder);
+DiagnosticBag* binder_take_diagnostics(Binder* binder);
 
 #endif  // MINSC_CODE_ANALYSIS_BINDING_BINDER_H_

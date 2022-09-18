@@ -15,7 +15,7 @@ static const size_t SYNTAX_KIND_STRING_LENGTHS[] = {
 #undef X
 };
 
-extern str syntax_kind_string(SyntaxKind kind) {
+str syntax_kind_string(SyntaxKind kind) {
     switch (kind) {
 #define X(x) case SYNTAX_KIND_##x:
 #include "minsc/code_analysis/syntax/syntax_kind.inc"

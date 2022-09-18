@@ -6,7 +6,6 @@
 #include "minsc/code_analysis/binding/binder.h"
 #include "minsc/code_analysis/binding/bound_expression.h"
 #include "minsc/code_analysis/evaluator.h"
-#include "minsc/code_analysis/syntax/diagnostic.h"
 #include "minsc/runtime/object.h"
 #include "minsc/support/minsc_assert.h"
 
@@ -30,13 +29,11 @@ EvaluationResult compilation_evaluate(Compilation* compilation) {
     Binder* binder = binder_new();
     BoundExpression* bound_expression = binder_bind_expression(binder, compilation->syntax->root);
 
-    DiagnosticBuf diagnostics = syntax_tree_take_diagnostics(compilation->syntax);
-    DiagnosticBuf binder_diagnostics = binder_take_diagnostics(binder);
-    BUF_CONCAT(&diagnostics, binder_diagnostics);
-    BUF_FREE(binder_diagnostics);
+    DiagnosticBag* diagnostics = syntax_tree_take_diagnostics(compilation->syntax);
+    diagnostic_bag_concat(diagnostics, binder_take_diagnostics(binder));
     binder_free(binder);
 
-    if (diagnostics.len > 0) {
+    if (!diagnostic_bag_empty(diagnostics)) {
         bound_expression_free(bound_expression);
         return (EvaluationResult){.diagnostics = diagnostics, .value = NULL};
     }
@@ -46,5 +43,5 @@ EvaluationResult compilation_evaluate(Compilation* compilation) {
     bound_expression_free(bound_expression);
     evaluator_free(evaluator);
 
-    return (EvaluationResult){.diagnostics = BUF_NEW, .value = value};
+    return (EvaluationResult){.diagnostics = NULL, .value = value};
 }

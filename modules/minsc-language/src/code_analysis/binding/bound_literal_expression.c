@@ -6,7 +6,7 @@
 #include "minsc/code_analysis/binding/bound_node.h"
 #include "minsc/support/minsc_assert.h"
 
-extern BoundExpression* bound_literal_expression_new(Object* value) {
+BoundExpression* bound_literal_expression_new(Object* value) {
     BoundLiteralExpression* expression = malloc(sizeof(BoundLiteralExpression));
     MINSC_ASSERT(expression != NULL);
     expression->base.base.type = BOUND_NODE_TYPE_EXPRESSION;
@@ -15,12 +15,12 @@ extern BoundExpression* bound_literal_expression_new(Object* value) {
     return (BoundExpression*)expression;
 }
 
-extern void bound_literal_expression_free(BoundLiteralExpression* expression) {
+void bound_literal_expression_free(BoundLiteralExpression* expression) {
     object_free(expression->value);
     free(expression);
 }
 
-extern ObjectType bound_literal_expression_type(const BoundLiteralExpression* expression) {
+ObjectType bound_literal_expression_type(const BoundLiteralExpression* expression) {
     if (expression->value == NULL) {
         return OBJECT_TYPE_NULL;
     }

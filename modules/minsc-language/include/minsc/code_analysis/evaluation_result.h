@@ -1,11 +1,11 @@
 #ifndef MINSC_CODE_ANALYSIS_EVALUATION_RESULT_H_
 #define MINSC_CODE_ANALYSIS_EVALUATION_RESULT_H_
 
-#include "minsc/code_analysis/syntax/diagnostic.h"
+#include "minsc/code_analysis/diagnostic_bag.h"
 #include "minsc/runtime/object.h"
 
 typedef struct EvaluationResult {
-    DiagnosticBuf diagnostics;
+    DiagnosticBag* diagnostics;
     Object* value;
 } EvaluationResult;
 

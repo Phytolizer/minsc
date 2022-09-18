@@ -6,7 +6,6 @@
 #include <str/str.h>
 
 #include "minsc/code_analysis/syntax/binary_expression_syntax.h"
-#include "minsc/code_analysis/syntax/diagnostic.h"
 #include "minsc/code_analysis/syntax/expression_syntax.h"
 #include "minsc/code_analysis/syntax/lexer.h"
 #include "minsc/code_analysis/syntax/literal_expression_syntax.h"
@@ -23,7 +22,7 @@ typedef BUF(SyntaxToken*) SyntaxTokenBuf;
 struct Parser {
     SyntaxTokenBuf tokens;
     size_t position;
-    DiagnosticBuf diagnostics;
+    DiagnosticBag* diagnostics;
 };
 
 static SyntaxToken* peek(const Parser* parser, size_t offset);
@@ -50,7 +49,7 @@ Parser* parser_new(str text) {
         }
     }
 
-    DiagnosticBuf diagnostics = lexer_take_diagnostics(lexer);
+    DiagnosticBag* diagnostics = lexer_take_diagnostics(lexer);
     lexer_free(lexer);
 
     Parser* parser = malloc(sizeof(Parser));
@@ -65,7 +64,7 @@ void parser_free(Parser* parser) {
         syntax_token_free(parser->tokens.ptr[i]);
     }
     BUF_FREE(parser->tokens);
-    diagnostic_buf_free(parser->diagnostics);
+    diagnostic_bag_free(parser->diagnostics);
     free(parser);
 }
 
@@ -73,13 +72,13 @@ SyntaxTree* parser_parse(Parser* parser) {
     ExpressionSyntax* root = parse_expression(parser, 0);
     SyntaxToken* end_of_file_token =
         syntax_token_dup(match_token(parser, SYNTAX_KIND_END_OF_FILE_TOKEN));
-    DiagnosticBuf diagnostics = parser_take_diagnostics(parser);
+    DiagnosticBag* diagnostics = parser_take_diagnostics(parser);
     return syntax_tree_new(diagnostics, root, end_of_file_token);
 }
 
-DiagnosticBuf parser_take_diagnostics(Parser* parser) {
-    DiagnosticBuf diagnostics = parser->diagnostics;
-    parser->diagnostics = (DiagnosticBuf)BUF_NEW;
+DiagnosticBag* parser_take_diagnostics(Parser* parser) {
+    DiagnosticBag* diagnostics = parser->diagnostics;
+    parser->diagnostics = NULL;
     return diagnostics;
 }
 
@@ -106,13 +105,11 @@ static SyntaxToken* match_token(Parser* parser, SyntaxKind kind) {
         return next_token(parser);
     }
 
-    BUF_PUSH(
-        &parser->diagnostics,
-        str_printf(
-            "ERROR: Unexpected token <" str_fmt ">, expected <" str_fmt ">",
-            str_arg(syntax_kind_string(current(parser)->kind)),
-            str_arg(syntax_kind_string(kind))
-        )
+    diagnostic_bag_report_unexpected_token(
+        parser->diagnostics,
+        syntax_token_span(current(parser)),
+        current(parser)->kind,
+        kind
     );
     return syntax_token_new_manufactured(kind, current(parser)->position, str_null, NULL);
 }

@@ -12,13 +12,13 @@ typedef struct BoundBinaryExpression {
     BoundExpression* right;
 } BoundBinaryExpression;
 
-extern BoundExpression* bound_binary_expression_new(
+BoundExpression* bound_binary_expression_new(
     const BoundBinaryOperator* op,
     BoundExpression* left,
     BoundExpression* right
 );
-extern void bound_binary_expression_free(BoundBinaryExpression* expression);
+void bound_binary_expression_free(BoundBinaryExpression* expression);
 
-extern ObjectType bound_binary_expression_type(const BoundBinaryExpression* expression);
+ObjectType bound_binary_expression_type(const BoundBinaryExpression* expression);
 
 #endif  // MINSC_CODE_ANALYSIS_BINDING_BOUND_BINARY_EXPRESSION_H_

@@ -17,7 +17,7 @@ typedef struct BoundNode {
     BoundNodeType type;
 } BoundNode;
 
-extern void bound_node_free(BoundNode* node);
-extern BoundNodeKind bound_node_kind(const BoundNode* node);
+void bound_node_free(BoundNode* node);
+BoundNodeKind bound_node_kind(const BoundNode* node);
 
 #endif  // MINSC_CODE_ANALYSIS_BINDING_BOUND_NODE_H_

@@ -4,7 +4,7 @@
 
 #include "minsc/code_analysis/syntax/syntax_kind.h"
 
-extern size_t binary_operator_precedence(SyntaxKind kind) {
+size_t binary_operator_precedence(SyntaxKind kind) {
     switch (kind) {
         case SYNTAX_KIND_STAR_TOKEN:
         case SYNTAX_KIND_SLASH_TOKEN:
@@ -24,7 +24,7 @@ extern size_t binary_operator_precedence(SyntaxKind kind) {
     }
 }
 
-extern size_t unary_operator_precedence(SyntaxKind kind) {
+size_t unary_operator_precedence(SyntaxKind kind) {
     switch (kind) {
         case SYNTAX_KIND_PLUS_TOKEN:
         case SYNTAX_KIND_MINUS_TOKEN:
@@ -35,7 +35,7 @@ extern size_t unary_operator_precedence(SyntaxKind kind) {
     }
 }
 
-extern SyntaxKind keyword_kind(str text) {
+SyntaxKind keyword_kind(str text) {
     SyntaxKind kind;
 
     if (str_eq(text, str_lit("true"))) {
