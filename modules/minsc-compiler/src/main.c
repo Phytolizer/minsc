@@ -126,7 +126,7 @@ int main(void) {
             str result_str = object_string(result.value);
             object_free(result.value);
 
-            styler_apply_fg(styler_fg_green, stdout);
+            styler_apply_fg(styler_fg_magenta, stdout);
             printfln(str_fmt, str_arg(result_str));
             str_free(result_str);
             styler_apply_fg(styler_fg_reset, stdout);
