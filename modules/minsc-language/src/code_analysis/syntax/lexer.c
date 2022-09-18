@@ -141,7 +141,7 @@ SyntaxToken* lexer_next_token(Lexer* lexer) {
                     kind = SYNTAX_KIND_EQUALS_EQUALS_TOKEN;
                 } else {
                     lexer->position++;
-                    c_is_error = true;
+                    kind = SYNTAX_KIND_EQUALS_TOKEN;
                 }
                 break;
             case '\0':
@@ -158,8 +158,7 @@ SyntaxToken* lexer_next_token(Lexer* lexer) {
         kind = SYNTAX_KIND_BAD_TOKEN;
     }
 
-    str text = str_null;
-    str_cpy(&text, ref_text(lexer, start));
+    str text = str_dup(ref_text(lexer, start));
     return syntax_token_new(kind, start, text, value);
 }
 

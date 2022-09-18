@@ -4,14 +4,18 @@
 #include <stdlib.h>
 #include <str/str.h>
 
+#include "minsc/code_analysis/binding/bound_assignment_expression.h"
 #include "minsc/code_analysis/binding/bound_binary_expression.h"
 #include "minsc/code_analysis/binding/bound_binary_operator.h"
 #include "minsc/code_analysis/binding/bound_expression.h"
 #include "minsc/code_analysis/binding/bound_literal_expression.h"
 #include "minsc/code_analysis/binding/bound_unary_expression.h"
 #include "minsc/code_analysis/binding/bound_unary_operator.h"
+#include "minsc/code_analysis/binding/bound_variable_expression.h"
+#include "minsc/code_analysis/syntax/assignment_expression_syntax.h"
 #include "minsc/code_analysis/syntax/binary_expression_syntax.h"
 #include "minsc/code_analysis/syntax/literal_expression_syntax.h"
+#include "minsc/code_analysis/syntax/name_expression_syntax.h"
 #include "minsc/code_analysis/syntax/parenthesized_expression_syntax.h"
 #include "minsc/code_analysis/syntax/syntax_kind.h"
 #include "minsc/code_analysis/syntax/syntax_token.h"
@@ -21,6 +25,7 @@
 
 struct Binder {
     DiagnosticBag* diagnostics;
+    VariableMap* variables;
 };
 
 static BoundExpression* bind_literal_expression(Binder* binder, LiteralExpressionSyntax* syntax);
@@ -28,16 +33,21 @@ static BoundExpression* bind_unary_expression(Binder* binder, UnaryExpressionSyn
 static BoundExpression* bind_binary_expression(Binder* binder, BinaryExpressionSyntax* syntax);
 static BoundExpression*
 bind_parenthesized_expression(Binder* binder, ParenthesizedExpressionSyntax* syntax);
+static BoundExpression* bind_name_expression(Binder* binder, NameExpressionSyntax* syntax);
+static BoundExpression*
+bind_assignment_expression(Binder* binder, AssignmentExpressionSyntax* syntax);
 
-Binder* binder_new(void) {
+Binder* binder_new(VariableMap* variables) {
     Binder* binder = malloc(sizeof(Binder));
     MINSC_ASSERT(binder != NULL);
     binder->diagnostics = diagnostic_bag_new();
+    binder->variables = variables;
     return binder;
 }
 
 void binder_free(Binder* binder) {
     diagnostic_bag_free(binder->diagnostics);
+    // don't free variables, they could be reused
     free(binder);
 }
 
@@ -51,6 +61,10 @@ BoundExpression* binder_bind_expression(Binder* binder, ExpressionSyntax* syntax
             return bind_binary_expression(binder, (BinaryExpressionSyntax*)syntax);
         case SYNTAX_KIND_PARENTHESIZED_EXPRESSION:
             return bind_parenthesized_expression(binder, (ParenthesizedExpressionSyntax*)syntax);
+        case SYNTAX_KIND_NAME_EXPRESSION:
+            return bind_name_expression(binder, (NameExpressionSyntax*)syntax);
+        case SYNTAX_KIND_ASSIGNMENT_EXPRESSION:
+            return bind_assignment_expression(binder, (AssignmentExpressionSyntax*)syntax);
         default:
             MINSC_ABORT("Unexpected expression syntax kind");
     }
@@ -109,4 +123,27 @@ static BoundExpression* bind_binary_expression(Binder* binder, BinaryExpressionS
 static BoundExpression*
 bind_parenthesized_expression(Binder* binder, ParenthesizedExpressionSyntax* syntax) {
     return binder_bind_expression(binder, syntax->expression);
+}
+
+static BoundExpression* bind_name_expression(Binder* binder, NameExpressionSyntax* syntax) {
+    str name = str_dup(syntax->identifier_token->text);
+    Object* value = variable_map_get(binder->variables, name);
+    if (value == NULL) {
+        diagnostic_bag_report_undefined_name(
+            binder->diagnostics,
+            syntax_token_span(syntax->identifier_token),
+            name
+        );
+        return bound_literal_expression_new(object_new_i64(0));
+    }
+
+    ObjectType type = value ? value->type : OBJECT_TYPE_NULL;
+    return bound_variable_expression_new(name, type);
+}
+
+static BoundExpression*
+bind_assignment_expression(Binder* binder, AssignmentExpressionSyntax* syntax) {
+    str name = str_dup(syntax->identifier_token->text);
+    BoundExpression* bound_expression = binder_bind_expression(binder, syntax->expression);
+    return bound_assignment_expression_new(name, bound_expression);
 }

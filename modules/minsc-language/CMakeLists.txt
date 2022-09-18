@@ -1,5 +1,7 @@
 set(MINSC_SRC_REL
     code_analysis/binding/binder.c
+    code_analysis/binding/bound_variable_expression.c
+    code_analysis/binding/bound_assignment_expression.c
     code_analysis/binding/bound_binary_expression.c
     code_analysis/binding/bound_binary_operator.c
     code_analysis/binding/bound_expression.c
@@ -24,7 +26,10 @@ set(MINSC_SRC_REL
     code_analysis/syntax/parenthesized_expression_syntax.c
     code_analysis/syntax/syntax_facts.c
     code_analysis/syntax/unary_expression_syntax.c
+    code_analysis/syntax/name_expression_syntax.c
+    code_analysis/syntax/assignment_expression_syntax.c
     runtime/object.c
+    runtime/variable_map.c
 )
 prepend_path(MINSC_SRC_REL src/ MINSC_SRC)
 add_library(minsc_language ${MINSC_SRC})
@@ -38,7 +43,9 @@ foreach(inc ${MINSC_INC})
   vary_case(${inc} include/minsc/${inc_dir} uppercamel minsc_language)
 endforeach()
 target_link_libraries(
-  minsc_language PRIVATE println::println linenoise::linenoise str::str
-                         buf::buf styler::styler sum::sum
+  minsc_language
+  PRIVATE println::println linenoise::linenoise str::str buf::buf styler::styler
+          sum::sum
+  PUBLIC hash::hash
 )
 add_library(minsc::language ALIAS minsc_language)

@@ -69,6 +69,7 @@ int main(void) {
     linenoiseHistoryLoad("minsc.history");
 
     bool show_tree = false;
+    VariableMap variables = variable_map_new();
 
     while (true) {
         char* raw_line = linenoise(">> ");
@@ -98,7 +99,7 @@ int main(void) {
         SyntaxTree* program = syntax_tree_parse(str_ref(line));
 
         Compilation* compilation = compilation_new(program);
-        EvaluationResult result = compilation_evaluate(compilation);
+        EvaluationResult result = compilation_evaluate(compilation, &variables);
 
         if (show_tree) {
             styler_apply_style(styler_style_faint, stdout);
@@ -152,6 +153,7 @@ int main(void) {
         str_free(line);
     }
 
+    variable_map_free(variables);
     linenoiseHistorySave("minsc.history");
 }
 

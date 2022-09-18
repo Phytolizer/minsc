@@ -218,6 +218,12 @@ int str_cpy(str* const dest, const str s) {
     return 0;
 }
 
+str str_dup(str s) {
+    str s2 = str_null;
+    str_cpy(&s2, s);
+    return s2;
+}
+
 // string composition
 // -----------------------------------------------------------------------
 // append string

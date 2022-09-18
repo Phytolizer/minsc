@@ -5,28 +5,36 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "minsc/code_analysis/binding/bound_assignment_expression.h"
 #include "minsc/code_analysis/binding/bound_binary_expression.h"
 #include "minsc/code_analysis/binding/bound_binary_operator.h"
 #include "minsc/code_analysis/binding/bound_expression.h"
 #include "minsc/code_analysis/binding/bound_literal_expression.h"
 #include "minsc/code_analysis/binding/bound_unary_expression.h"
 #include "minsc/code_analysis/binding/bound_unary_operator.h"
+#include "minsc/code_analysis/binding/bound_variable_expression.h"
 #include "minsc/runtime/object.h"
 #include "minsc/support/minsc_assert.h"
 
 struct Evaluator {
     BoundExpression* root;
+    VariableMap* variables;
 };
 
-static Object* evaluate_expression(BoundExpression* expression);
-static Object* evaluate_literal_expression(BoundLiteralExpression* literal);
-static Object* evaluate_unary_expression(BoundUnaryExpression* unary);
-static Object* evaluate_binary_expression(BoundBinaryExpression* binary);
+static Object* evaluate_expression(Evaluator* evaluator, BoundExpression* expression);
+static Object* evaluate_literal_expression(Evaluator* evaluator, BoundLiteralExpression* literal);
+static Object* evaluate_unary_expression(Evaluator* evaluator, BoundUnaryExpression* unary);
+static Object* evaluate_binary_expression(Evaluator* evaluator, BoundBinaryExpression* binary);
+static Object*
+evaluate_variable_expression(Evaluator* evaluator, BoundVariableExpression* variable);
+static Object*
+evaluate_assignment_expression(Evaluator* evaluator, BoundAssignmentExpression* assignment);
 
-Evaluator* evaluator_new(BoundExpression* root) {
+Evaluator* evaluator_new(BoundExpression* root, VariableMap* variables) {
     Evaluator* evaluator = malloc(sizeof(Evaluator));
     MINSC_ASSERT(evaluator != NULL);
     evaluator->root = root;
+    evaluator->variables = variables;
     return evaluator;
 }
 
@@ -35,24 +43,32 @@ void evaluator_free(Evaluator* evaluator) {
 }
 
 Object* evaluator_evaluate(Evaluator* evaluator) {
-    return evaluate_expression(evaluator->root);
+    return evaluate_expression(evaluator, evaluator->root);
 }
 
-static Object* evaluate_expression(BoundExpression* expression) {
+static Object* evaluate_expression(Evaluator* evaluator, BoundExpression* expression) {
     Object* result;
 
     switch (expression->type) {
         case BOUND_EXPRESSION_TYPE_LITERAL: {
             BoundLiteralExpression* literal = (BoundLiteralExpression*)expression;
-            result = evaluate_literal_expression(literal);
+            result = evaluate_literal_expression(evaluator, literal);
         } break;
         case BOUND_EXPRESSION_TYPE_BINARY: {
             BoundBinaryExpression* binary = (BoundBinaryExpression*)expression;
-            result = evaluate_binary_expression(binary);
+            result = evaluate_binary_expression(evaluator, binary);
         } break;
         case BOUND_EXPRESSION_TYPE_UNARY: {
             BoundUnaryExpression* unary = (BoundUnaryExpression*)expression;
-            result = evaluate_unary_expression(unary);
+            result = evaluate_unary_expression(evaluator, unary);
+        } break;
+        case BOUND_EXPRESSION_TYPE_VARIABLE: {
+            BoundVariableExpression* variable = (BoundVariableExpression*)expression;
+            result = evaluate_variable_expression(evaluator, variable);
+        } break;
+        case BOUND_EXPRESSION_TYPE_ASSIGNMENT: {
+            BoundAssignmentExpression* assignment = (BoundAssignmentExpression*)expression;
+            result = evaluate_assignment_expression(evaluator, assignment);
         } break;
         default:
             MINSC_ABORT("corrupt expression or not handled in switch");
@@ -61,14 +77,15 @@ static Object* evaluate_expression(BoundExpression* expression) {
     return result;
 }
 
-static Object* evaluate_literal_expression(BoundLiteralExpression* expression) {
-    return object_dup(expression->value);
+static Object* evaluate_literal_expression(Evaluator* evaluator, BoundLiteralExpression* literal) {
+    (void)evaluator;
+    return object_dup(literal->value);
 }
 
-static Object* evaluate_unary_expression(BoundUnaryExpression* unary) {
+static Object* evaluate_unary_expression(Evaluator* evaluator, BoundUnaryExpression* unary) {
     Object* result;
 
-    Object* operand = evaluate_expression(unary->operand);
+    Object* operand = evaluate_expression(evaluator, unary->operand);
     switch (unary->op->kind) {
         case BOUND_UNARY_OPERATOR_KIND_IDENTITY:
             result = operand;
@@ -86,11 +103,11 @@ static Object* evaluate_unary_expression(BoundUnaryExpression* unary) {
     return result;
 }
 
-static Object* evaluate_binary_expression(BoundBinaryExpression* binary) {
+static Object* evaluate_binary_expression(Evaluator* evaluator, BoundBinaryExpression* binary) {
     Object* result;
 
-    Object* left = evaluate_expression(binary->left);
-    Object* right = evaluate_expression(binary->right);
+    Object* left = evaluate_expression(evaluator, binary->left);
+    Object* right = evaluate_expression(evaluator, binary->right);
     switch (binary->op->kind) {
         case BOUND_BINARY_OPERATOR_KIND_ADDITION:
             result = object_new_i64(object_unwrap_i64(left) + object_unwrap_i64(right));
@@ -145,4 +162,16 @@ static Object* evaluate_binary_expression(BoundBinaryExpression* binary) {
     }
 
     return result;
+}
+
+static Object*
+evaluate_variable_expression(Evaluator* evaluator, BoundVariableExpression* variable) {
+    return object_dup(variable_map_get(evaluator->variables, variable->name));
+}
+
+static Object*
+evaluate_assignment_expression(Evaluator* evaluator, BoundAssignmentExpression* assignment) {
+    Object* value = evaluate_expression(evaluator, assignment->expression);
+    variable_map_define(evaluator->variables, str_dup(assignment->name), object_dup(value));
+    return value;
 }

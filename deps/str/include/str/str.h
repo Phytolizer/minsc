@@ -146,6 +146,8 @@ bool str_has_suffix(str s, str suffix);
 // ------------------------------------------------------------------
 int str_cpy(str* dest, str s);
 
+str str_dup(str s);
+
 int str_cat_range(str* dest, const str* src, size_t count);
 
 // concatenate string arguments

@@ -36,7 +36,7 @@ DiagnosticBuf diagnostic_bag_iter(const DiagnosticBag* bag) {
 }
 
 bool diagnostic_bag_empty(const DiagnosticBag* bag) {
-    return bag->diagnostics.len == 0;
+    return bag == NULL || bag->diagnostics.len == 0;
 }
 
 void diagnostic_bag_report_invalid_int64(DiagnosticBag* bag, TextSpan span, str text) {
@@ -95,6 +95,11 @@ void diagnostic_bag_report_undefined_binary_operator(
         str_arg(object_type_string(left_type)),
         str_arg(object_type_string(right_type))
     );
+    report(bag, span, message);
+}
+
+void diagnostic_bag_report_undefined_name(DiagnosticBag* bag, TextSpan span, str name) {
+    str message = str_printf("Variable '" str_fmt "' doesn't exist.", str_arg(name));
     report(bag, span, message);
 }
 

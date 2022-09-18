@@ -30,8 +30,7 @@ SyntaxToken* syntax_token_dup(SyntaxToken* token) {
     if (token->manufactured) {
         return token;
     }
-    str text_dup = str_null;
-    str_cpy(&text_dup, token->text);
+    str text_dup = str_dup(token->text);
     Object* value_dup = object_dup(token->value);
     return syntax_token_new(token->kind, token->position, text_dup, value_dup);
 }

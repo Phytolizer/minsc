@@ -5,10 +5,12 @@
 #include <stdlib.h>
 #include <str/str.h>
 
+#include "minsc/code_analysis/syntax/assignment_expression_syntax.h"
 #include "minsc/code_analysis/syntax/binary_expression_syntax.h"
 #include "minsc/code_analysis/syntax/expression_syntax.h"
 #include "minsc/code_analysis/syntax/lexer.h"
 #include "minsc/code_analysis/syntax/literal_expression_syntax.h"
+#include "minsc/code_analysis/syntax/name_expression_syntax.h"
 #include "minsc/code_analysis/syntax/parenthesized_expression_syntax.h"
 #include "minsc/code_analysis/syntax/syntax_facts.h"
 #include "minsc/code_analysis/syntax/syntax_kind.h"
@@ -29,7 +31,9 @@ static SyntaxToken* peek(const Parser* parser, size_t offset);
 static SyntaxToken* current(const Parser* parser);
 static SyntaxToken* next_token(Parser* parser);
 static SyntaxToken* match_token(Parser* parser, SyntaxKind kind);
-static ExpressionSyntax* parse_expression(Parser* parser, size_t parent_precedence);
+static ExpressionSyntax* parse_expression(Parser* parser);
+static ExpressionSyntax* parse_assignment_expression(Parser* parser);
+static ExpressionSyntax* parse_binary_expression(Parser* parser, size_t parent_precedence);
 static ExpressionSyntax* parse_primary_expression(Parser* parser);
 
 Parser* parser_new(str text) {
@@ -69,7 +73,7 @@ void parser_free(Parser* parser) {
 }
 
 SyntaxTree* parser_parse(Parser* parser) {
-    ExpressionSyntax* root = parse_expression(parser, 0);
+    ExpressionSyntax* root = parse_expression(parser);
     SyntaxToken* end_of_file_token =
         syntax_token_dup(match_token(parser, SYNTAX_KIND_END_OF_FILE_TOKEN));
     DiagnosticBag* diagnostics = parser_take_diagnostics(parser);
@@ -114,12 +118,32 @@ static SyntaxToken* match_token(Parser* parser, SyntaxKind kind) {
     return syntax_token_new_manufactured(kind, current(parser)->position, str_null, NULL);
 }
 
-static ExpressionSyntax* parse_expression(Parser* parser, size_t parent_precedence) {
+static ExpressionSyntax* parse_expression(Parser* parser) {
+    return parse_assignment_expression(parser);
+}
+
+static ExpressionSyntax* parse_assignment_expression(Parser* parser) {
+    ExpressionSyntax* result;
+
+    if (peek(parser, 0)->kind == SYNTAX_KIND_IDENTIFIER_TOKEN &&
+        peek(parser, 1)->kind == SYNTAX_KIND_EQUALS_TOKEN) {
+        SyntaxToken* identifier_token = syntax_token_dup(next_token(parser));
+        SyntaxToken* operator_token = syntax_token_dup(next_token(parser));
+        ExpressionSyntax* right = parse_assignment_expression(parser);
+        result = assignment_expression_syntax_new(identifier_token, operator_token, right);
+    } else {
+        result = parse_binary_expression(parser, 0);
+    }
+
+    return result;
+}
+
+static ExpressionSyntax* parse_binary_expression(Parser* parser, size_t parent_precedence) {
     ExpressionSyntax* left;
     size_t unary_precedence = unary_operator_precedence(current(parser)->kind);
     if (unary_precedence != 0 && unary_precedence >= parent_precedence) {
         SyntaxToken* operator_token = syntax_token_dup(next_token(parser));
-        ExpressionSyntax* operand = parse_expression(parser, unary_precedence);
+        ExpressionSyntax* operand = parse_binary_expression(parser, unary_precedence);
         left = unary_expression_syntax_new(operator_token, operand);
     } else {
         left = parse_primary_expression(parser);
@@ -132,7 +156,7 @@ static ExpressionSyntax* parse_expression(Parser* parser, size_t parent_preceden
         }
 
         SyntaxToken* operator_token = syntax_token_dup(next_token(parser));
-        ExpressionSyntax* right = parse_expression(parser, precedence);
+        ExpressionSyntax* right = parse_binary_expression(parser, precedence);
         left = binary_expression_syntax_new(left, operator_token, right);
     }
 
@@ -145,7 +169,7 @@ static ExpressionSyntax* parse_primary_expression(Parser* parser) {
     switch (current(parser)->kind) {
         case SYNTAX_KIND_OPEN_PARENTHESIS_TOKEN: {
             SyntaxToken* left = syntax_token_dup(next_token(parser));
-            ExpressionSyntax* expression = parse_expression(parser, 0);
+            ExpressionSyntax* expression = parse_expression(parser);
             SyntaxToken* right =
                 syntax_token_dup(match_token(parser, SYNTAX_KIND_CLOSE_PARENTHESIS_TOKEN));
             result = parenthesized_expression_syntax_new(left, expression, right);
@@ -155,6 +179,10 @@ static ExpressionSyntax* parse_primary_expression(Parser* parser) {
             bool value = current(parser)->kind == SYNTAX_KIND_TRUE_KEYWORD;
             SyntaxToken* keyword_token = syntax_token_dup(next_token(parser));
             result = literal_expression_syntax_new(keyword_token, object_new_bool(value));
+        } break;
+        case SYNTAX_KIND_IDENTIFIER_TOKEN: {
+            SyntaxToken* identifier_token = syntax_token_dup(next_token(parser));
+            result = name_expression_syntax_new(identifier_token);
         } break;
         default: {
             SyntaxToken* number_token =

@@ -25,8 +25,8 @@ void compilation_free(Compilation* compilation) {
     free(compilation);
 }
 
-EvaluationResult compilation_evaluate(Compilation* compilation) {
-    Binder* binder = binder_new();
+EvaluationResult compilation_evaluate(Compilation* compilation, VariableMap* variables) {
+    Binder* binder = binder_new(variables);
     BoundExpression* bound_expression = binder_bind_expression(binder, compilation->syntax->root);
 
     DiagnosticBag* diagnostics = syntax_tree_take_diagnostics(compilation->syntax);
@@ -38,7 +38,8 @@ EvaluationResult compilation_evaluate(Compilation* compilation) {
         return (EvaluationResult){.diagnostics = diagnostics, .value = NULL};
     }
 
-    Evaluator* evaluator = evaluator_new(bound_expression);
+    diagnostic_bag_free(diagnostics);
+    Evaluator* evaluator = evaluator_new(bound_expression, variables);
     Object* value = evaluator_evaluate(evaluator);
     bound_expression_free(bound_expression);
     evaluator_free(evaluator);

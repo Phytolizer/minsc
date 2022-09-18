@@ -38,6 +38,7 @@ void diagnostic_bag_report_undefined_binary_operator(
     ObjectType left_type,
     ObjectType right_type
 );
+void diagnostic_bag_report_undefined_name(DiagnosticBag* bag, TextSpan span, str name);
 
 void diagnostic_bag_concat(DiagnosticBag* bag, DiagnosticBag* other);
 
