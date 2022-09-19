@@ -149,12 +149,14 @@ int str_cpy(str* dest, str s);
 str str_dup(str s);
 
 int str_cat_range(str* dest, const str* src, size_t count);
+str str_cat_ret_range(const str* src, size_t count);
 
 // concatenate string arguments
 #define ARGS_LEN_(...) (sizeof((str[]){__VA_ARGS__}) / sizeof(str))
 #define ARRAYOF_(...) ((str[]){__VA_ARGS__}), ARGS_LEN_(__VA_ARGS__)
 
 #define str_cat(dest, ...) str_cat_range((dest), ARRAYOF_(__VA_ARGS__))
+#define str_cat_ret(...) str_cat_ret_range(ARRAYOF_(__VA_ARGS__))
 
 // implementation helpers
 int str_join_range(str* dest, str sep, const str* src, size_t count);

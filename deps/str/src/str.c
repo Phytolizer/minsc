@@ -272,6 +272,12 @@ int str_cat_range(str* const dest, const str* src, size_t count) {
     return 0;
 }
 
+str str_cat_ret_range(const str* src, size_t count) {
+    str s = str_null;
+    str_cat_range(&s, src, count);
+    return s;
+}
+
 // join strings
 int str_join_range(str* const dest, const str sep, const str* src, size_t count) {
     // test for simple cases
