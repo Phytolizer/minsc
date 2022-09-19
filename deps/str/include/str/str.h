@@ -168,6 +168,8 @@ int str_join_range(str* dest, str sep, const str* src, size_t count);
 // ----------------------------------------------------------------------------
 // string reference from a string literal
 #define str_lit(s) ((str){"" s, sizeof(s) - 1, false})
+#define str_lit_c(s) \
+    { "" s, sizeof(s) - 1, false }
 
 static inline str str_ref_(const str s) {
     return (str){s.ptr, s.len, false};
