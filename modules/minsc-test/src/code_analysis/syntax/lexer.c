@@ -89,18 +89,12 @@ static bool requires_separator(TestTokenPair pair) {
 
     if (pair.tokens[0].kind == SYNTAX_KIND_NUMBER_TOKEN) {
         result = pair.tokens[1].kind == SYNTAX_KIND_NUMBER_TOKEN;
-    } else if (pair.tokens[0].kind == SYNTAX_KIND_IDENTIFIER_TOKEN) {
-        result = pair.tokens[1].kind == SYNTAX_KIND_IDENTIFIER_TOKEN ||
-                 pair.tokens[1].kind == SYNTAX_KIND_NUMBER_TOKEN || t1_is_keyword;
-    } else if (t0_is_keyword) {
+    } else if (pair.tokens[0].kind == SYNTAX_KIND_IDENTIFIER_TOKEN || t0_is_keyword) {
         result = pair.tokens[1].kind == SYNTAX_KIND_IDENTIFIER_TOKEN ||
                  pair.tokens[1].kind == SYNTAX_KIND_NUMBER_TOKEN || t1_is_keyword;
     } else if (pair.tokens[0].kind == SYNTAX_KIND_WHITESPACE_TOKEN) {
         result = pair.tokens[1].kind == SYNTAX_KIND_WHITESPACE_TOKEN;
-    } else if (pair.tokens[0].kind == SYNTAX_KIND_EQUALS_TOKEN) {
-        result = pair.tokens[1].kind == SYNTAX_KIND_EQUALS_TOKEN ||
-                 pair.tokens[1].kind == SYNTAX_KIND_EQUALS_EQUALS_TOKEN;
-    } else if (pair.tokens[0].kind == SYNTAX_KIND_BANG_TOKEN) {
+    } else if (pair.tokens[0].kind == SYNTAX_KIND_EQUALS_TOKEN || pair.tokens[0].kind == SYNTAX_KIND_BANG_TOKEN) {
         result = pair.tokens[1].kind == SYNTAX_KIND_EQUALS_TOKEN ||
                  pair.tokens[1].kind == SYNTAX_KIND_EQUALS_EQUALS_TOKEN;
     }

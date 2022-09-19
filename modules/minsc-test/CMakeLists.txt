@@ -7,6 +7,3 @@ target_link_libraries(
 )
 target_include_directories(minsc_test PRIVATE include)
 add_executable(minsc::test ALIAS minsc_test)
-
-enable_testing()
-add_test(NAME minsc::test COMMAND minsc::test)
