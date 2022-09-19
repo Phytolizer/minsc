@@ -22,3 +22,4 @@ add_subdirectory(deps/uthash)
 
 add_subdirectory(modules/minsc-language)
 add_subdirectory(modules/minsc-compiler)
+add_subdirectory(modules/minsc-test)
