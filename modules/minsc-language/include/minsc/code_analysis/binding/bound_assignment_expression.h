@@ -2,14 +2,16 @@
 #define MINSC_CODE_ANALYSIS_BINDING_BOUND_ASSIGNMENT_EXPRESSION_H_
 
 #include "minsc/code_analysis/binding/bound_expression.h"
+#include "minsc/code_analysis/variable_symbol.h"
 
 typedef struct BoundAssignmentExpression {
     BoundExpression base;
-    str name;
+    VariableSymbol variable;
     BoundExpression* expression;
 } BoundAssignmentExpression;
 
-BoundExpression* bound_assignment_expression_new(str name, BoundExpression* expression);
+BoundExpression*
+bound_assignment_expression_new(VariableSymbol variable, BoundExpression* expression);
 void bound_assignment_expression_free(BoundAssignmentExpression* expression);
 
 ObjectType bound_assignment_expression_type(const BoundAssignmentExpression* expression);

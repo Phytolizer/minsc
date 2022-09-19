@@ -125,21 +125,27 @@ bind_parenthesized_expression(Binder* binder, ParenthesizedExpressionSyntax* syn
     return binder_bind_expression(binder, syntax->expression);
 }
 
+static bool variable_symbol_names_eq(VariableSymbol* variable, void* user) {
+    str* name = user;
+    return str_eq(variable->name, *name);
+}
+
 static BoundExpression* bind_name_expression(Binder* binder, NameExpressionSyntax* syntax) {
-    str name = str_dup(syntax->identifier_token->text);
-    Object* value = variable_map_get(*binder->variables, name);
-    if (value == NULL) {
+    str name = syntax->identifier_token->text;
+
+    VariableSymbol* variable =
+        variable_map_find(*binder->variables, variable_symbol_names_eq, &name);
+
+    if (variable == NULL) {
         diagnostic_bag_report_undefined_name(
             binder->diagnostics,
             syntax_token_span(syntax->identifier_token),
             name
         );
-        str_free(name);
         return bound_literal_expression_new(object_new_i64(0));
     }
 
-    ObjectType type = value ? value->type : OBJECT_TYPE_NULL;
-    return bound_variable_expression_new(name, type);
+    return bound_variable_expression_new(variable_symbol_dup(*variable));
 }
 
 static BoundExpression*
@@ -147,20 +153,9 @@ bind_assignment_expression(Binder* binder, AssignmentExpressionSyntax* syntax) {
     str name = str_dup(syntax->identifier_token->text);
     BoundExpression* bound_expression = binder_bind_expression(binder, syntax->expression);
 
-    ObjectType rhs_type = bound_expression_type(bound_expression);
-    Object* default_value;
-    switch (rhs_type) {
-        case OBJECT_TYPE_INT64:
-            default_value = object_new_i64(0);
-            break;
-        case OBJECT_TYPE_BOOL:
-            default_value = object_new_bool(false);
-            break;
-        default:
-            MINSC_ABORT("Unexpected type");
-    }
+    VariableSymbol variable = variable_symbol_new(name, bound_expression_type(bound_expression));
 
-    variable_map_define(binder->variables, str_dup(name), default_value);
+    variable_map_define(binder->variables, variable_symbol_dup(variable), NULL);
 
-    return bound_assignment_expression_new(name, bound_expression);
+    return bound_assignment_expression_new(variable, bound_expression);
 }

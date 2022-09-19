@@ -166,12 +166,16 @@ static Object* evaluate_binary_expression(Evaluator* evaluator, BoundBinaryExpre
 
 static Object*
 evaluate_variable_expression(Evaluator* evaluator, BoundVariableExpression* variable) {
-    return object_dup(variable_map_get(*evaluator->variables, variable->name));
+    return object_dup(variable_map_get(*evaluator->variables, variable->variable));
 }
 
 static Object*
 evaluate_assignment_expression(Evaluator* evaluator, BoundAssignmentExpression* assignment) {
     Object* value = evaluate_expression(evaluator, assignment->expression);
-    variable_map_define(evaluator->variables, str_dup(assignment->name), object_dup(value));
+    variable_map_define(
+        evaluator->variables,
+        variable_symbol_dup(assignment->variable),
+        object_dup(value)
+    );
     return value;
 }

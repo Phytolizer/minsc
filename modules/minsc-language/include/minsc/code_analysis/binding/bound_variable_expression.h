@@ -2,14 +2,14 @@
 #define MINSC_CODE_ANALYSIS_BINDING_BOUND_VARIABLE_EXPRESSION_H_
 
 #include "minsc/code_analysis/binding/bound_expression.h"
+#include "minsc/code_analysis/variable_symbol.h"
 
 typedef struct BoundVariableExpression {
     BoundExpression base;
-    str name;
-    ObjectType type;
+    VariableSymbol variable;
 } BoundVariableExpression;
 
-BoundExpression* bound_variable_expression_new(str name, ObjectType type);
+BoundExpression* bound_variable_expression_new(VariableSymbol variable);
 void bound_variable_expression_free(BoundVariableExpression* expression);
 
 ObjectType bound_variable_expression_type(const BoundVariableExpression* expression);
