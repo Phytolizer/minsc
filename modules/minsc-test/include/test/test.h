@@ -60,11 +60,14 @@ typedef struct {
         name##_test_suite(state); \
     } while (false)
 
-#define RUN_TEST(state, name, displayname, ...) \
+#define TEST_CALL(state, name, ...) name##_test(state, __VA_ARGS__)
+#define TEST_CALL0(state, name) name##_test(state)
+
+#define DO_RUN_TEST(state, name, call, displayname) \
     do { \
         str disp = displayname; \
         (void)fprintf(stderr, "TEST  " str_fmt "\n", str_arg(disp)); \
-        TestResult result = name##_test(state __VA_OPT__(, ) __VA_ARGS__); \
+        TestResult result = call; \
         switch (result.type) { \
             case TEST_RESULT_FAIL: \
                 ++(state)->failed; \
@@ -87,22 +90,37 @@ typedef struct {
         str_free(disp); \
     } while (false)
 
-#define RUN_SUBTEST(state, name, cleanup, ...) \
+#define RUN_TEST(state, name, displayname, ...) \
+    DO_RUN_TEST(state, name, TEST_CALL(state, name, __VA_ARGS__), displayname)
+
+#define RUN_TEST0(state, name, displayname) \
+    DO_RUN_TEST(state, name, TEST_CALL0(state, name), displayname)
+
+#define DO_RUN_SUBTEST(state, name, call, cleanup, ...) \
     do { \
-        str message = name##_subtest(state, __VA_ARGS__); \
+        str message = call; \
         if (str_len(message) > 0) { \
             cleanup; \
             return message; \
         } \
     } while (false)
 
+#define SUBTEST_CALL(state, name, ...) name##_subtest(state, __VA_ARGS__)
+#define SUBTEST_CALL0(state, name) name##_subtest(state)
+
+#define RUN_SUBTEST(state, name, cleanup, ...) \
+    DO_RUN_SUBTEST(state, name, SUBTEST_CALL(state, name, __VA_ARGS__), cleanup)
+
+#define RUN_SUBTEST0(state, name, cleanup) \
+    DO_RUN_SUBTEST(state, name, SUBTEST_CALL0(state, name), cleanup)
+
 #define SUITE_FUNC(state, name) void name##_test_suite(TestState* state)
 
-#define TEST_FUNC(state, name, ...) \
-    TestResult name##_test(TestState* state __VA_OPT__(, ) __VA_ARGS__)
+#define TEST_FUNC(state, name, ...) TestResult name##_test(TestState* state, __VA_ARGS__)
+#define TEST_FUNC0(state, name) TestResult name##_test(TestState* state)
 
-#define SUBTEST_FUNC(state, name, ...) \
-    TestResult name##_subtest(TestState* state __VA_OPT__(, ) __VA_ARGS__)
+#define SUBTEST_FUNC(state, name, ...) TestResult name##_subtest(TestState* state, __VA_ARGS__)
+#define SUBTEST_FUNC0(state, name) TestResult name##_subtest(TestState* state)
 
 #define PASS() return TEST_PASS()
 
