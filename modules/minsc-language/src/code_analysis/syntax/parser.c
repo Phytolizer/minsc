@@ -19,8 +19,6 @@
 #include "minsc/code_analysis/syntax/unary_expression_syntax.h"
 #include "minsc/runtime/object.h"
 
-typedef BUF(SyntaxToken*) SyntaxTokenBuf;
-
 struct Parser {
     SyntaxTokenBuf tokens;
     size_t position;

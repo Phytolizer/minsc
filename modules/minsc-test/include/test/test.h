@@ -64,7 +64,7 @@ typedef struct {
     do { \
         str disp = displayname; \
         (void)fprintf(stderr, "TEST  " str_fmt "\n", str_arg(disp)); \
-        TestResult result = name##_test(state, __VA_ARGS__); \
+        TestResult result = name##_test(state __VA_OPT__(, ) __VA_ARGS__); \
         switch (result.type) { \
             case TEST_RESULT_FAIL: \
                 ++(state)->failed; \

@@ -1,4 +1,0 @@
-#ifndef MINSC_TEST_LEXER_H_
-#define MINSC_TEST_LEXER_H_
-
-#endif  // MINSC_TEST_LEXER_H_
