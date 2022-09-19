@@ -54,6 +54,19 @@ Object* variable_map_get(VariableMap* map, VariableSymbol symbol) {
     return variable->value;
 }
 
+void variable_map_remove(VariableMap** map, VariableSymbol symbol) {
+    VariableMap* variable;
+    // NOLINTNEXTLINE(readability-isolate-declaration): uthash requires this
+    HASH_FIND(hh, *map, symbol.name.ptr, symbol.name.len, variable);
+    if (variable == NULL) {
+        return;
+    }
+    HASH_DEL(*map, variable);
+    variable_symbol_free(variable->symbol);
+    object_free(variable->value);
+    free(variable);
+}
+
 VariableSymbol* variable_map_find(VariableMap* map, VariableMapFindPredicate pred, void* user) {
     VariableMap* variable;
     VariableMap* tmp;

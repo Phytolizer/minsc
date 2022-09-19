@@ -155,6 +155,12 @@ bind_assignment_expression(Binder* binder, AssignmentExpressionSyntax* syntax) {
 
     VariableSymbol variable = variable_symbol_new(name, bound_expression_type(bound_expression));
 
+    VariableSymbol* existing_variable =
+        variable_map_find(*binder->variables, variable_symbol_names_eq, &name);
+    if (existing_variable != NULL) {
+        variable_map_remove(binder->variables, *existing_variable);
+    }
+
     variable_map_define(binder->variables, variable_symbol_dup(variable), NULL);
 
     return bound_assignment_expression_new(variable, bound_expression);

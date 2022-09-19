@@ -11,6 +11,7 @@ void variable_map_free(VariableMap* map);
 
 void variable_map_define(VariableMap** map, VariableSymbol symbol, Object* value);
 Object* variable_map_get(VariableMap* map, VariableSymbol symbol);
+void variable_map_remove(VariableMap** map, VariableSymbol symbol);
 
 typedef bool (*VariableMapFindPredicate)(VariableSymbol* variable, void* user);
 
