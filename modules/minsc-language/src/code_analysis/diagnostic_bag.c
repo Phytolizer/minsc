@@ -1,6 +1,7 @@
 #include "minsc/code_analysis/diagnostic_bag.h"
 
 #include <buf/buf.h>
+#include <stdint.h>
 #include <stdlib.h>
 
 #include "minsc/code_analysis/diagnostic.h"

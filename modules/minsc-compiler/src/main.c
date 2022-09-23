@@ -2,13 +2,16 @@
 #include <inttypes.h>
 #include <linenoise.h>
 #include <minsc/code_analysis/compilation.h>
+#include <minsc/code_analysis/diagnostic.h>
 #include <minsc/code_analysis/diagnostic_bag.h>
 #include <minsc/code_analysis/evaluation_result.h>
 #include <minsc/code_analysis/syntax/syntax_kind.h>
 #include <minsc/code_analysis/syntax/syntax_node.h>
 #include <minsc/code_analysis/syntax/syntax_token.h>
 #include <minsc/code_analysis/syntax/syntax_tree.h>
+#include <minsc/code_analysis/text_span.h>
 #include <minsc/runtime/object.h>
+#include <minsc/runtime/variable_map.h>
 #include <println/println.h>
 #include <stdbool.h>
 #include <stdio.h>

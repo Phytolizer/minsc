@@ -1,7 +1,6 @@
 #ifndef MINSC_CODE_ANALYSIS_DIAGNOSTIC_H_
 #define MINSC_CODE_ANALYSIS_DIAGNOSTIC_H_
 
-#include <buf/buf.h>
 #include <str/str.h>
 
 #include "minsc/code_analysis/text_span.h"

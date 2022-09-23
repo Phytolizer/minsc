@@ -1,12 +1,15 @@
 #include "minsc/code_analysis/syntax/syntax_tree.h"
 
 #include <buf/buf.h>
+#include <stdbool.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <str/str.h>
 
 #include "minsc/code_analysis/syntax/expression_syntax.h"
 #include "minsc/code_analysis/syntax/lexer.h"
 #include "minsc/code_analysis/syntax/parser.h"
+#include "minsc/code_analysis/syntax/syntax_kind.h"
 #include "minsc/code_analysis/syntax/syntax_token.h"
 #include "minsc/support/minsc_assert.h"
 

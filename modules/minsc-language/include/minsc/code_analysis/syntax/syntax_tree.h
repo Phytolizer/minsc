@@ -1,6 +1,7 @@
 #ifndef MINSC_CODE_ANALYSIS_SYNTAX_SYNTAX_TREE_H_
 #define MINSC_CODE_ANALYSIS_SYNTAX_SYNTAX_TREE_H_
 
+#include <buf/buf.h>
 #include <str/str.h>
 
 #include "minsc/code_analysis/diagnostic_bag.h"

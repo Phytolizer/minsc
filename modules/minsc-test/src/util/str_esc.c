@@ -1,6 +1,8 @@
 #include "minsc_test/util/str_esc.h"
 
 #include <buf/buf.h>
+#include <stddef.h>
+#include <str/str.h>
 
 typedef BUF(char) CharBuf;
 

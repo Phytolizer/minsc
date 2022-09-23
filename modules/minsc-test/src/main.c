@@ -1,5 +1,6 @@
 #include <inttypes.h>
 #include <println/println.h>
+#include <str/str.h>
 #include <test/test.h>
 
 #include "minsc_test/code_analysis/evaluator.h"

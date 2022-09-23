@@ -1,7 +1,11 @@
 #include "minsc_test/code_analysis/syntax/syntax_facts.h"
 
 #include <minsc/code_analysis/syntax/syntax_facts.h>
+#include <minsc/code_analysis/syntax/syntax_kind.h>
+#include <minsc/code_analysis/syntax/syntax_token.h>
 #include <minsc/code_analysis/syntax/syntax_tree.h>
+#include <str/str.h>
+#include <test/test.h>
 
 static TEST_FUNC(state, get_text_round_trips, SyntaxKind kind) {
     str text = syntax_facts_get_text(kind);

@@ -1,5 +1,7 @@
 #include "minsc/runtime/variable_map.h"
 
+#include <stdlib.h>
+#include <str/str.h>
 #include <uthash.h>
 
 #include "minsc/code_analysis/variable_symbol.h"

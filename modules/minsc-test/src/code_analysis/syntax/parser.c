@@ -1,8 +1,15 @@
 #include "minsc_test/code_analysis/syntax/parser.h"
 
+#include <buf/buf.h>
+#include <minsc/code_analysis/syntax/expression_syntax.h>
 #include <minsc/code_analysis/syntax/syntax_facts.h>
 #include <minsc/code_analysis/syntax/syntax_kind.h>
+#include <minsc/code_analysis/syntax/syntax_node.h>
 #include <minsc/code_analysis/syntax/syntax_tree.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <str/str.h>
+#include <test/test.h>
 
 #include "minsc_test/util/asserting_iterator.h"
 

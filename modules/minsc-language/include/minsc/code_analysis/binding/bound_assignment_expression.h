@@ -3,6 +3,7 @@
 
 #include "minsc/code_analysis/binding/bound_expression.h"
 #include "minsc/code_analysis/variable_symbol.h"
+#include "minsc/runtime/object.h"
 
 typedef struct BoundAssignmentExpression {
     BoundExpression base;

@@ -1,7 +1,14 @@
 #include "minsc_test/code_analysis/syntax/lexer.h"
 
 #include <buf/buf.h>
+#include <minsc/code_analysis/syntax/syntax_kind.h>
+#include <minsc/code_analysis/syntax/syntax_token.h>
 #include <minsc/code_analysis/syntax/syntax_tree.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <str/str.h>
+#include <test/test.h>
 
 #include "minsc_test/util/str_esc.h"
 

@@ -1,5 +1,7 @@
 #include "minsc/code_analysis/variable_symbol.h"
 
+#include <str/str.h>
+
 VariableSymbol variable_symbol_new(str name, ObjectType type) {
     return (VariableSymbol){.name = name, .type = type};
 }

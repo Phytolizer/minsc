@@ -2,8 +2,17 @@
 
 #include <buf/buf.h>
 #include <minsc/code_analysis/compilation.h>
+#include <minsc/code_analysis/diagnostic.h>
+#include <minsc/code_analysis/diagnostic_bag.h>
+#include <minsc/code_analysis/evaluation_result.h>
 #include <minsc/code_analysis/syntax/syntax_tree.h>
 #include <minsc/runtime/object.h>
+#include <minsc/runtime/variable_map.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <str/str.h>
+#include <test/test.h>
 
 typedef struct {
     str text;

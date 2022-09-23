@@ -1,5 +1,8 @@
 #include "minsc/code_analysis/syntax/name_expression_syntax.h"
 
+#include <buf/buf.h>
+#include <stdlib.h>
+
 #include "minsc/support/minsc_assert.h"
 
 ExpressionSyntax* name_expression_syntax_new(SyntaxToken* identifier_token) {

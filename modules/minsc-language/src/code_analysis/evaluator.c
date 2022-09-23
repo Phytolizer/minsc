@@ -13,6 +13,7 @@
 #include "minsc/code_analysis/binding/bound_unary_expression.h"
 #include "minsc/code_analysis/binding/bound_unary_operator.h"
 #include "minsc/code_analysis/binding/bound_variable_expression.h"
+#include "minsc/code_analysis/variable_symbol.h"
 #include "minsc/runtime/object.h"
 #include "minsc/support/minsc_assert.h"
 

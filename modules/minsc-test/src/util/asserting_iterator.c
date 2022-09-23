@@ -1,8 +1,13 @@
 #include "minsc_test/util/asserting_iterator.h"
 
 #include <buf/buf.h>
+#include <minsc/code_analysis/syntax/syntax_kind.h>
+#include <minsc/code_analysis/syntax/syntax_node.h>
 #include <minsc/code_analysis/syntax/syntax_token.h>
 #include <minsc/support/minsc_assert.h>
+#include <stdlib.h>
+#include <str/str.h>
+#include <test/test.h>
 
 typedef BUF(const SyntaxNode*) Inner;
 

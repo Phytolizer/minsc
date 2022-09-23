@@ -1,5 +1,6 @@
 #include "minsc/code_analysis/syntax/syntax_facts.h"
 
+#include <buf/buf.h>
 #include <str/str.h>
 
 #include "minsc/code_analysis/syntax/syntax_kind.h"

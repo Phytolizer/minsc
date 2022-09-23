@@ -1,6 +1,5 @@
 #include "minsc/code_analysis/syntax/lexer.h"
 
-#include <buf/buf.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -11,6 +10,7 @@
 #include "minsc/code_analysis/syntax/syntax_facts.h"
 #include "minsc/code_analysis/syntax/syntax_kind.h"
 #include "minsc/code_analysis/syntax/syntax_token.h"
+#include "minsc/code_analysis/text_span.h"
 #include "minsc/runtime/object.h"
 #include "minsc/support/minsc_assert.h"
 #include "minsc/support/wrap_ctype.h"
