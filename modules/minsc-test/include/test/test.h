@@ -20,7 +20,7 @@ typedef struct {
 
 typedef enum {
 #define X(x) TEST_RESULT_##x,
-#include "test_results.def"
+#include "test_results.inc"
 #undef X
 } TestResultType;
 
