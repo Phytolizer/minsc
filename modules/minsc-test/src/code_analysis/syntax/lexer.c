@@ -10,10 +10,10 @@ typedef struct {
     str text;
 } TestToken;
 
-typedef BUF(const TestToken) TestTokenBuf;
+typedef BUF(TestToken) TestTokenBuf;
 
 static TestTokenBuf get_tokens(void) {
-    static const TestToken a[] = {
+    static TestToken a[] = {
         {SYNTAX_KIND_PLUS_TOKEN, str_lit_c("+")},
         {SYNTAX_KIND_MINUS_TOKEN, str_lit_c("-")},
         {SYNTAX_KIND_STAR_TOKEN, str_lit_c("*")},
@@ -33,6 +33,12 @@ static TestTokenBuf get_tokens(void) {
         {SYNTAX_KIND_IDENTIFIER_TOKEN, str_lit_c("abc")},
         {SYNTAX_KIND_NUMBER_TOKEN, str_lit_c("1")},
         {SYNTAX_KIND_NUMBER_TOKEN, str_lit_c("123")},
+    };
+    return (TestTokenBuf)BUF_ARRAY(a);
+}
+
+static TestTokenBuf get_separators(void) {
+    static TestToken a[] = {
         {SYNTAX_KIND_WHITESPACE_TOKEN, str_lit_c(" ")},
         {SYNTAX_KIND_WHITESPACE_TOKEN, str_lit_c("  ")},
         {SYNTAX_KIND_WHITESPACE_TOKEN, str_lit_c("\r")},
@@ -40,6 +46,15 @@ static TestTokenBuf get_tokens(void) {
         {SYNTAX_KIND_WHITESPACE_TOKEN, str_lit_c("\r\n")},
     };
     return (TestTokenBuf)BUF_ARRAY(a);
+}
+
+static TestTokenBuf get_all_tokens(void) {
+    TestTokenBuf buf = BUF_NEW;
+    TestTokenBuf tokens = get_tokens();
+    BUF_CONCAT(&buf, tokens);
+    TestTokenBuf separators = get_separators();
+    BUF_CONCAT(&buf, separators);
+    return buf;
 }
 
 static TEST_FUNC(state, lexes_token, TestToken token) {
@@ -92,8 +107,6 @@ static bool requires_separator(TestTokenPair pair) {
     } else if (pair.tokens[0].kind == SYNTAX_KIND_IDENTIFIER_TOKEN || t0_is_keyword) {
         result = pair.tokens[1].kind == SYNTAX_KIND_IDENTIFIER_TOKEN ||
                  pair.tokens[1].kind == SYNTAX_KIND_NUMBER_TOKEN || t1_is_keyword;
-    } else if (pair.tokens[0].kind == SYNTAX_KIND_WHITESPACE_TOKEN) {
-        result = pair.tokens[1].kind == SYNTAX_KIND_WHITESPACE_TOKEN;
     } else if (pair.tokens[0].kind == SYNTAX_KIND_EQUALS_TOKEN || pair.tokens[0].kind == SYNTAX_KIND_BANG_TOKEN) {
         result = pair.tokens[1].kind == SYNTAX_KIND_EQUALS_TOKEN ||
                  pair.tokens[1].kind == SYNTAX_KIND_EQUALS_EQUALS_TOKEN;
@@ -170,8 +183,108 @@ static TEST_FUNC(state, lexes_token_pair, TestTokenPair pair) {
     PASS();
 }
 
+typedef struct TestTokenPairWithSeparator {
+    TestTokenPair pair;
+    TestToken separator;
+} TestTokenPairWithSeparator;
+
+typedef BUF(TestTokenPairWithSeparator) TestTokenPairWithSeparatorBuf;
+
+static TestTokenPairWithSeparatorBuf get_token_pairs_with_separators(void) {
+    TestTokenBuf tokens = get_tokens();
+    TestTokenBuf separators = get_separators();
+
+    TestTokenPairWithSeparatorBuf pairs_with_separators = BUF_NEW;
+
+    for (size_t i = 0; i < tokens.len; i++) {
+        for (size_t j = 0; j < tokens.len; j++) {
+            TestTokenPair pair = {{tokens.ptr[i], tokens.ptr[j]}};
+            if (!requires_separator(pair)) {
+                continue;
+            }
+            for (size_t j = 0; j < separators.len; j++) {
+                TestTokenPairWithSeparator pair_with_separator = {
+                    .pair = pair,
+                    .separator = separators.ptr[j],
+                };
+                BUF_PUSH(&pairs_with_separators, pair_with_separator);
+            }
+        }
+    }
+
+    return pairs_with_separators;
+}
+
+static TEST_FUNC(state, lexes_token_pair_with_separator, TestTokenPairWithSeparator pair) {
+    str text_tmp = str_cat_ret(pair.pair.tokens[0].text, pair.separator.text);
+    str text = str_cat_ret(text_tmp, pair.pair.tokens[1].text);
+    str_free(text_tmp);
+    SyntaxTokenBuf tokens = syntax_tree_parse_tokens(text);
+
+    TEST_ASSERT(
+        state,
+        tokens.len == 3,
+        CLEANUP(syntax_token_buf_free(tokens)),
+        "Expected 3 tokens, got %zu",
+        tokens.len
+    );
+    SyntaxToken* tok0 = tokens.ptr[0];
+    SyntaxToken* tok1 = tokens.ptr[1];
+    SyntaxToken* tok2 = tokens.ptr[2];
+    TEST_ASSERT(
+        state,
+        tok0->kind == pair.pair.tokens[0].kind,
+        CLEANUP(syntax_token_buf_free(tokens)),
+        "Expected " str_fmt ", got " str_fmt,
+        str_arg(syntax_kind_string(pair.pair.tokens[0].kind)),
+        str_arg(syntax_kind_string(tok0->kind))
+    );
+    TEST_ASSERT(
+        state,
+        tok1->kind == pair.separator.kind,
+        CLEANUP(syntax_token_buf_free(tokens)),
+        "Expected " str_fmt ", got " str_fmt,
+        str_arg(syntax_kind_string(pair.separator.kind)),
+        str_arg(syntax_kind_string(tok1->kind))
+    );
+    TEST_ASSERT(
+        state,
+        tok2->kind == pair.pair.tokens[1].kind,
+        CLEANUP(syntax_token_buf_free(tokens)),
+        "Expected " str_fmt ", got " str_fmt,
+        str_arg(syntax_kind_string(pair.pair.tokens[1].kind)),
+        str_arg(syntax_kind_string(tok2->kind))
+    );
+    TEST_ASSERT(
+        state,
+        str_eq(tok0->text, pair.pair.tokens[0].text),
+        CLEANUP(syntax_token_buf_free(tokens)),
+        "Expected " str_fmt ", got " str_fmt,
+        str_arg(pair.pair.tokens[0].text),
+        str_arg(tok0->text)
+    );
+    TEST_ASSERT(
+        state,
+        str_eq(tok1->text, pair.separator.text),
+        CLEANUP(syntax_token_buf_free(tokens)),
+        "Expected " str_fmt ", got " str_fmt,
+        str_arg(pair.separator.text),
+        str_arg(tok1->text)
+    );
+    TEST_ASSERT(
+        state,
+        str_eq(tok2->text, pair.pair.tokens[1].text),
+        CLEANUP(syntax_token_buf_free(tokens)),
+        "Expected " str_fmt ", got " str_fmt,
+        str_arg(pair.pair.tokens[1].text),
+        str_arg(tok2->text)
+    );
+    syntax_token_buf_free(tokens);
+    PASS();
+}
+
 SUITE_FUNC(state, lexer) {
-    TestTokenBuf test_tokens = get_tokens();
+    TestTokenBuf test_tokens = get_all_tokens();
     for (uint64_t i = 0; i < test_tokens.len; i++) {
         str text_esc = str_esc(test_tokens.ptr[i].text);
         RUN_TEST(
@@ -186,6 +299,7 @@ SUITE_FUNC(state, lexer) {
         );
         str_free(text_esc);
     }
+    BUF_FREE(test_tokens);
 
     TestTokenPairBuf test_token_pairs = get_token_pairs();
     for (uint64_t i = 0; i < test_token_pairs.len; i++) {
@@ -207,4 +321,35 @@ SUITE_FUNC(state, lexer) {
         str_free(text_esc1);
     }
     BUF_FREE(test_token_pairs);
+
+    TestTokenPairWithSeparatorBuf test_token_pairs_with_separator =
+        get_token_pairs_with_separators();
+    for (uint64_t i = 0; i < test_token_pairs_with_separator.len; i++) {
+        str text_esc0 = str_esc(test_token_pairs_with_separator.ptr[i].pair.tokens[0].text);
+        str text_esc1 = str_esc(test_token_pairs_with_separator.ptr[i].pair.tokens[1].text);
+        str text_esc_sep = str_esc(test_token_pairs_with_separator.ptr[i].separator.text);
+        RUN_TEST(
+            state,
+            lexes_token_pair_with_separator,
+            str_printf(
+                "Lexes token pair (" str_fmt ", '" str_fmt "'), (" str_fmt ", '" str_fmt "')"
+                " with separator (" str_fmt ", '" str_fmt "')",
+                str_arg(
+                    syntax_kind_string(test_token_pairs_with_separator.ptr[i].pair.tokens[0].kind)
+                ),
+                str_arg(text_esc0),
+                str_arg(
+                    syntax_kind_string(test_token_pairs_with_separator.ptr[i].pair.tokens[1].kind)
+                ),
+                str_arg(text_esc1),
+                str_arg(syntax_kind_string(test_token_pairs_with_separator.ptr[i].separator.kind)),
+                str_arg(text_esc_sep)
+            ),
+            test_token_pairs_with_separator.ptr[i]
+        );
+        str_free(text_esc0);
+        str_free(text_esc1);
+        str_free(text_esc_sep);
+    }
+    BUF_FREE(test_token_pairs_with_separator);
 }
