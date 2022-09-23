@@ -41,7 +41,7 @@
             "name": "wflags",
             "hidden": true,
             "cacheVariables": {
-                "CMAKE_C_FLAGS": "-Wall -Wextra -Wpedantic -Wmissing-prototypes -Wno-unused-function"
+                "CMAKE_C_FLAGS": "-Wall -Wextra -Wpedantic -Wmissing-prototypes -Wno-unused-function -Wno-missing-field-initializers"
             }
         },
         {
