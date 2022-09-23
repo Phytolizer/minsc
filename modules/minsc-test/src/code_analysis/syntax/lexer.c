@@ -199,15 +199,14 @@ static TestTokenPairWithSeparatorBuf get_token_pairs_with_separators(void) {
     for (size_t i = 0; i < tokens.len; i++) {
         for (size_t j = 0; j < tokens.len; j++) {
             TestTokenPair pair = {{tokens.ptr[i], tokens.ptr[j]}};
-            if (!requires_separator(pair)) {
-                continue;
-            }
-            for (size_t j = 0; j < separators.len; j++) {
-                TestTokenPairWithSeparator pair_with_separator = {
-                    .pair = pair,
-                    .separator = separators.ptr[j],
-                };
-                BUF_PUSH(&pairs_with_separators, pair_with_separator);
+            if (requires_separator(pair)) {
+                for (size_t j = 0; j < separators.len; j++) {
+                    TestTokenPairWithSeparator pair_with_separator = {
+                        .pair = pair,
+                        .separator = separators.ptr[j],
+                    };
+                    BUF_PUSH(&pairs_with_separators, pair_with_separator);
+                }
             }
         }
     }
