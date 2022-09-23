@@ -1,6 +1,7 @@
 #include "minsc_test/code_analysis/syntax/lexer.h"
 
 #include <buf/buf.h>
+#include <minsc/code_analysis/syntax/syntax_facts.h>
 #include <minsc/code_analysis/syntax/syntax_kind.h>
 #include <minsc/code_analysis/syntax/syntax_token.h>
 #include <minsc/code_analysis/syntax/syntax_tree.h>
@@ -20,28 +21,23 @@ typedef struct {
 typedef BUF(TestToken) TestTokenBuf;
 
 static TestTokenBuf get_tokens(void) {
+    TestTokenBuf tokens = BUF_NEW;
+    for (SyntaxKind kind = SYNTAX_KIND_ZERO; kind < SYNTAX_KIND_COUNT; kind++) {
+        str text = syntax_facts_get_text(kind);
+        if (text.len > 0) {
+            TestToken token = {kind, text};
+            BUF_PUSH(&tokens, token);
+        }
+    }
     static TestToken a[] = {
-        {SYNTAX_KIND_PLUS_TOKEN, str_lit_c("+")},
-        {SYNTAX_KIND_MINUS_TOKEN, str_lit_c("-")},
-        {SYNTAX_KIND_STAR_TOKEN, str_lit_c("*")},
-        {SYNTAX_KIND_SLASH_TOKEN, str_lit_c("/")},
-        {SYNTAX_KIND_BANG_TOKEN, str_lit_c("!")},
-        {SYNTAX_KIND_EQUALS_TOKEN, str_lit_c("=")},
-        {SYNTAX_KIND_AMPERSAND_AMPERSAND_TOKEN, str_lit_c("&&")},
-        {SYNTAX_KIND_PIPE_PIPE_TOKEN, str_lit_c("||")},
-        {SYNTAX_KIND_EQUALS_EQUALS_TOKEN, str_lit_c("==")},
-        {SYNTAX_KIND_BANG_EQUALS_TOKEN, str_lit_c("!=")},
-        {SYNTAX_KIND_OPEN_PARENTHESIS_TOKEN, str_lit_c("(")},
-        {SYNTAX_KIND_CLOSE_PARENTHESIS_TOKEN, str_lit_c(")")},
-        {SYNTAX_KIND_FALSE_KEYWORD, str_lit_c("false")},
-        {SYNTAX_KIND_TRUE_KEYWORD, str_lit_c("true")},
-
         {SYNTAX_KIND_IDENTIFIER_TOKEN, str_lit_c("a")},
         {SYNTAX_KIND_IDENTIFIER_TOKEN, str_lit_c("abc")},
         {SYNTAX_KIND_NUMBER_TOKEN, str_lit_c("1")},
         {SYNTAX_KIND_NUMBER_TOKEN, str_lit_c("123")},
     };
-    return (TestTokenBuf)BUF_ARRAY(a);
+    TestTokenBuf dynamic_tokens = BUF_ARRAY(a);
+    BUF_CONCAT(&tokens, dynamic_tokens);
+    return tokens;
 }
 
 static TestTokenBuf get_separators(void) {
@@ -59,6 +55,7 @@ static TestTokenBuf get_all_tokens(void) {
     TestTokenBuf buf = BUF_NEW;
     TestTokenBuf tokens = get_tokens();
     BUF_CONCAT(&buf, tokens);
+    BUF_FREE(tokens);
     TestTokenBuf separators = get_separators();
     BUF_CONCAT(&buf, separators);
     return buf;
@@ -137,6 +134,7 @@ static TestTokenPairBuf get_token_pairs(void) {
             }
         }
     }
+    BUF_FREE(tokens);
 
     return pairs;
 }
@@ -217,6 +215,7 @@ static TestTokenPairWithSeparatorBuf get_token_pairs_with_separators(void) {
             }
         }
     }
+    BUF_FREE(tokens);
 
     return pairs_with_separators;
 }
