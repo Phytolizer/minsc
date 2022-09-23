@@ -123,6 +123,24 @@ SyntaxToken* lexer_next_token(Lexer* lexer) {
         case '\0':
             lexer->kind = SYNTAX_KIND_END_OF_FILE_TOKEN;
             break;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+            read_number_token(lexer);
+            break;
+        case ' ':
+        case '\t':
+        case '\n':
+        case '\r':
+            read_whitespace_token(lexer);
+            break;
         default:
             if (wrap_isdigit(c)) {
                 read_number_token(lexer);
