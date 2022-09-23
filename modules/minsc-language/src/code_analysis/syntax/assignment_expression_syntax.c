@@ -1,5 +1,8 @@
 #include "minsc/code_analysis/syntax/assignment_expression_syntax.h"
 
+#include <buf/buf.h>
+#include <stdlib.h>
+
 #include "minsc/support/minsc_assert.h"
 
 ExpressionSyntax* assignment_expression_syntax_new(

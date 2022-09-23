@@ -1,6 +1,8 @@
 #ifndef MINSC_RUNTIME_VARIABLE_MAP_H_
 #define MINSC_RUNTIME_VARIABLE_MAP_H_
 
+#include <stdbool.h>
+
 #include "minsc/code_analysis/variable_symbol.h"
 #include "minsc/runtime/object.h"
 

@@ -1,10 +1,10 @@
 #include "minsc/code_analysis/compilation.h"
 
-#include <buf/buf.h>
 #include <stdlib.h>
 
 #include "minsc/code_analysis/binding/binder.h"
 #include "minsc/code_analysis/binding/bound_expression.h"
+#include "minsc/code_analysis/diagnostic_bag.h"
 #include "minsc/code_analysis/evaluator.h"
 #include "minsc/runtime/object.h"
 #include "minsc/support/minsc_assert.h"

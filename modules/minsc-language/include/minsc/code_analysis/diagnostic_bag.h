@@ -2,10 +2,14 @@
 #define MINSC_CODE_ANALYSIS_DIAGNOSTIC_BAG_H_
 
 #include <buf/buf.h>
+#include <stdbool.h>
+#include <stddef.h>
 
 #include "minsc/code_analysis/diagnostic.h"
 #include "minsc/code_analysis/syntax/syntax_kind.h"
+#include "minsc/code_analysis/text_span.h"
 #include "minsc/runtime/object.h"
+#include "str/str.h"
 
 typedef struct DiagnosticBag DiagnosticBag;
 

@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 
+#include "minsc/code_analysis/binding/bound_node.h"
 #include "minsc/support/minsc_assert.h"
 
 BoundExpression* bound_variable_expression_new(VariableSymbol variable) {

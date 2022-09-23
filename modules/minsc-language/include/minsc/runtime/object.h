@@ -30,6 +30,8 @@ Object* object_new_bool(bool value);
 Object* object_dup(const Object* object);
 void object_free(Object* object);
 
+bool object_eq(Object* a, Object* b);
+
 int64_t object_as_i64(const Object* object);
 bool object_as_bool(const Object* object);
 

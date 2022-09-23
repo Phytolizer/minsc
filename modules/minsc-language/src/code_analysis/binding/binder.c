@@ -1,6 +1,6 @@
 #include "minsc/code_analysis/binding/binder.h"
 
-#include <buf/buf.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <str/str.h>
 
@@ -20,6 +20,7 @@
 #include "minsc/code_analysis/syntax/syntax_kind.h"
 #include "minsc/code_analysis/syntax/syntax_token.h"
 #include "minsc/code_analysis/syntax/unary_expression_syntax.h"
+#include "minsc/code_analysis/variable_symbol.h"
 #include "minsc/runtime/object.h"
 #include "minsc/support/minsc_assert.h"
 

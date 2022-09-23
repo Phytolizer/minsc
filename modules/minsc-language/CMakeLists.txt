@@ -45,12 +45,8 @@ foreach(inc ${MINSC_INC})
 endforeach()
 target_link_libraries(
   minsc_language
-  PRIVATE println::println
-          linenoise::linenoise
-          str::str
-          buf::buf
-          styler::styler
-          sum::sum
+  PRIVATE println::println linenoise::linenoise styler::styler sum::sum
           uthash::uthash
+  PUBLIC str::str buf::buf
 )
 add_library(minsc::language ALIAS minsc_language)

@@ -3,6 +3,8 @@
 #include <stddef.h>
 #include <str/str.h>
 
+#include "minsc/support/minsc_assert.h"
+
 static const char* const SYNTAX_KIND_STRINGS[] = {
 #define X(x) #x,
 #include "minsc/code_analysis/syntax/syntax_kind_uppercamel.inc"
@@ -22,6 +24,6 @@ str syntax_kind_string(SyntaxKind kind) {
 #undef X
         return str_ref_chars(SYNTAX_KIND_STRINGS[kind], SYNTAX_KIND_STRING_LENGTHS[kind]);
         default:
-            return str_lit("SYNTAX_KIND_UNKNOWN");
+            MINSC_ABORT("Invalid SyntaxKind");
     }
 }

@@ -1,11 +1,15 @@
 #include "minsc/code_analysis/syntax/syntax_tree.h"
 
 #include <buf/buf.h>
+#include <stdbool.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <str/str.h>
 
 #include "minsc/code_analysis/syntax/expression_syntax.h"
+#include "minsc/code_analysis/syntax/lexer.h"
 #include "minsc/code_analysis/syntax/parser.h"
+#include "minsc/code_analysis/syntax/syntax_kind.h"
 #include "minsc/code_analysis/syntax/syntax_token.h"
 #include "minsc/support/minsc_assert.h"
 
@@ -40,4 +44,27 @@ SyntaxTree* syntax_tree_parse(str text) {
     SyntaxTree* tree = parser_parse(parser);
     parser_free(parser);
     return tree;
+}
+
+SyntaxTokenBuf syntax_tree_parse_tokens(str text) {
+    Lexer* lexer = lexer_new(text);
+    SyntaxTokenBuf buf = BUF_NEW;
+    while (true) {
+        SyntaxToken* token = lexer_next_token(lexer);
+        if (token->kind == SYNTAX_KIND_END_OF_FILE_TOKEN) {
+            syntax_token_free(token);
+            break;
+        }
+        BUF_PUSH(&buf, token);
+    }
+
+    lexer_free(lexer);
+    return buf;
+}
+
+void syntax_token_buf_free(SyntaxTokenBuf buf) {
+    for (uint64_t i = 0; i < buf.len; i++) {
+        syntax_token_free(buf.ptr[i]);
+    }
+    BUF_FREE(buf);
 }
