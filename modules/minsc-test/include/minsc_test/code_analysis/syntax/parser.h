@@ -1,0 +1,8 @@
+#ifndef MINSC_TEST_CODE_ANALYSIS_SYNTAX_PARSER_H_
+#define MINSC_TEST_CODE_ANALYSIS_SYNTAX_PARSER_H_
+
+#include <test/test.h>
+
+SUITE_FUNC(state, parser);
+
+#endif  // MINSC_TEST_CODE_ANALYSIS_SYNTAX_PARSER_H_

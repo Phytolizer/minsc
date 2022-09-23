@@ -96,12 +96,12 @@ typedef struct {
 #define RUN_TEST0(state, name, displayname) \
     DO_RUN_TEST(state, name, TEST_CALL0(state, name), displayname)
 
-#define DO_RUN_SUBTEST(state, name, call, cleanup, ...) \
+#define DO_RUN_SUBTEST(state, name, call, cleanup) \
     do { \
-        str message = call; \
-        if (str_len(message) > 0) { \
+        TestResult result = call; \
+        if (result.type != TEST_RESULT_PASS) { \
             cleanup; \
-            return message; \
+            return result; \
         } \
     } while (false)
 

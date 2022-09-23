@@ -48,3 +48,58 @@ SyntaxKind keyword_kind(str text) {
 
     return kind;
 }
+
+str syntax_facts_get_text(SyntaxKind kind) {
+    switch (kind) {
+        case SYNTAX_KIND_PLUS_TOKEN:
+            return str_lit("+");
+        case SYNTAX_KIND_MINUS_TOKEN:
+            return str_lit("-");
+        case SYNTAX_KIND_STAR_TOKEN:
+            return str_lit("*");
+        case SYNTAX_KIND_SLASH_TOKEN:
+            return str_lit("/");
+        case SYNTAX_KIND_BANG_TOKEN:
+            return str_lit("!");
+        case SYNTAX_KIND_EQUALS_EQUALS_TOKEN:
+            return str_lit("==");
+        case SYNTAX_KIND_BANG_EQUALS_TOKEN:
+            return str_lit("!=");
+        case SYNTAX_KIND_AMPERSAND_AMPERSAND_TOKEN:
+            return str_lit("&&");
+        case SYNTAX_KIND_PIPE_PIPE_TOKEN:
+            return str_lit("||");
+        case SYNTAX_KIND_EQUALS_TOKEN:
+            return str_lit("=");
+        case SYNTAX_KIND_OPEN_PARENTHESIS_TOKEN:
+            return str_lit("(");
+        case SYNTAX_KIND_CLOSE_PARENTHESIS_TOKEN:
+            return str_lit(")");
+        case SYNTAX_KIND_FALSE_KEYWORD:
+            return str_lit("false");
+        case SYNTAX_KIND_TRUE_KEYWORD:
+            return str_lit("true");
+        default:
+            return str_null;
+    }
+}
+
+SyntaxKindBuf syntax_facts_get_binary_operator_kinds(void) {
+    SyntaxKindBuf buf = BUF_NEW;
+    for (SyntaxKind kind = SYNTAX_KIND_ZERO; kind < SYNTAX_KIND_COUNT; kind++) {
+        if (binary_operator_precedence(kind) > 0) {
+            BUF_PUSH(&buf, kind);
+        }
+    }
+    return buf;
+}
+
+SyntaxKindBuf syntax_facts_get_unary_operator_kinds(void) {
+    SyntaxKindBuf buf = BUF_NEW;
+    for (SyntaxKind kind = SYNTAX_KIND_ZERO; kind < SYNTAX_KIND_COUNT; kind++) {
+        if (unary_operator_precedence(kind) > 0) {
+            BUF_PUSH(&buf, kind);
+        }
+    }
+    return buf;
+}

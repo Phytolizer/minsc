@@ -61,6 +61,8 @@
         } \
     } while (false)
 
+#define BUF_POP(buf) ((buf)->ptr[--(buf)->len])
+
 #define BUF_FIND(buf, val, eq, target) \
     do { \
         for (uint64_t i = 0; i < (buf).len; i++) { \

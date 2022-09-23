@@ -3,10 +3,14 @@
 #include <test/test.h>
 
 #include "minsc_test/code_analysis/syntax/lexer.h"
+#include "minsc_test/code_analysis/syntax/parser.h"
+#include "minsc_test/code_analysis/syntax/syntax_facts.h"
 
 int main(void) {
     TestState state = {0};
     RUN_SUITE(&state, lexer, str_lit("Lexer"));
+    RUN_SUITE(&state, parser, str_lit("Parser"));
+    RUN_SUITE(&state, syntax_facts, str_lit("Syntax Facts"));
 
     // print test summary
     printfln(
