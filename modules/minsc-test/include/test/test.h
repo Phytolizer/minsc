@@ -41,10 +41,10 @@ typedef struct {
     do { \
         ++(state)->assertions; \
         if (!(test)) { \
-            str message = str_printf(__VA_ARGS__); \
+            str message_ = str_printf(__VA_ARGS__); \
             cleanup; \
             TEST_ABORT(); \
-            return TEST_FAIL(message); \
+            return TEST_FAIL(message_); \
         } \
     } while (false)
 

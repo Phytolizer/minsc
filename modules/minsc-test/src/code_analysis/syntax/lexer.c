@@ -10,6 +10,7 @@
 #include <stdint.h>
 #include <str/str.h>
 #include <test/test.h>
+#include <uthash.h>
 
 #include "minsc_test/util/str_esc.h"
 
@@ -59,6 +60,80 @@ static TestTokenBuf get_all_tokens(void) {
     TestTokenBuf separators = get_separators();
     BUF_CONCAT(&buf, separators);
     return buf;
+}
+
+typedef struct {
+    str key;
+    UT_hash_handle hh;
+} SyntaxKindSetEntry;
+
+static void syntax_kind_set_clear(SyntaxKindSetEntry* set) {
+    SyntaxKindSetEntry* entry;
+    SyntaxKindSetEntry* tmp;
+    HASH_ITER(hh, set, entry, tmp) {
+        HASH_DEL(set, entry);
+        free(entry);
+    }
+}
+
+static TEST_FUNC0(state, lexer_tests_all_tokens) {
+    SyntaxKindSetEntry* token_kinds = NULL;
+    for (SyntaxKind kind = SYNTAX_KIND_ZERO; kind < SYNTAX_KIND_COUNT; kind++) {
+        str s = syntax_kind_string(kind);
+        if (str_has_suffix(s, str_lit("Token")) || str_has_suffix(s, str_lit("Keyword"))) {
+            SyntaxKindSetEntry* entry = malloc(sizeof(SyntaxKindSetEntry));
+            entry->key = s;
+            // NOLINTNEXTLINE(readability-isolate-declaration): uthash requires this
+            HASH_ADD_KEYPTR(hh, token_kinds, s.ptr, s.len, entry);
+        }
+    }
+
+    TestTokenBuf tested_tokens = get_all_tokens();
+    for (uint64_t i = 0; i < tested_tokens.len; i++) {
+        TestToken token = tested_tokens.ptr[i];
+        SyntaxKindSetEntry* entry;
+        str s = syntax_kind_string(token.kind);
+        // NOLINTNEXTLINE(readability-isolate-declaration): uthash requires this
+        HASH_FIND(hh, token_kinds, s.ptr, s.len, entry);
+        if (entry != NULL) {
+            HASH_DEL(token_kinds, entry);
+            free(entry);
+        }
+    }
+    BUF_FREE(tested_tokens);
+
+    {
+        SyntaxKindSetEntry* entry;
+        static const str acceptable_tokens[] = {
+            str_lit_c("EndOfFileToken"),
+            str_lit_c("BadToken"),
+        };
+        for (size_t i = 0; i < sizeof(acceptable_tokens) / sizeof(acceptable_tokens[0]); i++) {
+            str s = acceptable_tokens[i];
+            // NOLINTNEXTLINE(readability-isolate-declaration): uthash requires this
+            HASH_FIND(hh, token_kinds, s.ptr, s.len, entry);
+            if (entry != NULL) {
+                HASH_DEL(token_kinds, entry);
+                free(entry);
+            }
+        }
+    }
+
+    if (token_kinds != NULL) {
+        str message = str_lit("The following tokens were not tested:\n");
+        SyntaxKindSetEntry* el;
+        SyntaxKindSetEntry* tmp;
+        HASH_ITER(hh, token_kinds, el, tmp) {
+            str_append(&message, str_lit("    "));
+            str_append(&message, str_ref(el->key));
+            str_append(&message, str_lit("\n"));
+            HASH_DEL(token_kinds, el);
+            free(el);
+        }
+        FAIL(state, CLEANUP(str_free(message)), str_fmt, str_arg(message));
+    }
+
+    PASS();
 }
 
 static TEST_FUNC(state, lexes_token, TestToken token) {
@@ -357,4 +432,6 @@ SUITE_FUNC(state, lexer) {
         str_free(text_esc_sep);
     }
     BUF_FREE(test_token_pairs_with_separator);
+
+    RUN_TEST0(state, lexer_tests_all_tokens, str_lit("Lexer tests all tokens"));
 }

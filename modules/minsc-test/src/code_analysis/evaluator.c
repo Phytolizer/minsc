@@ -81,7 +81,7 @@ static str diagnostics_to_string(DiagnosticBuf diagnostics) {
     str result = str_null;
     for (size_t i = 0; i < diagnostics.len; i++) {
         Diagnostic diagnostic = diagnostics.ptr[i];
-        str_append(&result, result, diagnostic.message, str_lit("\n"));
+        str_append(&result, diagnostic.message, str_lit("\n"));
     }
     return result;
 }
