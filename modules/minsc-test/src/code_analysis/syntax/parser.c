@@ -16,15 +16,16 @@ static TEST_FUNC(state, binary_expression_honors_precedence, SyntaxKind op1, Syn
     SyntaxTree* tree = syntax_tree_parse(text);
     ExpressionSyntax* expression = tree->root;
 
+    AssertingIterator* it = asserting_iterator_new((const SyntaxNode*)expression);
+    RUN_SUBTEST(
+        state,
+        asserting_iterator_assert_node,
+        CLEANUP(asserting_iterator_free(it); syntax_tree_free(tree)),
+        it,
+        SYNTAX_KIND_BINARY_EXPRESSION
+    );
+
     if (op1_precedence >= op2_precedence) {
-        AssertingIterator* it = asserting_iterator_new((const SyntaxNode*)expression);
-        RUN_SUBTEST(
-            state,
-            asserting_iterator_assert_node,
-            CLEANUP(asserting_iterator_free(it); syntax_tree_free(tree)),
-            it,
-            SYNTAX_KIND_BINARY_EXPRESSION
-        );
         RUN_SUBTEST(
             state,
             asserting_iterator_assert_node,
@@ -55,60 +56,7 @@ static TEST_FUNC(state, binary_expression_honors_precedence, SyntaxKind op1, Syn
             op1,
             op1_text
         );
-        RUN_SUBTEST(
-            state,
-            asserting_iterator_assert_node,
-            CLEANUP(asserting_iterator_free(it); syntax_tree_free(tree)),
-            it,
-            SYNTAX_KIND_NAME_EXPRESSION
-        );
-        RUN_SUBTEST(
-            state,
-            asserting_iterator_assert_token,
-            CLEANUP(asserting_iterator_free(it); syntax_tree_free(tree)),
-            it,
-            SYNTAX_KIND_IDENTIFIER_TOKEN,
-            str_lit("b")
-        );
-        RUN_SUBTEST(
-            state,
-            asserting_iterator_assert_token,
-            CLEANUP(asserting_iterator_free(it); syntax_tree_free(tree)),
-            it,
-            op2,
-            op2_text
-        );
-        RUN_SUBTEST(
-            state,
-            asserting_iterator_assert_node,
-            CLEANUP(asserting_iterator_free(it); syntax_tree_free(tree)),
-            it,
-            SYNTAX_KIND_NAME_EXPRESSION
-        );
-        RUN_SUBTEST(
-            state,
-            asserting_iterator_assert_token,
-            CLEANUP(asserting_iterator_free(it); syntax_tree_free(tree)),
-            it,
-            SYNTAX_KIND_IDENTIFIER_TOKEN,
-            str_lit("c")
-        );
-        RUN_SUBTEST(
-            state,
-            asserting_iterator_assert_end,
-            CLEANUP(asserting_iterator_free(it); syntax_tree_free(tree)),
-            it
-        );
-        asserting_iterator_free(it);
     } else {
-        AssertingIterator* it = asserting_iterator_new((const SyntaxNode*)expression);
-        RUN_SUBTEST(
-            state,
-            asserting_iterator_assert_node,
-            CLEANUP(asserting_iterator_free(it); syntax_tree_free(tree)),
-            it,
-            SYNTAX_KIND_BINARY_EXPRESSION
-        );
         RUN_SUBTEST(
             state,
             asserting_iterator_assert_node,
@@ -139,52 +87,52 @@ static TEST_FUNC(state, binary_expression_honors_precedence, SyntaxKind op1, Syn
             it,
             SYNTAX_KIND_BINARY_EXPRESSION
         );
-        RUN_SUBTEST(
-            state,
-            asserting_iterator_assert_node,
-            CLEANUP(asserting_iterator_free(it); syntax_tree_free(tree)),
-            it,
-            SYNTAX_KIND_NAME_EXPRESSION
-        );
-        RUN_SUBTEST(
-            state,
-            asserting_iterator_assert_token,
-            CLEANUP(asserting_iterator_free(it); syntax_tree_free(tree)),
-            it,
-            SYNTAX_KIND_IDENTIFIER_TOKEN,
-            str_lit("b")
-        );
-        RUN_SUBTEST(
-            state,
-            asserting_iterator_assert_token,
-            CLEANUP(asserting_iterator_free(it); syntax_tree_free(tree)),
-            it,
-            op2,
-            op2_text
-        );
-        RUN_SUBTEST(
-            state,
-            asserting_iterator_assert_node,
-            CLEANUP(asserting_iterator_free(it); syntax_tree_free(tree)),
-            it,
-            SYNTAX_KIND_NAME_EXPRESSION
-        );
-        RUN_SUBTEST(
-            state,
-            asserting_iterator_assert_token,
-            CLEANUP(asserting_iterator_free(it); syntax_tree_free(tree)),
-            it,
-            SYNTAX_KIND_IDENTIFIER_TOKEN,
-            str_lit("c")
-        );
-        RUN_SUBTEST(
-            state,
-            asserting_iterator_assert_end,
-            CLEANUP(asserting_iterator_free(it); syntax_tree_free(tree)),
-            it
-        );
-        asserting_iterator_free(it);
     }
+    RUN_SUBTEST(
+        state,
+        asserting_iterator_assert_node,
+        CLEANUP(asserting_iterator_free(it); syntax_tree_free(tree)),
+        it,
+        SYNTAX_KIND_NAME_EXPRESSION
+    );
+    RUN_SUBTEST(
+        state,
+        asserting_iterator_assert_token,
+        CLEANUP(asserting_iterator_free(it); syntax_tree_free(tree)),
+        it,
+        SYNTAX_KIND_IDENTIFIER_TOKEN,
+        str_lit("b")
+    );
+    RUN_SUBTEST(
+        state,
+        asserting_iterator_assert_token,
+        CLEANUP(asserting_iterator_free(it); syntax_tree_free(tree)),
+        it,
+        op2,
+        op2_text
+    );
+    RUN_SUBTEST(
+        state,
+        asserting_iterator_assert_node,
+        CLEANUP(asserting_iterator_free(it); syntax_tree_free(tree)),
+        it,
+        SYNTAX_KIND_NAME_EXPRESSION
+    );
+    RUN_SUBTEST(
+        state,
+        asserting_iterator_assert_token,
+        CLEANUP(asserting_iterator_free(it); syntax_tree_free(tree)),
+        it,
+        SYNTAX_KIND_IDENTIFIER_TOKEN,
+        str_lit("c")
+    );
+    RUN_SUBTEST(
+        state,
+        asserting_iterator_assert_end,
+        CLEANUP(asserting_iterator_free(it); syntax_tree_free(tree)),
+        it
+    );
+    asserting_iterator_free(it);
     syntax_tree_free(tree);
     PASS();
 }
