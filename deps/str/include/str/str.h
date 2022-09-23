@@ -158,6 +158,13 @@ str str_cat_ret_range(const str* src, size_t count);
 #define str_cat(dest, ...) str_cat_range((dest), ARRAYOF_(__VA_ARGS__))
 #define str_cat_ret(...) str_cat_ret_range(ARRAYOF_(__VA_ARGS__))
 
+#define str_append(dest, ...) \
+    do { \
+        str temp = str_cat_ret(__VA_ARGS__); \
+        str_free(*(dest)); \
+        *(dest) = temp; \
+    } while (0)
+
 // implementation helpers
 int str_join_range(str* dest, str sep, const str* src, size_t count);
 

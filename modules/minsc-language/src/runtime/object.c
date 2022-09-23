@@ -54,6 +54,25 @@ void object_free(Object* object) {
     free(object);
 }
 
+bool object_eq(Object* a, Object* b) {
+    if (a == NULL || b == NULL) {
+        return a == b;
+    }
+    if (a->type != b->type) {
+        return false;
+    }
+    switch (a->type) {
+        case OBJECT_TYPE_NULL:
+            MINSC_ABORT("Corrupt object: non-NULL object with type NULL");
+        case OBJECT_TYPE_INT64:
+            return ((ObjectI64*)a)->value == ((ObjectI64*)b)->value;
+        case OBJECT_TYPE_BOOL:
+            return ((ObjectBool*)a)->value == ((ObjectBool*)b)->value;
+        default:
+            MINSC_ABORT("Corrupt object: unknown type");
+    }
+}
+
 int64_t object_as_i64(const Object* object) {
     MINSC_ASSERT(object != NULL);
     MINSC_ASSERT(object->type == OBJECT_TYPE_INT64);

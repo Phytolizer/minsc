@@ -2,6 +2,7 @@
 #include <println/println.h>
 #include <test/test.h>
 
+#include "minsc_test/code_analysis/evaluator.h"
 #include "minsc_test/code_analysis/syntax/lexer.h"
 #include "minsc_test/code_analysis/syntax/parser.h"
 #include "minsc_test/code_analysis/syntax/syntax_facts.h"
@@ -11,6 +12,7 @@ int main(void) {
     RUN_SUITE(&state, lexer, str_lit("Lexer"));
     RUN_SUITE(&state, parser, str_lit("Parser"));
     RUN_SUITE(&state, syntax_facts, str_lit("Syntax Facts"));
+    RUN_SUITE(&state, evaluator, str_lit("Evaluator"));
 
     // print test summary
     printfln(
