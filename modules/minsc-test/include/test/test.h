@@ -15,6 +15,7 @@ typedef struct {
     uint64_t failed;
     uint64_t skipped;
     uint64_t assertions;
+    bool verbose;
 } TestState;
 
 typedef enum {
@@ -66,7 +67,9 @@ typedef struct {
 #define DO_RUN_TEST(state, name, call, displayname) \
     do { \
         str disp = displayname; \
-        (void)fprintf(stderr, "TEST  " str_fmt "\n", str_arg(disp)); \
+        if ((state)->verbose) { \
+            (void)fprintf(stderr, "TEST  " str_fmt "\n", str_arg(disp)); \
+        } \
         TestResult result = call; \
         switch (result.type) { \
             case TEST_RESULT_FAIL: \

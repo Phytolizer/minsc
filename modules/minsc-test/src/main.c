@@ -8,8 +8,14 @@
 #include "minsc_test/code_analysis/syntax/parser.h"
 #include "minsc_test/code_analysis/syntax/syntax_facts.h"
 
-int main(void) {
+int main(int argc, char** argv) {
     TestState state = {0};
+    for (int i = 1; i < argc; i++) {
+        str argvi = str_ref(argv[i]);
+        if (str_eq(argvi, str_lit("-v"))) {
+            state.verbose = true;
+        }
+    }
     RUN_SUITE(&state, lexer, str_lit("Lexer"));
     RUN_SUITE(&state, parser, str_lit("Parser"));
     RUN_SUITE(&state, syntax_facts, str_lit("Syntax Facts"));
