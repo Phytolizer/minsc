@@ -17,6 +17,7 @@ if(MINSC_SANITIZE)
   )
 endif()
 
+add_subdirectory(deps/arena)
 add_subdirectory(deps/buf)
 add_subdirectory(deps/c-argparser)
 add_subdirectory(deps/linenoise)
