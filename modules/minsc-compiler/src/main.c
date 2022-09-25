@@ -17,6 +17,8 @@
 #include <str/str.h>
 #include <styler/styler.h>
 
+#include "string_builder.h"
+
 #ifdef _WIN32
 #include <windows.h>
 #endif
@@ -69,33 +71,44 @@ int main(void) {
 
     bool show_tree = false;
     VariableMap* variables = variable_map_new();
+    StringBuilder text_builder = string_builder_new();
 
     while (true) {
-        char* raw_line = linenoise(">> ");
+        const char* prompt = text_builder.len == 0 ? ">> " : "-| ";
+        char* raw_line = linenoise(prompt);
         if (raw_line == NULL) {
             break;
         }
         str line = str_acquire(raw_line);
-        if (line.len == 0) {
-            continue;
-        }
+        bool is_blank = line.len == 0;
 
         linenoiseHistoryAdd(line.ptr);
 
-        if (str_eq(line, str_lit("#showTree"))) {
-            str_free(line);
-            show_tree = !show_tree;
-            printfln("%s", show_tree ? "Showing parse trees." : "Not showing parse trees.");
-            continue;
-        }
-        if (str_eq(line, str_lit("#cls"))) {
-            str_free(line);
-            printf("\x1b[2J\x1b[H");
-            (void)fflush(stdout);
-            continue;
+        if (text_builder.len == 0) {
+            if (str_eq(line, str_lit("#showTree"))) {
+                str_free(line);
+                show_tree = !show_tree;
+                printfln("%s", show_tree ? "Showing parse trees." : "Not showing parse trees.");
+                continue;
+            }
+            if (str_eq(line, str_lit("#cls"))) {
+                str_free(line);
+                printf("\x1b[2J\x1b[H");
+                (void)fflush(stdout);
+                continue;
+            }
         }
 
-        SyntaxTree* program = syntax_tree_parse(str_ref(line));
+        string_builder_add(&text_builder, line);
+        string_builder_add(&text_builder, str_lit("\n"));
+        str text = string_builder_build(text_builder);
+        SyntaxTree* program = syntax_tree_parse(str_ref(text));
+
+        if (!is_blank && !diagnostic_bag_empty(program->diagnostics)) {
+            syntax_tree_free(program);
+            str_free(text);
+            continue;
+        }
 
         Compilation* compilation = compilation_new(program);
         EvaluationResult result = compilation_evaluate(compilation, &variables);
@@ -120,8 +133,8 @@ int main(void) {
                 size_t line_index =
                     source_text_get_line_index(program->source, diagnostic.span.start);
                 size_t line_number = line_index + 1;
-                size_t character =
-                    diagnostic.span.start + program->source.lines.ptr[line_index].start + 1;
+                TextLine line = program->source.lines.ptr[line_index];
+                size_t character = diagnostic.span.start - line.start + 1;
 
                 styler_apply_style(styler_style_faint, stdout);
                 styler_apply_fg(styler_fg_red, stdout);
@@ -134,10 +147,11 @@ int main(void) {
                 styler_apply_fg(styler_fg_reset, stdout);
                 styler_apply_style(styler_style_reset, stdout);
 
-                str prefix = str_upto(line, diagnostic.span.start);
+                str prefix = str_substr_bounds(text, line.start, diagnostic.span.start);
                 str error =
-                    str_substr_bounds(line, diagnostic.span.start, text_span_end(diagnostic.span));
-                str suffix = str_after(line, text_span_end(diagnostic.span));
+                    str_substr_bounds(text, diagnostic.span.start, text_span_end(diagnostic.span));
+                str suffix =
+                    str_substr_bounds(text, text_span_end(diagnostic.span), text_line_end(line));
 
                 printf("    " str_fmt, str_arg(prefix));
                 styler_apply_style(styler_style_faint, stdout);
@@ -160,10 +174,12 @@ int main(void) {
             (void)fflush(stdout);
         }
 
+        str_free(text);
         syntax_tree_free(program);
-        str_free(line);
+        string_builder_clear(&text_builder);
     }
 
     variable_map_free(variables);
+    string_builder_free(text_builder);
     linenoiseHistorySave("minsc.history");
 }
