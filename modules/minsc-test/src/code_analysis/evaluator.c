@@ -93,6 +93,7 @@ static TEST_FUNC(state, evaluator, EvaluatorTest test) {
     EvaluationResult result = compilation_evaluate(compilation, &variables);
     variable_map_free(variables);
     compilation_free(compilation);
+    syntax_tree_free(tree);
     if (result.diagnostics != NULL) {
         str diagnostics_str = diagnostics_to_string(diagnostic_bag_iter(result.diagnostics));
         FAIL(
