@@ -4,6 +4,7 @@
 [submodule "deps/linenoise/repo"]
 	path = deps/linenoise/repo
 	url = https://github.com/Phytolizer/linenoise.git
+    branch = fix/segv-empty-line
 [submodule "deps/uthash"]
 	path = deps/uthash
 	url = https://github.com/Phytolizer/uthash.git
