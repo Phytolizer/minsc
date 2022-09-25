@@ -1,5 +1,6 @@
 #include <inttypes.h>
 #include <println/println.h>
+#include <stdbool.h>
 #include <str/str.h>
 #include <test/test.h>
 

@@ -1,6 +1,5 @@
 #include "minsc/code_analysis/syntax/lexer.h"
 
-#include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <str/str.h>

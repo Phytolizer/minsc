@@ -8,6 +8,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <str/str.h>
 #include <test/test.h>
 #include <uthash.h>
