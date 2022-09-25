@@ -15,7 +15,7 @@
 #include "minsc/support/wrap_ctype.h"
 
 struct Lexer {
-    str source;
+    SourceText source;
     size_t position;
     DiagnosticBag* diagnostics;
     SyntaxKind kind;
@@ -30,10 +30,10 @@ static void read_number_token(Lexer* lexer);
 static void read_whitespace_token(Lexer* lexer);
 static void read_identifier_or_keyword(Lexer* lexer);
 
-Lexer* lexer_new(str source) {
+Lexer* lexer_new(SourceText text) {
     Lexer* lexer = malloc(sizeof(Lexer));
     MINSC_ASSERT(lexer != NULL);
-    lexer->source = source;
+    lexer->source = text;
     lexer->position = 0;
     lexer->diagnostics = diagnostic_bag_new();
     lexer->kind = SYNTAX_KIND_BAD_TOKEN;
@@ -44,7 +44,7 @@ Lexer* lexer_new(str source) {
 
 void lexer_free(Lexer* lexer) {
     diagnostic_bag_free(lexer->diagnostics);
-    str_free(lexer->source);
+    source_text_free(lexer->source);
     free(lexer);
 }
 
@@ -165,10 +165,10 @@ SyntaxToken* lexer_next_token(Lexer* lexer) {
 
 static char peek(const Lexer* lexer, size_t offset) {
     size_t position = lexer->position + offset;
-    if (position >= str_len(lexer->source)) {
+    if (position >= str_len(lexer->source.text)) {
         return '\0';
     }
-    return lexer->source.ptr[position];
+    return lexer->source.text.ptr[position];
 }
 
 static char current(const Lexer* lexer) {
@@ -176,7 +176,7 @@ static char current(const Lexer* lexer) {
 }
 
 static str ref_text(const Lexer* lexer) {
-    return str_ref_chars(lexer->source.ptr + lexer->start, lexer->position - lexer->start);
+    return source_text_substr(lexer->source, lexer->start, lexer->position - lexer->start);
 }
 
 static void read_number_token(Lexer* lexer) {

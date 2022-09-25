@@ -11,7 +11,11 @@
 #include "minsc/code_analysis/syntax/parser.h"
 #include "minsc/code_analysis/syntax/syntax_kind.h"
 #include "minsc/code_analysis/syntax/syntax_token.h"
+#include "minsc/code_analysis/text/source_text.h"
 #include "minsc/support/minsc_assert.h"
+
+static SyntaxTree* syntax_tree_parse_source(SourceText source);
+static SyntaxTokenBuf syntax_tree_parse_tokens_source(SourceText source);
 
 SyntaxTree* syntax_tree_new(
     DiagnosticBag* diagnostics,
@@ -40,14 +44,29 @@ DiagnosticBag* syntax_tree_take_diagnostics(SyntaxTree* tree) {
 }
 
 SyntaxTree* syntax_tree_parse(str text) {
-    Parser* parser = parser_new(text);
+    return syntax_tree_parse_source(source_text_from(text));
+}
+
+SyntaxTokenBuf syntax_tree_parse_tokens(str text) {
+    return syntax_tree_parse_tokens_source(source_text_from(text));
+}
+
+void syntax_token_buf_free(SyntaxTokenBuf buf) {
+    for (uint64_t i = 0; i < buf.len; i++) {
+        syntax_token_free(buf.ptr[i]);
+    }
+    BUF_FREE(buf);
+}
+
+static SyntaxTree* syntax_tree_parse_source(SourceText source) {
+    Parser* parser = parser_new(source);
     SyntaxTree* tree = parser_parse(parser);
     parser_free(parser);
     return tree;
 }
 
-SyntaxTokenBuf syntax_tree_parse_tokens(str text) {
-    Lexer* lexer = lexer_new(text);
+static SyntaxTokenBuf syntax_tree_parse_tokens_source(SourceText source) {
+    Lexer* lexer = lexer_new(source);
     SyntaxTokenBuf buf = BUF_NEW;
     while (true) {
         SyntaxToken* token = lexer_next_token(lexer);
@@ -60,11 +79,4 @@ SyntaxTokenBuf syntax_tree_parse_tokens(str text) {
 
     lexer_free(lexer);
     return buf;
-}
-
-void syntax_token_buf_free(SyntaxTokenBuf buf) {
-    for (uint64_t i = 0; i < buf.len; i++) {
-        syntax_token_free(buf.ptr[i]);
-    }
-    BUF_FREE(buf);
 }

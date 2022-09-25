@@ -38,7 +38,7 @@ static ExpressionSyntax* parse_boolean_literal_expression(Parser* parser);
 static ExpressionSyntax* parse_name_expression(Parser* parser);
 static ExpressionSyntax* parse_number_literal_expression(Parser* parser);
 
-Parser* parser_new(str text) {
+Parser* parser_new(SourceText text) {
     Lexer* lexer = lexer_new(text);
     SyntaxTokenBuf tokens = BUF_NEW;
 
