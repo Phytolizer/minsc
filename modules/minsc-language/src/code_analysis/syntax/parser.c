@@ -20,6 +20,7 @@
 #include "minsc/runtime/object.h"
 
 struct Parser {
+    SourceText source;
     SyntaxTokenBuf tokens;
     size_t position;
     DiagnosticBag* diagnostics;
@@ -59,6 +60,7 @@ Parser* parser_new(SourceText text) {
     lexer_free(lexer);
 
     Parser* parser = malloc(sizeof(Parser));
+    parser->source = text;
     parser->tokens = tokens;
     parser->position = 0;
     parser->diagnostics = diagnostics;
@@ -79,7 +81,7 @@ SyntaxTree* parser_parse(Parser* parser) {
     SyntaxToken* end_of_file_token =
         syntax_token_dup(match_token(parser, SYNTAX_KIND_END_OF_FILE_TOKEN));
     DiagnosticBag* diagnostics = parser_take_diagnostics(parser);
-    return syntax_tree_new(diagnostics, root, end_of_file_token);
+    return syntax_tree_new(parser->source, diagnostics, root, end_of_file_token);
 }
 
 DiagnosticBag* parser_take_diagnostics(Parser* parser) {

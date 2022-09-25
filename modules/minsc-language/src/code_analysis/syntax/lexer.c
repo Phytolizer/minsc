@@ -44,7 +44,6 @@ Lexer* lexer_new(SourceText text) {
 
 void lexer_free(Lexer* lexer) {
     diagnostic_bag_free(lexer->diagnostics);
-    source_text_free(lexer->source);
     free(lexer);
 }
 

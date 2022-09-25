@@ -18,12 +18,14 @@ static SyntaxTree* syntax_tree_parse_source(SourceText source);
 static SyntaxTokenBuf syntax_tree_parse_tokens_source(SourceText source);
 
 SyntaxTree* syntax_tree_new(
+    SourceText source,
     DiagnosticBag* diagnostics,
     ExpressionSyntax* root,
     SyntaxToken* end_of_file_token
 ) {
     SyntaxTree* tree = malloc(sizeof(SyntaxTree));
     MINSC_ASSERT(tree != NULL);
+    tree->source = source;
     tree->diagnostics = diagnostics;
     tree->root = root;
     tree->end_of_file_token = end_of_file_token;
@@ -34,6 +36,7 @@ void syntax_tree_free(SyntaxTree* tree) {
     diagnostic_bag_free(tree->diagnostics);
     expression_syntax_free(tree->root);
     syntax_token_free(tree->end_of_file_token);
+    source_text_free(tree->source);
     free(tree);
 }
 
@@ -78,5 +81,6 @@ static SyntaxTokenBuf syntax_tree_parse_tokens_source(SourceText source) {
     }
 
     lexer_free(lexer);
+    source_text_free(source);
     return buf;
 }
