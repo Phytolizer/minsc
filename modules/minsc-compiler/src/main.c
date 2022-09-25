@@ -8,7 +8,7 @@
 #include <minsc/code_analysis/evaluation_result.h>
 #include <minsc/code_analysis/syntax/syntax_node.h>
 #include <minsc/code_analysis/syntax/syntax_tree.h>
-#include <minsc/code_analysis/text_span.h>
+#include <minsc/code_analysis/text/text_span.h>
 #include <minsc/runtime/object.h>
 #include <minsc/runtime/variable_map.h>
 #include <println/println.h>

@@ -3,7 +3,7 @@
 
 #include <str/str.h>
 
-#include "minsc/code_analysis/text_span.h"
+#include "minsc/code_analysis/text/text_span.h"
 
 typedef struct Diagnostic {
     TextSpan span;

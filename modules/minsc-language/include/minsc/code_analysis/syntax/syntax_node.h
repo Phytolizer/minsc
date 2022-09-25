@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 #include "minsc/code_analysis/syntax/syntax_kind.h"
-#include "minsc/code_analysis/text_span.h"
+#include "minsc/code_analysis/text/text_span.h"
 
 typedef enum {
 #define X(x) SYNTAX_NODE_TYPE_##x,
