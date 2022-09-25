@@ -4,6 +4,7 @@
 #include <buf/buf.h>
 
 #include "minsc/code_analysis/syntax/syntax_kind.h"
+#include "minsc/code_analysis/text_span.h"
 
 typedef enum {
 #define X(x) SYNTAX_NODE_TYPE_##x,
@@ -19,5 +20,6 @@ typedef BUF(const SyntaxNode*) SyntaxNodeChildren;
 
 SyntaxKind syntax_node_kind(const SyntaxNode* node);
 SyntaxNodeChildren syntax_node_children(const SyntaxNode* node);
+TextSpan syntax_node_span(const SyntaxNode* node);
 
 #endif  // MINSC_CODE_ANALYSIS_SYNTAX_SYNTAX_NODE_H_
