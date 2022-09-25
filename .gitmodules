@@ -3,7 +3,7 @@
 	url = https://github.com/Phytolizer/c-argparser
 [submodule "deps/linenoise/repo"]
 	path = deps/linenoise/repo
-	url = https://github.com/msteveb/linenoise.git
+	url = https://github.com/Phytolizer/linenoise.git
 [submodule "deps/uthash"]
 	path = deps/uthash
 	url = https://github.com/Phytolizer/uthash.git
