@@ -24,7 +24,7 @@ void source_text_free(SourceText source) {
 
 size_t source_text_get_line_index(SourceText source, size_t position) {
     size_t lower = 0;
-    size_t upper = source.text.len - 1;
+    size_t upper = source.lines.len - 1;
 
     while (lower <= upper) {
         size_t index = (lower + upper) / 2;

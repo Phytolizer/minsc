@@ -21,7 +21,6 @@ Compilation* compilation_new(SyntaxTree* syntax) {
 }
 
 void compilation_free(Compilation* compilation) {
-    syntax_tree_free(compilation->syntax);
     free(compilation);
 }
 

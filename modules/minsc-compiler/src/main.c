@@ -116,10 +116,21 @@ int main(void) {
             DiagnosticBuf view = diagnostic_bag_iter(diagnostics);
 
             for (uint64_t i = 0; i < view.len; i++) {
+                Diagnostic diagnostic = view.ptr[i];
+                size_t line_index =
+                    source_text_get_line_index(program->source, diagnostic.span.start);
+                size_t line_number = line_index + 1;
+                size_t character =
+                    diagnostic.span.start + program->source.lines.ptr[line_index].start + 1;
+
                 styler_apply_style(styler_style_faint, stdout);
                 styler_apply_fg(styler_fg_red, stdout);
-                Diagnostic diagnostic = view.ptr[i];
-                printfln(str_fmt, str_arg(diagnostic.message));
+                printfln(
+                    "(%zu, %zu): " str_fmt,
+                    line_number,
+                    character,
+                    str_arg(diagnostic.message)
+                );
                 styler_apply_fg(styler_fg_reset, stdout);
                 styler_apply_style(styler_style_reset, stdout);
 
@@ -149,6 +160,7 @@ int main(void) {
             (void)fflush(stdout);
         }
 
+        syntax_tree_free(program);
         str_free(line);
     }
 
