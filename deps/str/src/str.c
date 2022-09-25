@@ -158,11 +158,6 @@ str str_acquire_chars(const char* const s, const size_t n) {
         return str_null;
     }
 
-    if (n == 0) {
-        free((void*)s);
-        return str_null;
-    }
-
     return (str){s, n, true};
 }
 

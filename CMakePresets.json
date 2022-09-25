@@ -66,8 +66,7 @@
             "displayName": "x64 Debug (Sanitizers)",
             "inherits": ["dev", "wflags"],
             "cacheVariables": {
-                "CMAKE_C_FLAGS": "-fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer",
-                "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=address -fsanitize=undefined"
+                "MINSC_SANITIZE": "ON"
             }
         },
         {

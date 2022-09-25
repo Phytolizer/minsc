@@ -160,7 +160,8 @@ str str_cat_ret_range(const str* src, size_t count);
 
 #define str_append(dest, ...) \
     do { \
-        str temp = str_cat_ret(__VA_ARGS__); \
+        str temp = str_null; \
+        str_cat(&temp, *dest, __VA_ARGS__); \
         str_free(*(dest)); \
         *(dest) = temp; \
     } while (0)

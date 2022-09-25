@@ -1,14 +1,17 @@
 #include "minsc_test/code_analysis/syntax/lexer.h"
 
 #include <buf/buf.h>
+#include <minsc/code_analysis/syntax/syntax_facts.h>
 #include <minsc/code_analysis/syntax/syntax_kind.h>
 #include <minsc/code_analysis/syntax/syntax_token.h>
 #include <minsc/code_analysis/syntax/syntax_tree.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <str/str.h>
 #include <test/test.h>
+#include <uthash.h>
 
 #include "minsc_test/util/str_esc.h"
 
@@ -20,28 +23,23 @@ typedef struct {
 typedef BUF(TestToken) TestTokenBuf;
 
 static TestTokenBuf get_tokens(void) {
+    TestTokenBuf tokens = BUF_NEW;
+    for (SyntaxKind kind = SYNTAX_KIND_ZERO; kind < SYNTAX_KIND_COUNT; kind++) {
+        str text = syntax_facts_get_text(kind);
+        if (text.len > 0) {
+            TestToken token = {kind, text};
+            BUF_PUSH(&tokens, token);
+        }
+    }
     static TestToken a[] = {
-        {SYNTAX_KIND_PLUS_TOKEN, str_lit_c("+")},
-        {SYNTAX_KIND_MINUS_TOKEN, str_lit_c("-")},
-        {SYNTAX_KIND_STAR_TOKEN, str_lit_c("*")},
-        {SYNTAX_KIND_SLASH_TOKEN, str_lit_c("/")},
-        {SYNTAX_KIND_BANG_TOKEN, str_lit_c("!")},
-        {SYNTAX_KIND_EQUALS_TOKEN, str_lit_c("=")},
-        {SYNTAX_KIND_AMPERSAND_AMPERSAND_TOKEN, str_lit_c("&&")},
-        {SYNTAX_KIND_PIPE_PIPE_TOKEN, str_lit_c("||")},
-        {SYNTAX_KIND_EQUALS_EQUALS_TOKEN, str_lit_c("==")},
-        {SYNTAX_KIND_BANG_EQUALS_TOKEN, str_lit_c("!=")},
-        {SYNTAX_KIND_OPEN_PARENTHESIS_TOKEN, str_lit_c("(")},
-        {SYNTAX_KIND_CLOSE_PARENTHESIS_TOKEN, str_lit_c(")")},
-        {SYNTAX_KIND_FALSE_KEYWORD, str_lit_c("false")},
-        {SYNTAX_KIND_TRUE_KEYWORD, str_lit_c("true")},
-
         {SYNTAX_KIND_IDENTIFIER_TOKEN, str_lit_c("a")},
         {SYNTAX_KIND_IDENTIFIER_TOKEN, str_lit_c("abc")},
         {SYNTAX_KIND_NUMBER_TOKEN, str_lit_c("1")},
         {SYNTAX_KIND_NUMBER_TOKEN, str_lit_c("123")},
     };
-    return (TestTokenBuf)BUF_ARRAY(a);
+    TestTokenBuf dynamic_tokens = BUF_ARRAY(a);
+    BUF_CONCAT(&tokens, dynamic_tokens);
+    return tokens;
 }
 
 static TestTokenBuf get_separators(void) {
@@ -59,9 +57,84 @@ static TestTokenBuf get_all_tokens(void) {
     TestTokenBuf buf = BUF_NEW;
     TestTokenBuf tokens = get_tokens();
     BUF_CONCAT(&buf, tokens);
+    BUF_FREE(tokens);
     TestTokenBuf separators = get_separators();
     BUF_CONCAT(&buf, separators);
     return buf;
+}
+
+typedef struct {
+    str key;
+    UT_hash_handle hh;
+} SyntaxKindSetEntry;
+
+static void syntax_kind_set_clear(SyntaxKindSetEntry* set) {
+    SyntaxKindSetEntry* entry;
+    SyntaxKindSetEntry* tmp;
+    HASH_ITER(hh, set, entry, tmp) {
+        HASH_DEL(set, entry);
+        free(entry);
+    }
+}
+
+static TEST_FUNC0(state, lexer_tests_all_tokens) {
+    SyntaxKindSetEntry* token_kinds = NULL;
+    for (SyntaxKind kind = SYNTAX_KIND_ZERO; kind < SYNTAX_KIND_COUNT; kind++) {
+        str s = syntax_kind_string(kind);
+        if (str_has_suffix(s, str_lit("Token")) || str_has_suffix(s, str_lit("Keyword"))) {
+            SyntaxKindSetEntry* entry = malloc(sizeof(SyntaxKindSetEntry));
+            entry->key = s;
+            // NOLINTNEXTLINE(readability-isolate-declaration): uthash requires this
+            HASH_ADD_KEYPTR(hh, token_kinds, s.ptr, s.len, entry);
+        }
+    }
+
+    TestTokenBuf tested_tokens = get_all_tokens();
+    for (uint64_t i = 0; i < tested_tokens.len; i++) {
+        TestToken token = tested_tokens.ptr[i];
+        SyntaxKindSetEntry* entry;
+        str s = syntax_kind_string(token.kind);
+        // NOLINTNEXTLINE(readability-isolate-declaration): uthash requires this
+        HASH_FIND(hh, token_kinds, s.ptr, s.len, entry);
+        if (entry != NULL) {
+            HASH_DEL(token_kinds, entry);
+            free(entry);
+        }
+    }
+    BUF_FREE(tested_tokens);
+
+    {
+        SyntaxKindSetEntry* entry;
+        static const str acceptable_tokens[] = {
+            str_lit_c("EndOfFileToken"),
+            str_lit_c("BadToken"),
+        };
+        for (size_t i = 0; i < sizeof(acceptable_tokens) / sizeof(acceptable_tokens[0]); i++) {
+            str s = acceptable_tokens[i];
+            // NOLINTNEXTLINE(readability-isolate-declaration): uthash requires this
+            HASH_FIND(hh, token_kinds, s.ptr, s.len, entry);
+            if (entry != NULL) {
+                HASH_DEL(token_kinds, entry);
+                free(entry);
+            }
+        }
+    }
+
+    if (token_kinds != NULL) {
+        str message = str_lit("The following tokens were not tested:\n");
+        SyntaxKindSetEntry* el;
+        SyntaxKindSetEntry* tmp;
+        HASH_ITER(hh, token_kinds, el, tmp) {
+            str_append(&message, str_lit("    "));
+            str_append(&message, str_ref(el->key));
+            str_append(&message, str_lit("\n"));
+            HASH_DEL(token_kinds, el);
+            free(el);
+        }
+        FAIL(state, CLEANUP(str_free(message)), str_fmt, str_arg(message));
+    }
+
+    PASS();
 }
 
 static TEST_FUNC(state, lexes_token, TestToken token) {
@@ -137,6 +210,7 @@ static TestTokenPairBuf get_token_pairs(void) {
             }
         }
     }
+    BUF_FREE(tokens);
 
     return pairs;
 }
@@ -217,6 +291,7 @@ static TestTokenPairWithSeparatorBuf get_token_pairs_with_separators(void) {
             }
         }
     }
+    BUF_FREE(tokens);
 
     return pairs_with_separators;
 }
@@ -358,4 +433,6 @@ SUITE_FUNC(state, lexer) {
         str_free(text_esc_sep);
     }
     BUF_FREE(test_token_pairs_with_separator);
+
+    RUN_TEST0(state, lexer_tests_all_tokens, str_lit("Lexer tests all tokens"));
 }

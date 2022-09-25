@@ -20,6 +20,7 @@
 #include "minsc/runtime/object.h"
 
 struct Parser {
+    SourceText source;
     SyntaxTokenBuf tokens;
     size_t position;
     DiagnosticBag* diagnostics;
@@ -33,8 +34,12 @@ static ExpressionSyntax* parse_expression(Parser* parser);
 static ExpressionSyntax* parse_assignment_expression(Parser* parser);
 static ExpressionSyntax* parse_binary_expression(Parser* parser, size_t parent_precedence);
 static ExpressionSyntax* parse_primary_expression(Parser* parser);
+static ExpressionSyntax* parse_parenthesized_expression(Parser* parser);
+static ExpressionSyntax* parse_boolean_literal_expression(Parser* parser);
+static ExpressionSyntax* parse_name_expression(Parser* parser);
+static ExpressionSyntax* parse_number_literal_expression(Parser* parser);
 
-Parser* parser_new(str text) {
+Parser* parser_new(SourceText text) {
     Lexer* lexer = lexer_new(text);
     SyntaxTokenBuf tokens = BUF_NEW;
 
@@ -55,6 +60,7 @@ Parser* parser_new(str text) {
     lexer_free(lexer);
 
     Parser* parser = malloc(sizeof(Parser));
+    parser->source = text;
     parser->tokens = tokens;
     parser->position = 0;
     parser->diagnostics = diagnostics;
@@ -75,7 +81,7 @@ SyntaxTree* parser_parse(Parser* parser) {
     SyntaxToken* end_of_file_token =
         syntax_token_dup(match_token(parser, SYNTAX_KIND_END_OF_FILE_TOKEN));
     DiagnosticBag* diagnostics = parser_take_diagnostics(parser);
-    return syntax_tree_new(diagnostics, root, end_of_file_token);
+    return syntax_tree_new(parser->source, diagnostics, root, end_of_file_token);
 }
 
 DiagnosticBag* parser_take_diagnostics(Parser* parser) {
@@ -165,29 +171,48 @@ static ExpressionSyntax* parse_primary_expression(Parser* parser) {
     ExpressionSyntax* result;
 
     switch (current(parser)->kind) {
-        case SYNTAX_KIND_OPEN_PARENTHESIS_TOKEN: {
-            SyntaxToken* left = syntax_token_dup(next_token(parser));
-            ExpressionSyntax* expression = parse_expression(parser);
-            SyntaxToken* right =
-                syntax_token_dup(match_token(parser, SYNTAX_KIND_CLOSE_PARENTHESIS_TOKEN));
-            result = parenthesized_expression_syntax_new(left, expression, right);
-        } break;
+        case SYNTAX_KIND_OPEN_PARENTHESIS_TOKEN:
+            result = parse_parenthesized_expression(parser);
+            break;
         case SYNTAX_KIND_TRUE_KEYWORD:
-        case SYNTAX_KIND_FALSE_KEYWORD: {
-            bool value = current(parser)->kind == SYNTAX_KIND_TRUE_KEYWORD;
-            SyntaxToken* keyword_token = syntax_token_dup(next_token(parser));
-            result = literal_expression_syntax_new(keyword_token, object_new_bool(value));
-        } break;
-        case SYNTAX_KIND_IDENTIFIER_TOKEN: {
-            SyntaxToken* identifier_token = syntax_token_dup(next_token(parser));
-            result = name_expression_syntax_new(identifier_token);
-        } break;
-        default: {
-            SyntaxToken* number_token =
-                syntax_token_dup(match_token(parser, SYNTAX_KIND_NUMBER_TOKEN));
-            result = literal_expression_syntax_new(number_token, NULL);
-        } break;
+        case SYNTAX_KIND_FALSE_KEYWORD:
+            result = parse_boolean_literal_expression(parser);
+            break;
+        case SYNTAX_KIND_NUMBER_TOKEN:
+            result = parse_number_literal_expression(parser);
+            break;
+        case SYNTAX_KIND_IDENTIFIER_TOKEN:
+        default:
+            result = parse_name_expression(parser);
+            break;
     }
 
     return result;
+}
+
+static ExpressionSyntax* parse_parenthesized_expression(Parser* parser) {
+    SyntaxToken* left = syntax_token_dup(match_token(parser, SYNTAX_KIND_OPEN_PARENTHESIS_TOKEN));
+    ExpressionSyntax* expression = parse_expression(parser);
+    SyntaxToken* right = syntax_token_dup(match_token(parser, SYNTAX_KIND_CLOSE_PARENTHESIS_TOKEN));
+    return parenthesized_expression_syntax_new(left, expression, right);
+}
+
+static ExpressionSyntax* parse_boolean_literal_expression(Parser* parser) {
+    bool value = current(parser)->kind == SYNTAX_KIND_TRUE_KEYWORD;
+    SyntaxToken* keyword_token = syntax_token_dup(
+        value ? match_token(parser, SYNTAX_KIND_TRUE_KEYWORD)
+              : match_token(parser, SYNTAX_KIND_FALSE_KEYWORD)
+    );
+    return literal_expression_syntax_new(keyword_token, object_new_bool(value));
+}
+
+static ExpressionSyntax* parse_name_expression(Parser* parser) {
+    SyntaxToken* identifier_token =
+        syntax_token_dup(match_token(parser, SYNTAX_KIND_IDENTIFIER_TOKEN));
+    return name_expression_syntax_new(identifier_token);
+}
+
+static ExpressionSyntax* parse_number_literal_expression(Parser* parser) {
+    SyntaxToken* number_token = syntax_token_dup(match_token(parser, SYNTAX_KIND_NUMBER_TOKEN));
+    return literal_expression_syntax_new(number_token, NULL);
 }

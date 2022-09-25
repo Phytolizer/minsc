@@ -23,3 +23,6 @@ indent_size = 2
 
 [.clang{d,-tidy,-format}]
 indent_size = 2
+
+[.gitmodules]
+indent_style = tab

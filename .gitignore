@@ -4,3 +4,4 @@ CMakeUserPresets.json
 .codechecker/
 infer-out/
 minsc.history
+afl_findings/

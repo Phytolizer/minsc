@@ -5,10 +5,11 @@
 
 #include "minsc/code_analysis/diagnostic_bag.h"
 #include "minsc/code_analysis/syntax/syntax_token.h"
+#include "minsc/code_analysis/text/source_text.h"
 
 typedef struct Lexer Lexer;
 
-Lexer* lexer_new(str source);
+Lexer* lexer_new(SourceText text);
 void lexer_free(Lexer* lexer);
 DiagnosticBag* lexer_take_diagnostics(Lexer* lexer);
 

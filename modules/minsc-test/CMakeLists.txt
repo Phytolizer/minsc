@@ -10,7 +10,7 @@ add_executable(
 )
 
 target_link_libraries(
-  minsc_test PRIVATE minsc::language str::str println::println
+  minsc_test PRIVATE minsc::language str::str println::println uthash::uthash
 )
 target_include_directories(minsc_test PRIVATE include)
 add_executable(minsc::test ALIAS minsc_test)

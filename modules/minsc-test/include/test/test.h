@@ -15,11 +15,12 @@ typedef struct {
     uint64_t failed;
     uint64_t skipped;
     uint64_t assertions;
+    bool verbose;
 } TestState;
 
 typedef enum {
 #define X(x) TEST_RESULT_##x,
-#include "test_results.def"
+#include "test_results.inc"
 #undef X
 } TestResultType;
 
@@ -41,10 +42,10 @@ typedef struct {
     do { \
         ++(state)->assertions; \
         if (!(test)) { \
-            str message = str_printf(__VA_ARGS__); \
+            str message_ = str_printf(__VA_ARGS__); \
             cleanup; \
             TEST_ABORT(); \
-            return TEST_FAIL(message); \
+            return TEST_FAIL(message_); \
         } \
     } while (false)
 
@@ -66,7 +67,9 @@ typedef struct {
 #define DO_RUN_TEST(state, name, call, displayname) \
     do { \
         str disp = displayname; \
-        (void)fprintf(stderr, "TEST  " str_fmt "\n", str_arg(disp)); \
+        if ((state)->verbose) { \
+            (void)fprintf(stderr, "TEST  " str_fmt "\n", str_arg(disp)); \
+        } \
         TestResult result = call; \
         switch (result.type) { \
             case TEST_RESULT_FAIL: \

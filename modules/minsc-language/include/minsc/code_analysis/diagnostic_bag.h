@@ -7,7 +7,7 @@
 
 #include "minsc/code_analysis/diagnostic.h"
 #include "minsc/code_analysis/syntax/syntax_kind.h"
-#include "minsc/code_analysis/text_span.h"
+#include "minsc/code_analysis/text/text_span.h"
 #include "minsc/runtime/object.h"
 #include "str/str.h"
 
