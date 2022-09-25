@@ -56,7 +56,8 @@ void syntax_node_pretty_print(const SyntaxNode* root, FILE* f) {
 
 static void pretty_print(const SyntaxNode* root, str indent, bool is_last, FILE* f) {
     str marker = is_last ? str_lit("└───") : str_lit("├───");
-    printf(
+    (void)fprintf(
+        f,
         str_fmt str_fmt str_fmt,
         str_arg(indent),
         str_arg(marker),
@@ -64,7 +65,7 @@ static void pretty_print(const SyntaxNode* root, str indent, bool is_last, FILE*
     );
     if (root->type == SYNTAX_NODE_TYPE_TOKEN && ((SyntaxToken*)root)->value != NULL) {
         str value = object_string(((SyntaxToken*)root)->value);
-        printf(" " str_fmt, str_arg(value));
+        (void)fprintf(f, " " str_fmt, str_arg(value));
         str_free(value);
     }
     fprintln(f);
