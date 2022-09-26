@@ -8,6 +8,7 @@
 #include "minsc_test/code_analysis/syntax/lexer.h"
 #include "minsc_test/code_analysis/syntax/parser.h"
 #include "minsc_test/code_analysis/syntax/syntax_facts.h"
+#include "minsc_test/code_analysis/text/source_text.h"
 
 int main(int argc, char** argv) {
     TestState state = {0};
@@ -21,6 +22,7 @@ int main(int argc, char** argv) {
     RUN_SUITE(&state, parser, str_lit("Parser"));
     RUN_SUITE(&state, syntax_facts, str_lit("Syntax Facts"));
     RUN_SUITE(&state, evaluator, str_lit("Evaluator"));
+    RUN_SUITE(&state, source_text, str_lit("Source Text"));
 
     // print test summary
     printfln(

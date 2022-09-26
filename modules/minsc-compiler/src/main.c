@@ -74,7 +74,7 @@ int main(void) {
     StringBuilder text_builder = string_builder_new();
 
     while (true) {
-        const char* prompt = text_builder.len == 0 ? ">> " : "-| ";
+        const char* prompt = text_builder.len == 0 ? "» " : "· ";
         char* raw_line = linenoise(prompt);
         if (raw_line == NULL) {
             break;
