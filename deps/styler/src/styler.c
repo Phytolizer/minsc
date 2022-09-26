@@ -506,6 +506,14 @@ void styler_apply_bg(styler_bg_t bg, FILE* stream) {
     }
 }
 
+int styler_str_fg(styler_fg_t fg, char str[static 6]) {
+    return snprintf(str, 6, "\x1b[%dm", fg);
+}
+
+int styler_str_bg(styler_bg_t bg, char str[static 6]) {
+    return snprintf(str, 6, "\x1b[%dm", bg);
+}
+
 void styler_apply_fg_bright(styler_fg_bright_t fg, FILE* stream) {
     styler_control_t control_mode = *get_control_mode();
 

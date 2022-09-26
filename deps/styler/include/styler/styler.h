@@ -120,6 +120,8 @@ typedef enum {
 
 void styler_apply_fg(styler_fg_t fg, FILE* stream);
 void styler_apply_bg(styler_bg_t bg, FILE* stream);
+int styler_str_fg(styler_fg_t fg, char str[static 6]);
+int styler_str_bg(styler_bg_t bg, char str[static 6]);
 void styler_apply_fg_bright(styler_fg_bright_t fg, FILE* stream);
 void styler_apply_bg_bright(styler_bg_bright_t bg, FILE* stream);
 void styler_apply_style(styler_style_t style, FILE* stream);

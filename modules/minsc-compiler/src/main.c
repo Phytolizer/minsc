@@ -74,7 +74,14 @@ int main(void) {
     StringBuilder text_builder = string_builder_new();
 
     while (true) {
-        const char* prompt = text_builder.len == 0 ? "» " : "· ";
+        // 13 == 10 for colors + 2 for '> ' + 1 for NUL
+        char prompt[13];
+        int n = styler_str_fg(styler_fg_green, prompt);
+        strncpy(&prompt[n], text_builder.len == 0 ? ">" : ".", 2);
+        n += 1;
+        n += styler_str_fg(styler_fg_reset, &prompt[n]);
+        prompt[n++] = ' ';
+        prompt[n++] = '\0';
         char* raw_line = linenoise(prompt);
         if (raw_line == NULL) {
             break;
