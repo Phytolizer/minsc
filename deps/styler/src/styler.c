@@ -506,11 +506,11 @@ void styler_apply_bg(styler_bg_t bg, FILE* stream) {
     }
 }
 
-int styler_str_fg(styler_fg_t fg, char str[static 6]) {
+int styler_str_fg(styler_fg_t fg, char str[6]) {
     return snprintf(str, 6, "\x1b[%dm", fg);
 }
 
-int styler_str_bg(styler_bg_t bg, char str[static 6]) {
+int styler_str_bg(styler_bg_t bg, char str[6]) {
     return snprintf(str, 6, "\x1b[%dm", bg);
 }
 
