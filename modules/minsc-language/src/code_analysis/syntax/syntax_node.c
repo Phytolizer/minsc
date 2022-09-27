@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <str/str.h>
+#include <styler/styler.h>
 
 #include "minsc/code_analysis/syntax/expression_syntax.h"
 #include "minsc/code_analysis/syntax/syntax_kind.h"
@@ -55,14 +56,22 @@ void syntax_node_pretty_print(const SyntaxNode* root, FILE* f) {
 }
 
 static void pretty_print(const SyntaxNode* root, str indent, bool is_last, FILE* f) {
+    bool is_console = f == stdout;
+
     str marker = is_last ? str_lit("└───") : str_lit("├───");
-    (void)fprintf(
-        f,
-        str_fmt str_fmt str_fmt,
-        str_arg(indent),
-        str_arg(marker),
-        str_arg(syntax_kind_string(syntax_node_kind(root)))
-    );
+    if (is_console) {
+        styler_apply_style(styler_style_faint, f);
+        styler_apply_fg(styler_fg_white, f);
+    }
+    (void)fprintf(f, str_fmt str_fmt, str_arg(indent), str_arg(marker));
+    if (is_console) {
+        styler_apply_style(styler_style_reset, f);
+        styler_apply_fg(root->type == SYNTAX_NODE_TYPE_TOKEN ? styler_fg_blue : styler_fg_cyan, f);
+    }
+    (void)fprintf(f, str_fmt, str_arg(syntax_kind_string(syntax_node_kind(root))));
+    if (is_console) {
+        styler_apply_fg(styler_fg_reset, f);
+    }
     if (root->type == SYNTAX_NODE_TYPE_TOKEN && ((SyntaxToken*)root)->value != NULL) {
         str value = object_string(((SyntaxToken*)root)->value);
         (void)fprintf(f, " " str_fmt, str_arg(value));
