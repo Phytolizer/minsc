@@ -6,7 +6,6 @@
 #include <stdlib.h>
 #include <str/str.h>
 
-#include "minsc/code_analysis/syntax/expression_syntax.h"
 #include "minsc/code_analysis/syntax/lexer.h"
 #include "minsc/code_analysis/syntax/parser.h"
 #include "minsc/code_analysis/syntax/syntax_kind.h"
@@ -17,25 +16,18 @@
 static SyntaxTree* syntax_tree_parse_source(SourceText source);
 static SyntaxTokenBuf syntax_tree_parse_tokens_source(SourceText source);
 
-SyntaxTree* syntax_tree_new(
-    SourceText source,
-    DiagnosticBag* diagnostics,
-    ExpressionSyntax* root,
-    SyntaxToken* end_of_file_token
-) {
+SyntaxTree* syntax_tree_new(SourceText source, DiagnosticBag* diagnostics, CompilationUnit* root) {
     SyntaxTree* tree = malloc(sizeof(SyntaxTree));
     MINSC_ASSERT(tree != NULL);
     tree->source = source;
     tree->diagnostics = diagnostics;
     tree->root = root;
-    tree->end_of_file_token = end_of_file_token;
     return tree;
 }
 
 void syntax_tree_free(SyntaxTree* tree) {
     diagnostic_bag_free(tree->diagnostics);
-    expression_syntax_free(tree->root);
-    syntax_token_free(tree->end_of_file_token);
+    compilation_unit_free(tree->root);
     source_text_free(tree->source);
     free(tree);
 }

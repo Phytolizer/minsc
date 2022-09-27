@@ -7,6 +7,7 @@
 #include <str/str.h>
 #include <styler/styler.h>
 
+#include "minsc/code_analysis/syntax/compilation_unit_syntax.h"
 #include "minsc/code_analysis/syntax/expression_syntax.h"
 #include "minsc/code_analysis/syntax/syntax_kind.h"
 #include "minsc/code_analysis/syntax/syntax_token.h"
@@ -21,6 +22,8 @@ SyntaxKind syntax_node_kind(const SyntaxNode* node) {
             return ((const SyntaxToken*)node)->kind;
         case SYNTAX_NODE_TYPE_EXPRESSION:
             return expression_syntax_kind((const ExpressionSyntax*)node);
+        case SYNTAX_NODE_TYPE_COMPILATION_UNIT:
+            return SYNTAX_KIND_COMPILATION_UNIT;
     }
 
     MINSC_ABORT("Invalid syntax node type");
@@ -33,6 +36,8 @@ SyntaxNodeChildren syntax_node_children(const SyntaxNode* node) {
             return (SyntaxNodeChildren)BUF_NEW;
         case SYNTAX_NODE_TYPE_EXPRESSION:
             return expression_syntax_children((const ExpressionSyntax*)node);
+        case SYNTAX_NODE_TYPE_COMPILATION_UNIT:
+            return compilation_unit_children((const CompilationUnit*)node);
     }
 
     MINSC_ABORT("Invalid syntax node type");

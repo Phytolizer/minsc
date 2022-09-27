@@ -28,6 +28,7 @@ set(MINSC_SRC_REL
     code_analysis/syntax/unary_expression_syntax.c
     code_analysis/syntax/name_expression_syntax.c
     code_analysis/syntax/assignment_expression_syntax.c
+    code_analysis/syntax/compilation_unit_syntax.c
     code_analysis/text/source_text.c
     code_analysis/text/text_line.c
     code_analysis/variable_symbol.c

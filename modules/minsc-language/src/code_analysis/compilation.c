@@ -26,7 +26,7 @@ void compilation_free(Compilation* compilation) {
 
 EvaluationResult compilation_evaluate(Compilation* compilation, VariableMap** variables) {
     Binder* binder = binder_new(variables);
-    BoundExpression* bound_expression = binder_bind_expression(binder, compilation->syntax->root);
+    BoundExpression* bound_expression = binder_bind_expression(binder, compilation->syntax->root->expression);
 
     DiagnosticBag* diagnostics = syntax_tree_take_diagnostics(compilation->syntax);
     diagnostic_bag_concat(diagnostics, binder_take_diagnostics(binder));

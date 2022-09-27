@@ -21,7 +21,7 @@ static TEST_FUNC(state, binary_expression_honors_precedence, SyntaxKind op1, Syn
     str text = str_printf("a " str_fmt " b " str_fmt " c", str_arg(op1_text), str_arg(op2_text));
 
     SyntaxTree* tree = syntax_tree_parse(text);
-    ExpressionSyntax* expression = tree->root;
+    ExpressionSyntax* expression = tree->root->expression;
 
     AssertingIterator* it = asserting_iterator_new((const SyntaxNode*)expression);
     RUN_SUBTEST(
@@ -157,7 +157,7 @@ static TEST_FUNC(
     str text = str_printf(str_fmt "a " str_fmt " b", str_arg(unary_text), str_arg(binary_text));
 
     SyntaxTree* tree = syntax_tree_parse(text);
-    ExpressionSyntax* expression = tree->root;
+    ExpressionSyntax* expression = tree->root->expression;
 
     AssertingIterator* it = asserting_iterator_new((const SyntaxNode*)expression);
     if (unary_precedence >= binary_precedence) {

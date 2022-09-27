@@ -7,6 +7,7 @@
 
 #include "minsc/code_analysis/syntax/assignment_expression_syntax.h"
 #include "minsc/code_analysis/syntax/binary_expression_syntax.h"
+#include "minsc/code_analysis/syntax/compilation_unit_syntax.h"
 #include "minsc/code_analysis/syntax/expression_syntax.h"
 #include "minsc/code_analysis/syntax/lexer.h"
 #include "minsc/code_analysis/syntax/literal_expression_syntax.h"
@@ -30,6 +31,7 @@ static SyntaxToken* peek(const Parser* parser, size_t offset);
 static SyntaxToken* current(const Parser* parser);
 static SyntaxToken* next_token(Parser* parser);
 static SyntaxToken* match_token(Parser* parser, SyntaxKind kind);
+static CompilationUnit* parse_compilation_unit(Parser* parser);
 static ExpressionSyntax* parse_expression(Parser* parser);
 static ExpressionSyntax* parse_assignment_expression(Parser* parser);
 static ExpressionSyntax* parse_binary_expression(Parser* parser, size_t parent_precedence);
@@ -77,11 +79,9 @@ void parser_free(Parser* parser) {
 }
 
 SyntaxTree* parser_parse(Parser* parser) {
-    ExpressionSyntax* root = parse_expression(parser);
-    SyntaxToken* end_of_file_token =
-        syntax_token_dup(match_token(parser, SYNTAX_KIND_END_OF_FILE_TOKEN));
+    CompilationUnit* root = parse_compilation_unit(parser);
     DiagnosticBag* diagnostics = parser_take_diagnostics(parser);
-    return syntax_tree_new(parser->source, diagnostics, root, end_of_file_token);
+    return syntax_tree_new(parser->source, diagnostics, root);
 }
 
 DiagnosticBag* parser_take_diagnostics(Parser* parser) {
@@ -120,6 +120,13 @@ static SyntaxToken* match_token(Parser* parser, SyntaxKind kind) {
         kind
     );
     return syntax_token_new_manufactured(kind, current(parser)->position, str_null, NULL);
+}
+
+static CompilationUnit* parse_compilation_unit(Parser* parser) {
+    ExpressionSyntax* expression = parse_expression(parser);
+    SyntaxToken* end_of_file_token =
+        syntax_token_dup(match_token(parser, SYNTAX_KIND_END_OF_FILE_TOKEN));
+    return compilation_unit_new(expression, end_of_file_token);
 }
 
 static ExpressionSyntax* parse_expression(Parser* parser) {
