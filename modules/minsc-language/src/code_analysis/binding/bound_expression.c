@@ -9,6 +9,9 @@
 #include "minsc/support/minsc_assert.h"
 
 void bound_expression_free(BoundExpression* expression) {
+    if (expression == NULL) {
+        return;
+    }
     switch (expression->type) {
         case BOUND_EXPRESSION_TYPE_UNARY:
             bound_unary_expression_free((BoundUnaryExpression*)expression);

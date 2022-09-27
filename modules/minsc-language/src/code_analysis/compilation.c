@@ -25,12 +25,13 @@ void compilation_free(Compilation* compilation) {
 }
 
 EvaluationResult compilation_evaluate(Compilation* compilation, VariableMap** variables) {
-    Binder* binder = binder_new(variables);
-    BoundExpression* bound_expression = binder_bind_expression(binder, compilation->syntax->root->expression);
+    BoundGlobalScope* global_scope = binder_bind_global_scope(compilation->syntax->root);
+    BoundExpression* bound_expression = global_scope->expression;
+    global_scope->expression = NULL;
 
     DiagnosticBag* diagnostics = syntax_tree_take_diagnostics(compilation->syntax);
-    diagnostic_bag_concat(diagnostics, binder_take_diagnostics(binder));
-    binder_free(binder);
+    diagnostic_bag_concat(diagnostics, &global_scope->diagnostics);
+    bound_global_scope_free(global_scope);
 
     if (!diagnostic_bag_empty(diagnostics)) {
         bound_expression_free(bound_expression);

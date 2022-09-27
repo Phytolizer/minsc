@@ -8,12 +8,14 @@
 #include "minsc/code_analysis/binding/bound_binary_expression.h"
 #include "minsc/code_analysis/binding/bound_binary_operator.h"
 #include "minsc/code_analysis/binding/bound_expression.h"
+#include "minsc/code_analysis/binding/bound_global_scope.h"
 #include "minsc/code_analysis/binding/bound_literal_expression.h"
 #include "minsc/code_analysis/binding/bound_unary_expression.h"
 #include "minsc/code_analysis/binding/bound_unary_operator.h"
 #include "minsc/code_analysis/binding/bound_variable_expression.h"
 #include "minsc/code_analysis/syntax/assignment_expression_syntax.h"
 #include "minsc/code_analysis/syntax/binary_expression_syntax.h"
+#include "minsc/code_analysis/syntax/compilation_unit_syntax.h"
 #include "minsc/code_analysis/syntax/literal_expression_syntax.h"
 #include "minsc/code_analysis/syntax/name_expression_syntax.h"
 #include "minsc/code_analysis/syntax/parenthesized_expression_syntax.h"
@@ -26,7 +28,7 @@
 
 struct Binder {
     DiagnosticBag* diagnostics;
-    VariableMap** variables;
+    BoundScope* scope;
 };
 
 static BoundExpression* bind_literal_expression(Binder* binder, LiteralExpressionSyntax* syntax);
@@ -38,16 +40,17 @@ static BoundExpression* bind_name_expression(Binder* binder, NameExpressionSynta
 static BoundExpression*
 bind_assignment_expression(Binder* binder, AssignmentExpressionSyntax* syntax);
 
-Binder* binder_new(VariableMap** variables) {
+Binder* binder_new(BoundScope* parent) {
     Binder* binder = malloc(sizeof(Binder));
     MINSC_ASSERT(binder != NULL);
     binder->diagnostics = diagnostic_bag_new();
-    binder->variables = variables;
+    binder->scope = bound_scope_new(parent);
     return binder;
 }
 
 void binder_free(Binder* binder) {
     diagnostic_bag_free(binder->diagnostics);
+    bound_scope_free(binder->scope);
     // don't free variables, they could be reused
     free(binder);
 }
@@ -134,10 +137,9 @@ static bool variable_symbol_names_eq(VariableSymbol* variable, void* user) {
 static BoundExpression* bind_name_expression(Binder* binder, NameExpressionSyntax* syntax) {
     str name = syntax->identifier_token->text;
 
-    VariableSymbol* variable =
-        variable_map_find(*binder->variables, variable_symbol_names_eq, &name);
+    BoundScopeTryLookupResult result = bound_scope_try_lookup(binder->scope, name);
 
-    if (variable == NULL) {
+    if (!result.present) {
         diagnostic_bag_report_undefined_name(
             binder->diagnostics,
             syntax_token_span(syntax->identifier_token),
@@ -146,7 +148,7 @@ static BoundExpression* bind_name_expression(Binder* binder, NameExpressionSynta
         return bound_literal_expression_new(object_new_i64(0));
     }
 
-    return bound_variable_expression_new(variable_symbol_dup(*variable));
+    return bound_variable_expression_new(variable_symbol_dup(result.value));
 }
 
 static BoundExpression*
@@ -156,13 +158,24 @@ bind_assignment_expression(Binder* binder, AssignmentExpressionSyntax* syntax) {
 
     VariableSymbol variable = variable_symbol_new(name, bound_expression_type(bound_expression));
 
-    VariableSymbol* existing_variable =
-        variable_map_find(*binder->variables, variable_symbol_names_eq, &name);
-    if (existing_variable != NULL) {
-        variable_map_remove(binder->variables, *existing_variable);
+    if (!bound_scope_try_declare(binder->scope, variable_symbol_dup(variable))) {
+        diagnostic_bag_report_variable_already_declared(
+            binder->diagnostics,
+            syntax_token_span(syntax->identifier_token),
+            name
+        );
     }
 
-    variable_map_define(binder->variables, variable_symbol_dup(variable), NULL);
-
     return bound_assignment_expression_new(variable, bound_expression);
+}
+
+BoundGlobalScope* binder_bind_global_scope(CompilationUnit* syntax) {
+    Binder* binder = binder_new(NULL);
+    BoundExpression* expression = binder_bind_expression(binder, syntax->expression);
+    VariableSymbolBuf variables = bound_scope_get_declared_variables(binder->scope);
+    DiagnosticBag* diagnostic_bag = binder_take_diagnostics(binder);
+    DiagnosticBuf diagnostics = diagnostic_bag_to_array(diagnostic_bag);
+    diagnostic_bag_free(diagnostic_bag);
+    binder_free(binder);
+    return bound_global_scope_new(NULL, diagnostics, variables, expression);
 }

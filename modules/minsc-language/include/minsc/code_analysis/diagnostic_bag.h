@@ -19,6 +19,7 @@ void diagnostic_bag_free(DiagnosticBag* bag);
 typedef BUF(Diagnostic) DiagnosticBuf;
 
 DiagnosticBuf diagnostic_bag_iter(const DiagnosticBag* bag);
+DiagnosticBuf diagnostic_bag_to_array(DiagnosticBag* bag);
 bool diagnostic_bag_empty(const DiagnosticBag* bag);
 
 void diagnostic_bag_report_invalid_int64(DiagnosticBag* bag, TextSpan span, str text);
@@ -43,7 +44,8 @@ void diagnostic_bag_report_undefined_binary_operator(
     ObjectType right_type
 );
 void diagnostic_bag_report_undefined_name(DiagnosticBag* bag, TextSpan span, str name);
+void diagnostic_bag_report_variable_already_declared(DiagnosticBag* bag, TextSpan span, str name);
 
-void diagnostic_bag_concat(DiagnosticBag* bag, DiagnosticBag* other);
+void diagnostic_bag_concat(DiagnosticBag* bag, DiagnosticBuf* other);
 
 #endif  // MINSC_CODE_ANALYSIS_DIAGNOSTIC_BAG_H_

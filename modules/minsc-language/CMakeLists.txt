@@ -9,6 +9,8 @@ set(MINSC_SRC_REL
     code_analysis/binding/bound_node.c
     code_analysis/binding/bound_unary_expression.c
     code_analysis/binding/bound_unary_operator.c
+    code_analysis/binding/bound_scope.c
+    code_analysis/binding/bound_global_scope.c
     code_analysis/compilation.c
     code_analysis/diagnostic.c
     code_analysis/diagnostic_bag.c

@@ -36,6 +36,12 @@ DiagnosticBuf diagnostic_bag_iter(const DiagnosticBag* bag) {
     return (DiagnosticBuf)BUF_REF(bag->diagnostics.ptr, bag->diagnostics.len);
 }
 
+DiagnosticBuf diagnostic_bag_to_array(DiagnosticBag* bag) {
+    DiagnosticBuf diagnostics = bag->diagnostics;
+    bag->diagnostics = (DiagnosticBuf)BUF_NEW;
+    return diagnostics;
+}
+
 bool diagnostic_bag_empty(const DiagnosticBag* bag) {
     return bag == NULL || bag->diagnostics.len == 0;
 }
@@ -104,10 +110,14 @@ void diagnostic_bag_report_undefined_name(DiagnosticBag* bag, TextSpan span, str
     report(bag, span, message);
 }
 
-void diagnostic_bag_concat(DiagnosticBag* bag, DiagnosticBag* other) {
-    BUF_CONCAT(&bag->diagnostics, other->diagnostics);
-    BUF_FREE(other->diagnostics);
-    free(other);
+void diagnostic_bag_report_variable_already_declared(DiagnosticBag* bag, TextSpan span, str name) {
+    str message = str_printf("Variable '" str_fmt "' is already declared.", str_arg(name));
+    report(bag, span, message);
+}
+
+void diagnostic_bag_concat(DiagnosticBag* bag, DiagnosticBuf* other) {
+    BUF_CONCAT(&bag->diagnostics, *other);
+    BUF_FREE(*other);
 }
 
 static void report(DiagnosticBag* bag, TextSpan span, str message) {
