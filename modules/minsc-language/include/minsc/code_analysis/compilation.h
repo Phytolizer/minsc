@@ -10,6 +10,6 @@ typedef struct Compilation Compilation;
 Compilation* compilation_new(SyntaxTree* syntax);
 void compilation_free(Compilation* compilation);
 
-EvaluationResult compilation_evaluate(Compilation* compilation, VariableMap** variables);
+EvaluationResult compilation_evaluate(const Compilation* compilation, VariableMap** variables);
 
 #endif  // MINSC_CODE_ANALYSIS_COMPILATION_H_

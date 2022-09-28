@@ -5,3 +5,4 @@ CMakeUserPresets.json
 infer-out/
 minsc.history
 afl_findings/
+.vs/

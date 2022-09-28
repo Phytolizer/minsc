@@ -24,7 +24,7 @@ void compilation_free(Compilation* compilation) {
     free(compilation);
 }
 
-EvaluationResult compilation_evaluate(Compilation* compilation, VariableMap** variables) {
+EvaluationResult compilation_evaluate(const Compilation* compilation, VariableMap** variables) {
     BoundGlobalScope* global_scope = binder_bind_global_scope(compilation->syntax->root);
     BoundExpression* bound_expression = global_scope->expression;
     global_scope->expression = NULL;
