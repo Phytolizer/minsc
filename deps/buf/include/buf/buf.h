@@ -47,8 +47,9 @@
     do { \
         if ((buf)->len == (buf)->cap) { \
             (buf)->cap = (buf)->cap ? (buf)->cap * 2 : 1; \
-            (buf)->ptr = realloc((buf)->ptr, (buf)->cap * sizeof(*(buf)->ptr)); \
-            BUF_ASSERT((buf)->ptr != NULL); \
+            void* tptr_ = realloc((buf)->ptr, (buf)->cap * sizeof(*(buf)->ptr)); \
+            BUF_ASSERT(tptr_ != NULL); \
+            (buf)->ptr = tptr_; \
         } \
         (buf)->ptr[(buf)->len++] = (val); \
     } while (false)
