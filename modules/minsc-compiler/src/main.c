@@ -23,50 +23,53 @@
 #include <windows.h>
 #endif
 
-static void ensure_ansi_escape_sequences_work(void) {
+static bool ensure_ansi_escape_sequences_work(void) {
 #ifdef _WIN32
     // Enable ANSI escape sequences on Windows 10
     // https://docs.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences
     HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
     if (out == INVALID_HANDLE_VALUE) {
         fprintfln(stderr, "Failed to get stdout handle");
-        exit(EXIT_FAILURE);
+        return false;
     }
 
     DWORD mode = 0;
     if (!GetConsoleMode(out, &mode)) {
         fprintfln(stderr, "Failed to get console mode");
-        return;
+        return false;
     }
 
     mode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
     if (!SetConsoleMode(out, mode)) {
         fprintfln(stderr, "Failed to set console mode");
-        return;
+        return false;
     }
 
     HANDLE in = GetStdHandle(STD_INPUT_HANDLE);
     if (in == INVALID_HANDLE_VALUE) {
         fprintfln(stderr, "Failed to get stdin handle");
-        exit(EXIT_FAILURE);
+        return false
     }
 
     DWORD in_mode = 0;
     if (!GetConsoleMode(in, &in_mode)) {
         fprintfln(stderr, "Failed to get console mode");
-        return;
+        return false;
     }
 
     in_mode |= ENABLE_VIRTUAL_TERMINAL_INPUT;
     if (!SetConsoleMode(in, in_mode)) {
         fprintfln(stderr, "Failed to set console mode");
-        return;
+        return false;
     }
 #endif
+    return true;
 }
 
 int main(void) {
-    ensure_ansi_escape_sequences_work();
+    if (!ensure_ansi_escape_sequences_work()) {
+        return 1;
+    }
     linenoiseHistoryLoad("minsc.history");
 
     bool show_tree = false;
