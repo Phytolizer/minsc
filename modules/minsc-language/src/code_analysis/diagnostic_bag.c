@@ -118,6 +118,7 @@ void diagnostic_bag_report_variable_already_declared(DiagnosticBag* bag, TextSpa
 void diagnostic_bag_concat(DiagnosticBag* bag, DiagnosticBuf* other) {
     BUF_CONCAT(&bag->diagnostics, *other);
     BUF_FREE(*other);
+    *other = (DiagnosticBuf)BUF_NEW;
 }
 
 static void report(DiagnosticBag* bag, TextSpan span, str message) {

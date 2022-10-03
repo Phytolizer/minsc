@@ -281,10 +281,10 @@ static TestTokenPairWithSeparatorBuf get_token_pairs_with_separators(void) {
         for (size_t j = 0; j < tokens.len; j++) {
             TestTokenPair pair = {{tokens.ptr[i], tokens.ptr[j]}};
             if (requires_separator(pair)) {
-                for (size_t j = 0; j < separators.len; j++) {
+                for (size_t k = 0; k < separators.len; k++) {
                     TestTokenPairWithSeparator pair_with_separator = {
                         .pair = pair,
-                        .separator = separators.ptr[j],
+                        .separator = separators.ptr[k],
                     };
                     BUF_PUSH(&pairs_with_separators, pair_with_separator);
                 }
