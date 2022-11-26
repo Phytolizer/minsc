@@ -26,6 +26,10 @@
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
                 "CMAKE_C_COMPILER": "cl.exe"
             },
+            "architecture": {
+                "value": "x64",
+                "strategy": "external"
+            },
             "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",

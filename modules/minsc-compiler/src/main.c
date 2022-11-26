@@ -48,7 +48,7 @@ static bool ensure_ansi_escape_sequences_work(void) {
     HANDLE in = GetStdHandle(STD_INPUT_HANDLE);
     if (in == INVALID_HANDLE_VALUE) {
         fprintfln(stderr, "Failed to get stdin handle");
-        return false
+        return false;
     }
 
     DWORD in_mode = 0;
@@ -66,6 +66,12 @@ static bool ensure_ansi_escape_sequences_work(void) {
     return true;
 }
 
+#ifdef _WIN32
+#define STRNCPY(dst, src, n) strncpy_s(dst, n, src, n)
+#else
+#define STRNCPY(dst, src, n) strncpy(dst, src, n)
+#endif
+
 int main(void) {
     if (!ensure_ansi_escape_sequences_work()) {
         return 1;
@@ -80,7 +86,7 @@ int main(void) {
         // 13 == 10 for colors + 2 for '> ' + 1 for NUL
         char prompt[13];
         int n = styler_str_fg(styler_fg_green, prompt);
-        strncpy(&prompt[n], text_builder.len == 0 ? ">" : "|", 2);
+        STRNCPY(&prompt[n], text_builder.len == 0 ? ">" : "|", 2);
         n += 1;
         n += styler_str_fg(styler_fg_reset, &prompt[n]);
         prompt[n++] = ' ';
